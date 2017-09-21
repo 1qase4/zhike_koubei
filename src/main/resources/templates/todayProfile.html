@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="renderer" content="webkit">
+    <title>今日概况</title>
+    <link href="/css/common.css" rel="stylesheet" type="text/css">
+    <!--zui-->
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <!--图标字体-->
+    <link rel="stylesheet" type="text/css" media="screen" href="/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/css/todayProfile.css">
+</head>
+<body>
+<div class="child-container">
+    <div class="title-box clearfix">
+        <div class="common-title lf">客流分析-今日概况 ( <span id="today"></span> ) </div>
+        <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
+    </div>
+    <div class="data-wrap common-box">
+        <div class="data-title">
+            <div class="lf-txt">关键数据</div>
+        </div>
+        <ul class="data-content clearfix">
+            <li>
+                <dl>
+                    <dt>今日客流</dt>
+                    <dd>
+                        <i style="display: inline-block;margin-right: 5px" class="iconfont icon-zhexiantu today-color"></i>
+                        <span class="today-color" data-n="currentFlow">0</span> 人
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>昨日客流</dt>
+                    <dd>
+                        <i style="display: inline-block;margin-right: 5px" class="iconfont icon-tubiaozhexiantu1 yesterday-color"></i>
+                        <span class="yesterday-color" data-n="yesterdayFlow">0</span> 人
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>上周同期</dt>
+                    <dd>
+                        <i style="display: inline-block;margin-right: 5px" class="iconfont icon-tubiaozhexiantu last-color"></i>
+                        <span class="last-color" data-n="lastWeekFlow">0</span> 人
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>上月日均客流</dt>
+                    <dd>
+                        <i style="display: inline-block;margin-right: 5px" class="iconfont icon-shuangren max-color"></i>
+                        <span class="max-color" data-n="dailyFlow">0</span> 人
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <!--图表区-->
+    <div class="common-box mt20">
+        <div class="switch-box">
+            <div class="switch fr">
+                <span class="selected" data-time="DayFlow">今日</span>
+                <span data-time="WeekFlow">本周</span>
+            </div>
+        </div>
+        <div id="charts" class="chart-common-wrap"></div>
+    </div>
+
+</div>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" charset="UTF-8"></script>
+<script src="/js/utils.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<script src="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.js"></script>
+
+<script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+<script>
+    //    从父页面获取店名
+    var gShop = parent.document.getElementById("shop").value;
+    $(function () {
+        //计算今天时间
+        $("#today").html(getDateByNow(0));
+        // 获取4个客流数据
+        getRealData(gShop);
+        getCharts();
+    });
+    //切换图表
+    $('.switch').on("click","span",function (e) {
+        e.preventDefault();
+        $(this).addClass("selected").siblings(".selected").removeClass("selected");
+        getCharts();
+    });
+    //客户特征下载报告
+    function loadReport() {
+        window.location = "/flow/currentDownload?account="+gShop;
+    }
+    //通过分组获取图表
+    function getCharts() {
+        var href = $(".switch span.selected").data("time");
+        $("#charts").empty();
+        var myChart = echarts.init(document.getElementById("charts"));
+        //加载等待
+        myChart.showLoading();
+        $.get("/flow/main"+href,{account: gShop},function (obj){
+            if(obj.result){
+                window.onresize = myChart.resize;
+                myChart.hideLoading();
+                myChart.setOption(obj.data);
+            }
+        });
+    }
+    // 获取客流数据
+    function getRealData(shop){
+        //获取4个数
+        $.ajax({
+            url:"/flow/current",
+            data:{account: shop},
+            type:'GET',
+            timeout:60000,
+            beforeSend:function(XMLHttpRequest){
+//            $(".loadingDiv").css('display','');
+            },
+            success:function(obj){
+                if(obj.result){
+                    var data=obj.data;
+                    for(var i in data){
+                        $("[data-n='"+i+"']").html(data[i]);
+                    }
+                }
+            },
+            error:function(XMLHttpRequest,textStatus,message){
+                new $.zui.Messager(message || "错误", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+            },
+            complete:function(XMLHttpRequest,textStatus){
+//            $(".loadingDiv").css('display','none');
+            }
+        });
+    }
+</script>
+</body>
+</html>

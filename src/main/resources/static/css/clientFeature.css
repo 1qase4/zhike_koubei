@@ -1,0 +1,106 @@
+.select-box{
+    padding: 10px 10px 10px 45px;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #F9F9F9;
+}
+.select-group{
+    float: left;
+    /*display: none;*/
+}
+.mylabel{
+    height: 32px;
+    line-height: 32px;
+    padding: 0 15px;
+    margin-bottom: 0;
+}
+.input-wrap{
+    position: relative;
+    display: inline-block;
+    width: 130px;
+}
+.my-caret-down{
+    position: absolute;
+    right: 6px;
+    top: 9px;
+}
+.sub-chart-wrap{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    width: 50%;
+    /*height: 100%;*/
+    padding: 20px;
+}
+.chart-title{
+    padding: 10px 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+}
+.mainContent{
+    /*margin-top: 20px;*/
+    padding-top: 80px;
+}
+.chart-box{
+    height: 313px;
+}
+.people{
+    overflow: hidden;
+    padding: 0;
+}
+.people li{
+    float: left;
+    width: 10%;
+    /*height: 84px;*/
+    /*margin-right: 10px;*/
+}
+.people li>div{
+    width: 36px;
+    height: 84px;
+    margin: auto;
+}
+.people li .female{
+    background: url(/image/dataswarmval.png) no-repeat 0 0;
+}
+.people li .male{
+    background: url(/image/dataswarmval.png) no-repeat -43px 0;
+}
+.progress-female{
+    float: left;
+    -webkit-transition: width .6s;
+    -moz-transition: width .6s;
+    -ms-transition: width .6s;
+    -o-transition: width .6s;
+    transition: width .6s;
+    width: 20%;
+}
+.progress-female-bar{
+    height: 20px;
+    background-color: #FD5542;
+}
+.progress-male{
+    float: left;
+    -webkit-transition: width .6s;
+    -moz-transition: width .6s;
+    -ms-transition: width .6s;
+    -o-transition: width .6s;
+    transition: width .6s;
+    width: 80%;
+}
+.progress-male-bar{
+    height: 20px;
+    background-color: #35A3F5;
+}
+.progress-percent{
+    padding-top: 20px;
+    text-align: center;
+}
+.no-data{
+    font-size: 60px;
+    font-family: 'Microsoft YaHei';
+    color: #DEDEDE;
+    text-align: center;
+    padding-top: 100px;
+    /*display: none;*/
+}

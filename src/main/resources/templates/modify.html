@@ -1,0 +1,265 @@
+
+  <!--Created by yi.
+  User: Administrator
+  Date: 2016/12/21
+  Time: 16:16
+  To change this template use File | Settings | File Templates.-->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="renderer" content="webkit">
+    <title>修改密码</title>
+    <link href="/image/favicon-20170908021540662.ico"  rel="shortcut icon">
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" type="text/css" href="/media/dmp_css/modifyPwd.css">-->
+    <link rel="stylesheet" type="text/css" href="/css/iconfont.css">
+    <style>
+        .header-box{
+            /*height: 119px;*/
+            height: 80px;
+            padding: 0 136px 0 34px;
+            border-bottom: 1px solid #B4B4B4;
+            /*overflow: hidden;*/
+        }
+        .logo{
+            float: left;
+        }
+        .header-box .logo a{
+            display: inline-block;
+            /*margin-top: 35px;*/
+            margin-top: 15px;
+            width: 280px;
+            height: 50px;
+            /*margin: 14px 0 0 53px;*/
+            background-image: url(/image/logo_top_02.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+            /*background-position: -912px -255px;*/
+            /*line-height: 100px;*/
+            overflow: hidden;
+        }
+
+        .user-info{
+            float: right;
+            /*margin-top: 40px;*/
+            margin-top: 20px;
+        }
+        .msg{
+            display: inline-block;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 20px;
+        }
+        .login-infor{
+            display: inline-block;/*兼容火狐*/
+            position: relative;
+            /*min-width: 90px;*/
+        }
+
+        .login-infor a{
+            /*width: 126px;*/
+            height:40px;
+            line-height: 40px;
+            text-align: center;
+            display: block;
+            padding: 0 20px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .shop-wrap{
+            height: 60px;
+            line-height: 60px;
+            padding-right: 136px;
+            background-color: #4679D4;
+            overflow: hidden;
+        }
+        .modifyCon{
+            padding: 80px 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-box">
+    <div class="logo">
+        <a href="#" target="_blank" title="辰数知客"></a>
+    </div>
+    <div class="user-info">
+        <ul class="nav nav-pills">
+            <li><a href="#">消息</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">账号 <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/index/dmpLoginOut">退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="shop-wrap">
+    <div class="shop">
+    </div>
+</div>
+
+<div class="modifyCon">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="oldPwd" class="col-sm-2">原密码</label>
+            <div class="col-md-6 col-sm-10">
+                <input name="oldPwd" type="password" class="form-control" id="oldPwd" onblur="checkOldPassword(this)" placeholder="请输入原密码">
+            </div>
+            <div class="help-block note"></div>
+        </div>
+        <div class="form-group">
+            <label for="newPwd" class="col-sm-2">新密码</label>
+            <div class="col-md-6 col-sm-10">
+                <input name="newPwd" type="password" class="form-control" id="newPwd" onblur="checkPassword(this)" placeholder="请输入密码">
+            </div>
+            <div class="help-block note"></div>
+        </div>
+        <div class="form-group">
+            <label for="againPwd" class="col-sm-2">确认新密码</label>
+            <div class="col-md-6 col-sm-10">
+                <input name="againPwd" type="password" class="form-control" id="againPwd" onblur="checkPasswordB(this)" placeholder="请再次输入新密码">
+            </div>
+            <div class="help-block note"></div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="submitModify" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" charset="UTF-8"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<script type="text/javascript" src="/js/jquery.md5.min.js"></script>
+<!--<script type="text/javascript" src="/js/jquery.placeholder.js"></script>-->
+<script>
+//    $("input").focus(function () {
+//        $(".input-text").removeClass("error-shadow");
+//        $(this).addClass("input-shadow");
+//    });
+    //    $("input").blur(function () {
+    //        $(this).removeClass("input-shadow");
+    //    });
+
+    //验证原密码
+    var isAllow = false;
+    function checkOldPassword(dom){
+        var value = $(dom).val();
+        if (value == "" || value == "请输入原密码"){
+            isAllow = false;
+            $(dom).parent().nextAll(".note").html("请输入原密码").parent().addClass("has-error").removeClass("has-success");
+            return false;
+        }else{
+            isAllow = true;
+            $(dom).parent().nextAll(".note").html("").parent().addClass("has-success").removeClass("has-error");
+            return true;
+        }
+    }
+    var isAllow1 = false;//阻止提交
+    //验证码第一次输入密码
+    function checkPassword(dom) {
+        var value = $(dom).val();
+        //长度不能小于8位
+        if (value.length < 8) {
+            $(dom).parent().nextAll(".note").html("密码长度不能小于8位").parent().addClass("has-error").removeClass("has-success");
+            isAllow1 = false;
+            return false;
+        } else if (!(/[a-z]/.test(value)&&/[A-Z]/.test(value)&&/\d/.test(value))) {//必须包含大写、小写字母以及数字
+            $(dom).parent().nextAll(".note").html("密码必须包含大写、小写字母以及数字").parent().addClass("has-error").removeClass("has-success");
+            isAllow1 = false;
+            return false;
+        }
+        else{
+            $(dom).parent().nextAll(".note").html("合格").parent().addClass("has-success").removeClass("has-error");
+            isAllow1 = true;
+            return true;
+        }
+    }
+    var isAllow2 = false;//阻止提交
+    //重新输入密码验证
+    function checkPasswordB(dom) {
+        var pwd = document.getElementsByName("newPwd")[0].value;
+        var pwdRepeat = document.getElementsByName("againPwd")[0].value;
+        if(pwdRepeat == ""){
+            $(dom).parent().nextAll(".note").html("请再次输入密码").parent().addClass("has-error").removeClass("has-success");
+            isAllow2 = false;
+            return false;
+        }
+        else if($.trim(pwd) !== $.trim(pwdRepeat)){
+            $(dom).parent().nextAll(".note").html("两次密码输入必须一致").parent().addClass("has-error").removeClass("has-success");
+            isAllow2 = false;
+            return false;
+        }
+        else{
+            $(dom).parent().nextAll(".note").html("合格").parent().addClass("has-success").removeClass("has-error");
+            isAllow2 = true;
+            return true;
+        }
+    }
+    //提交
+    $("#submitModify").click(function () {
+        var old = document.getElementsByName("oldPwd");
+        var newp = document.getElementsByName("newPwd");
+        var again = document.getElementsByName("againPwd");
+        checkOldPassword(old);
+        checkPassword(newp);
+        checkPasswordB(again);
+        if(!isAllow){
+            $("[name='oldPwd']").parent().nextAll(".note").html("请输入原密码").parent().addClass("has-error").removeClass("has-success");
+            return false;
+        }
+        if(!isAllow1){
+            $("[name='newPwd']").parent().nextAll(".note").html("密码必须包含大写、小写字母以及数字且长度不能小于8位").parent().addClass("has-error").removeClass("has-success");
+            return false;
+        }
+        if(!isAllow2){
+            $("[name='againPwd']").parent().nextAll(".note").html("请核对密码是否一致").parent().addClass("has-error").removeClass("has-success");
+            return false;
+        }
+        var oldPwd=$.md5($("[name='oldPwd']").val());
+        var newPwd=$.md5($("[name='newPwd']").val());
+        datas={"password":oldPwd,"newPassword":newPwd};
+        $.post("/user/password",datas,function (str) {
+            if(str === "密码错"){
+                new $.zui.Messager('原密码输入错误', {
+                    type: 'warning',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+                $("[name='oldPwd']").parent().nextAll(".note").html("密码输入错误").parent().addClass("has-error").removeClass("has-success");
+            }else if (str=="Success"){
+//                alert("密码修改成功");
+                new $.zui.Messager('密码修改成功', {
+                    type: 'warning',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+                location.href="/index.jsp";
+            }else if(str=="修改密码失败,请联系管理员"){
+//                alert("修改密码失败，请联系管理员");
+                new $.zui.Messager('修改密码失败，请联系管理员', {
+                    type: 'warning',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+            }
+        });
+    });
+//绑定键盘事件
+document.onkeydown = function(event){
+    var event = (event) ? event : ((window.event) ? window.event : "");
+    var key = event.keyCode?event.keyCode:event.which;
+    if(key == "13"){
+        $("#submitModify").click();
+    }
+};
+</script>
+</body>
+</html>
