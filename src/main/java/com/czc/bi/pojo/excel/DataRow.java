@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : zchong
+ * @author : fw
  * @Desc   : Excel的一行记录
- * @date   : 2016/8/31.
+ * @date   : 2017/9/27.
  * @version: V1.0
  */
 

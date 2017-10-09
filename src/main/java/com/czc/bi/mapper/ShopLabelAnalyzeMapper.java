@@ -11,9 +11,9 @@ import java.util.List;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : zchong
+ * @author : fw
  * @Desc : 数据库表[shop_label_analyze]的mapper接口
- * @date : 2016/8/22.
+ * @date : 2017/9/28.
  * @version: V1.0
  */
 

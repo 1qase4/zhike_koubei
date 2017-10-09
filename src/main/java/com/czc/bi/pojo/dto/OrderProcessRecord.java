@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * 
  * Copyright © 上海辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : yangmeng
+ * @author : fw
  * @Desc :
- * @date : 2017年3月23日上午10:33:11
+ * @date : 2017年9月27日上午10:33:11
  * @version: V1.0
  */
 public class OrderProcessRecord {

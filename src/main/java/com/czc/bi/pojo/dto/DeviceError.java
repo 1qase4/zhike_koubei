@@ -4,9 +4,9 @@ package com.czc.bi.pojo.dto;
  * 
  * Copyright © 上海辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : yangmeng
+ * @author : fw
  * @Desc :
- * @date : 2017年4月25日下午5:28:02
+ * @date : 2017年9月27日下午5:28:02
  * @version: V1.0
  */
 public class DeviceError {

@@ -7,9 +7,9 @@ import java.util.List;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : zchong
+ * @author : fw
  * @Desc : 前台表格展示数据
- * @date : 2016/8/23.
+ * @date : 2017/9/27.
  * @version: V1.0
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

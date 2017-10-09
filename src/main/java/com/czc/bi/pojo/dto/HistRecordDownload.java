@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * 
  * Copyright © 上海辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : yangmeng
+ * @author : fw
  * @Desc :
- * @date : 2017年3月22日上午10:22:21
+ * @date : 2017年9月27日上午10:22:21
  * @version: V1.0
  */
 public class HistRecordDownload {

@@ -6,9 +6,9 @@ import java.util.Date;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : zchong
+ * @author : fw
  * @Desc   : 数据库表[shop_label_analyze]的PO对象
- * @date   : 2016/8/22.
+ * @date   : 2017/9/27.
  * @version: V1.0
  */
 

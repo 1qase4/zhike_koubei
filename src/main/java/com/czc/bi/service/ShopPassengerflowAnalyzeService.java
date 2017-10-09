@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : zchong
+ * @author : fw
  * @Desc : 客户客流数据服务
- * @date : 2016年4月14日 上午11:33:19
+ * @date : 2017/9/28 上午11:33:19
  * @version: V1.0
  */
 

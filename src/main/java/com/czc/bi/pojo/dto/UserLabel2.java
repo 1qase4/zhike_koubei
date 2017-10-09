@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Created by Administrator on 2017/7/6.
+ * Created by Administrator on 2017/9/27.
  */
 public class UserLabel2 {
     private String gender;

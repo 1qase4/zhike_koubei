@@ -3,9 +3,9 @@ package com.czc.bi.pojo;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : zchong
+ * @author : fw
  * @Desc :   简单的pojo
- * @date : 2016/10/13.
+ * @date : 2017/9/27.
  * @version: V1.0
  */
 public class Simple {
