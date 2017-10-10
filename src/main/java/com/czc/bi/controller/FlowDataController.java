@@ -60,7 +60,7 @@ public class FlowDataController {
 
     // 获取首页的周客流echarts图
     @RequestMapping(value = "mainWeekFlow")
-    public Result mainWeekFlow(@RequestParam("account") String account) {
+    public Result mainWeekFlow(@RequestParam("account") String account) throws ParseException {
         if (account == null) {
             return null;
         }
@@ -69,7 +69,6 @@ public class FlowDataController {
     }
 
     // 年客流
-   /* @ResponseBody
     @RequestMapping(value = "yearFlow")
     public Result yearFlow(@RequestParam("account") String account, @RequestParam("time") String time) {
         if (account == null || time == null) {
@@ -77,10 +76,9 @@ public class FlowDataController {
         }
         List<Map> res = shopPassengerflowAnalyzeService.getYearFlow(account, time);
         return new Result(res);
-    }*/
+    }
 
     // 月客流
-    /*@ResponseBody
     @RequestMapping(value = "monthFlow")
     public Result monthFlow(@RequestParam("account") String account, @RequestParam("time") String time) {
         if (account == null || time == null) {
@@ -88,7 +86,7 @@ public class FlowDataController {
         }
         List<Map> res = shopPassengerflowAnalyzeService.getMonthFlow(account, time);
         return new Result(res);
-    }*/
+    }
 
     // 周客流
     @RequestMapping(value = "weekFlow")
@@ -142,7 +140,6 @@ public class FlowDataController {
     }
 
     // 客户分析 - 回流流失/月
-   /* @ResponseBody
     @RequestMapping(value = "monthBackFlow")
     public Result monthBackFlow(@RequestParam("account") String account, @RequestParam("time") String time) {
         if (account == null || time == null) {
@@ -150,14 +147,14 @@ public class FlowDataController {
         }
         Map<String, Map> res = shopPassengerflowAnalyzeService.getMonthBackFlow(account, time);
         return new Result(res);
-    }*/
+    }
 
     // 今日概况下载页面
-    /*@RequestMapping("currentDownload")
+    @RequestMapping("currentDownload")
     public ResponseEntity<byte[]> currentDownload(
-            @RequestParam("account") String account,
+            @RequestParam("account") String account
             ) throws IOException {
-
+        logger.debug("今日概况下载！！！");
         if (account == null) {
             return null;
         }
@@ -168,7 +165,7 @@ public class FlowDataController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", new String("客流分析-今日概况.xls".getBytes("UTF-8"), "iso-8859-1"));
         return new ResponseEntity<>(bytes, headers, HttpStatus.CREATED);
-    }*/
+    }
 
     // 客流分析-数据趋势 报告下载
    /* @RequestMapping("dateTrendDownload")

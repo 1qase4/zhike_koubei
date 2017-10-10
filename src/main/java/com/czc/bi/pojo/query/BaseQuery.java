@@ -28,7 +28,7 @@ public class BaseQuery {
     public static final String LESS_THAN = "<";
 
     // 小于或等于
-    public static final String LESS_OR_EQUAL = ">=";
+    public static final String LESS_OR_EQUAL = "<=";
 
     // Like
     public static final String LIKE = "like";

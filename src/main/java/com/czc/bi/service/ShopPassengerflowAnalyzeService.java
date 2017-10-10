@@ -160,7 +160,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 获取首页的周客流echarts图
-    public Result getMainWeekFlow(String account) {
+    public Result getMainWeekFlow(String account) throws ParseException {
         Calendar cal = Calendar.getInstance();
         // 获取周一的日期
         int d = 0;
@@ -175,9 +175,9 @@ public class ShopPassengerflowAnalyzeService {
         query.setAccount(account)
                 .setType(Constants.CUSTFLOW_TYPE_DAY)
                 .setPdate(monday, BaseQuery.GREATER_OR_EQUAL);
-        List<ShopPassengerflowAnalyze> shopCustflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
+        List<ShopPassengerflowAnalyze> shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopCustflowAnalyzes);
+        List<Integer> integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopPassengerflowAnalyzes);
 
         Option option = new Option();
         option.tooltip().trigger(Trigger.axis);
@@ -190,24 +190,18 @@ public class ShopPassengerflowAnalyzeService {
 
         // 上周客流信息
         cal.add(Calendar.DAY_OF_WEEK, -7);
-        monday = BaseUtil.getDateString(cal.getTime());
         query.setAccount(account)
                 .setType(Constants.CUSTFLOW_TYPE_DAY)
-                .setPdate(monday, BaseQuery.GREATER_OR_EQUAL);
-        shopCustflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopCustflowAnalyzes);
+                .setPdate(BaseUtil.getBegin7Day(monday), BaseQuery.GREATER_OR_EQUAL)
+                .setLabel(monday,BaseQuery.LESS_THAN);
+        logger.debug("查询条件有："+query.getPdate()+","+query.getLabel());
+        shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
+        integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopPassengerflowAnalyzes);
         option.series(new Line().name("上周客流")
                 .data(integers));
 
         return new Result<Option>(option);
     }
-
-    // 获取首页上面的设备状态信息
-    public List getDeviceStat(String account) {
-        List<DeviceStatDto> deviceStatDtos = showMapper.selectDeviceStat(account);
-        return deviceStatDtos;
-    }
-
 
     // 数据趋势
     // 数据趋势 - 年客流量
@@ -305,7 +299,7 @@ public class ShopPassengerflowAnalyzeService {
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
         query.setType(Constants.NEWCUST_TYPE_DAY)
                 .setAccount(account)
-                .setPdate(pdate, BaseQuery.LESS_OR_EQUAL)
+                .setPdate(pdate, BaseQuery.GREATER_OR_EQUAL)
                 .setLabel(BaseUtil.getAfter7Day(pdate), BaseQuery.LESS_THAN);
 
         List<ShopPassengerflowAnalyze> shopCustflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
@@ -355,14 +349,14 @@ public class ShopPassengerflowAnalyzeService {
                 .setAccount(account)
                 .setPdate(String.format("%s%%", time), BaseQuery.LIKE);
 
-        List<ShopPassengerflowAnalyze> shopCustflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
+        List<ShopPassengerflowAnalyze> shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> flow = formartOneMonthFlow(time, shopCustflowAnalyzes);
+        List<Integer> flow = formartOneMonthFlow(time, shopPassengerflowAnalyzes);
         // 获取老客户数据
         query.setType(Constants.OLDCUST_TYPE_DAY);
-        List<ShopPassengerflowAnalyze> shopCustflowAnalyzes2 = shopPassengerflowAnalyzeMapper.selectByQuery(query);
+        List<ShopPassengerflowAnalyze> shopPassengerflowAnalyzes2 = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> flow2 = formartOneMonthFlow(time, shopCustflowAnalyzes2);
+        List<Integer> flow2 = formartOneMonthFlow(time, shopPassengerflowAnalyzes2);
 
         List<Integer> flow3 = new ArrayList<>(31);
         for (int i = 0; i < flow2.size(); i++) {
@@ -493,14 +487,17 @@ public class ShopPassengerflowAnalyzeService {
         LinkedHashMap<String, Integer> map = new LinkedHashMap<>(31);
         try {
             cal.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(firstDay));
+            logger.debug("现在的时间是:"+new Date());
+            logger.debug("本月第一天是:"+cal.getTime());
             while (true) {
 
                 // 如果到了当天 退出循环
-                if (new Date().after(cal.getTime())) {
+                if (new Date().before(cal.getTime())) {
                     break;
                 }
 
                 map.put(String.format("%d日", cal.get(Calendar.DATE)), 0);
+
                 cal.add(Calendar.DATE, 1);
                 // 如果到了下月1号  退出循环
                 if (cal.get(Calendar.DATE) == 1) {
@@ -639,35 +636,6 @@ public class ShopPassengerflowAnalyzeService {
         callValue = map.get("lastWeekFlow").toString();
         cell = row.createCell(1);
         cell.setCellValue(callValue);
-
-
-        // 写入设备信息
-        row = sheet.createRow(4);
-        cell = row.createCell(0);
-        cell.setCellValue("设备号");
-        cell = row.createCell(1);
-        cell.setCellValue("设备类型");
-        cell = row.createCell(2);
-        cell.setCellValue("版本号");
-        cell = row.createCell(3);
-        cell.setCellValue("设备状态");
-        cell = row.createCell(4);
-        cell.setCellValue("分组情况");
-
-        List list = getDeviceStat(account);
-        for (int i = 0; i < list.size(); i++) {
-            row = sheet.createRow(5 + i);
-            DeviceStatDto dto = (DeviceStatDto) list.get(i);
-            cell = row.createCell(0);
-            cell.setCellValue(dto.getCode());
-            cell = row.createCell(1);
-            cell.setCellValue(dto.getType());
-            cell = row.createCell(2);
-            cell.setCellValue(dto.getVersion());
-            cell = row.createCell(3);
-            cell.setCellValue(dto.getStat().equals("1") ? "在线" : "离线");
-            cell = row.createCell(4);
-        }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         wb.write(bos);

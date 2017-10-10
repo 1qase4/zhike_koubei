@@ -36,7 +36,6 @@ public class LabelDataController {
     private ShopLabelAnalyzeService shopLabelAnalyzeService;
 
     // 客户分析 - 客户特征
-    @ResponseBody
     @RequestMapping("custFeature")
     public Result custFeature(@RequestParam("account") String account, @RequestParam("time") String time) {
         if(account == null || time == null) {
@@ -47,7 +46,6 @@ public class LabelDataController {
     }
 
     // 来源分析 - 地区分布
-    @ResponseBody
     @RequestMapping("custArea")
     public Result custArea(@RequestParam("account") String account, @RequestParam("time") String time) {
         if(account == null || time == null) {
@@ -58,7 +56,6 @@ public class LabelDataController {
     }
 
     // 获取热力图示
-    @ResponseBody
     @RequestMapping("elevation")
     public Result elevation(@RequestParam("account") String account, @RequestParam("time") String time) {
         if(account == null || time == null) {
@@ -85,7 +82,6 @@ public class LabelDataController {
     }
 
     // 来源分析-地区分布数据下载
-    @ResponseBody
     @RequestMapping("custAreaDownload")
     public ResponseEntity<byte[]> custAreaDownload(
             @RequestParam("account") String account,
