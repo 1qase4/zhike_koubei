@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="renderer" content="webkit">
+    <title>客户特征</title>
+    <link href="/css/common.css" rel="stylesheet" type="text/css">
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <link href="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/css/weekSelect.css">
+    <link rel="stylesheet" type="text/css" href="/css/areaDistributed.css">
+</head>
+<body>
+<div class="child-container">
+    <div class="title-box clearfix">
+        <div class="common-title lf">客流分析-地区分布( <span class="selectedTime"></span>)</div>
+        <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
+    </div>
+    <!--图表区-->
+    <div class="common-box">
+        <div class="select-box clearfix">
+            <div class="select-group">
+                <label class="mylabel lf">选择时间</label>
+                <div class="input-wrap lf">
+                    <input type="text" id="month" class="form-control form-date-month" readonly="readonly" placeholder="选择月份">
+                    <i class="icon icon-caret-down my-caret-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="chart-wrap clearfix">
+            <div id="chinaMap" class="sub-chart-wrap"></div>
+            <div id="top5" class="sub-chart-wrap"></div>
+        </div>
+    </div>
+    <!--客流列表-->
+    <div class="mt20">
+        <div class="title-box clearfix">
+            <div class="common-title lf">地区分布数据表( <span class="selectedTime"></span>)</div>
+        </div>
+        <div class="common-box">
+            <table id="tableData" class="data-common-table">
+                <thead>
+                <tr>
+                    <td data-name="city">城市名称</td>
+                    <td data-name="flow"><span class="selectedTime"></span>客流量(人)</td>
+                    <td data-name="percent">地区占比</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>上海</td>
+                    <td>83</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>上海</td>
+                    <td>83</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>上海</td>
+                    <td>83</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>上海</td>
+                    <td>83</td>
+                    <td>70%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="control-box clearfix">
+            <div id="pageControl" class="fr">
+                <div id="pageBox" class=" noselect lf">
+                    <ul id="pageWrap" class="pager" style="margin: 0;">
+                        <!--<li class="previous disabled"><a href="javascript:;">«上一页</a></li>-->
+                        <!--<li class="active"><a href="javascript:;">1</a></li>-->
+                        <!--<li><a href="javascript:;">2</a></li>-->
+                        <!--<li><a href="javascript:;">3</a></li>-->
+                        <!--<li><a href="javascript:;">4</a></li>-->
+                        <!--<li class="next"><a href="javascript:;">下一页»</a></li>-->
+                    </ul>
+                </div>
+                <div style="float: left;height: 33px;line-height: 33px;margin-left: 10px;"> 共 <span id="total">0</span>条</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" charset="UTF-8"></script>
+<script src="/js/utils.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<script src="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.js"></script>
+<script type="text/javascript" src="/js/pageControl.js"></script>
+<script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+<script type="text/javascript" src="/js/china.js"></script>
+<script>
+    var gMapDataList;//存储省份数据
+    //分页插件
+    var myPage = {
+        pageCount: 0,//总页数
+        pageSize: 10,//每一页多少条
+        currentPage: 1,//当前页
+        containerId: "pageWrap",
+        tableId: "tableData",
+        init: function (arr,pageSize) {//待渲染的数组、页面大小、表格的id
+            var _this = this;
+            this.currentPage = 1;
+            var NumberRegex = new RegExp(/^\d+$/);
+            if (pageSize != null && NumberRegex.test(pageSize)) {
+                _this.pageSize = parseInt(pageSize);
+            }
+            if (!jQuery.isArray(arr)){
+                new $.zui.Messager('输入的数据类型有误', {
+                    type: 'warning',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+                return false;
+            }
+            var html = "";
+            var len = arr.length;
+            _this.pageCount = Math.ceil(len/_this.pageSize);
+            if (len > 0){
+                html += "<ul id='"+this.containerId+"' class='pager' style='margin: 0;'><li class='previous'><a href='javascript:;'>«上一页</a></li>";
+                for (var i = 0;i < _this.pageCount;i ++){
+                    if (i+1 === _this.currentPage){
+                        html += "<li class = 'active'><a href='javascript:;'>"+(i+1)+"</a></li>";
+                    }else{
+                        html += "<li><a href='javascript:;'>"+(i+1)+"</a></li>";
+                    }
+                }
+                html += "<li class='next'><a href='javascript:;'>下一页»</a></li></ul>";
+                $("#pageBox").html(html);
+                this.isAbled();//渲染完毕后检查按钮是否可点击
+                //给每个按钮绑定事件
+                $("#"+_this.containerId).on("click","li a",function () {
+                    if($(this).parent().hasClass("previous")){//上一页
+                        _this.currentPage --;
+                        _this.currentPage = _this.currentPage < 1 ? 1 : _this.currentPage;
+                        var lis = $("#"+_this.containerId+" li");
+                        $(lis[_this.currentPage]).addClass("active").siblings(".active").removeClass("active");
+                        if (_this.currentPage <= 1){
+                            $(this).parent().addClass("disabled");
+                        }
+                        if (_this.currentPage < _this.pageCount){
+                            $("#"+_this.containerId+" .next").removeClass("disabled");
+                        }
+                    }else if($(this).parent().hasClass("next")){//下一页
+                        _this.currentPage ++;
+                        _this.currentPage = _this.currentPage > _this.pageCount ? _this.pageCount : _this.currentPage;
+                        var lis = $("#"+_this.containerId+" li");
+                        $(lis[_this.currentPage]).addClass("active").siblings(".active").removeClass("active");
+                        if (_this.currentPage >= _this.pageCount){
+                            $(this).parent().addClass("disabled");
+                        }
+                        if (_this.currentPage > 1){
+                            $("#"+_this.containerId+" .previous").removeClass("disabled");
+                        }
+                    }else{//点击页
+                        $(this).parent().addClass("active").siblings(".active").removeClass("active");
+                        //改变当前页
+                        _this.currentPage = parseInt($(this).html());
+                        _this.isAbled();
+                    }
+                    _this.renderData(arr);
+                })
+            }else{
+                $("#pageBox").html("");
+            }
+            _this.renderData(arr);//渲染数据
+        },
+        //渲染表格
+        renderData: function (arr) {
+            for (var i = this.pageSize * (this.currentPage - 1),html = "";i < this.pageSize * this.currentPage;i ++){
+                if (arr[i]){
+                    html += "<tr> <td>"+arr[i].name+"</td> <td>"+arr[i].value+"</td> <td>"+arr[i].percent+"</td> </tr>";
+                }else{
+                    html += "<tr> <td> </td> <td></td> <td></td> </tr>";
+                }
+            }
+            if (this.pageCount === 0){
+                html = "<tr> <td colspan='3'> 无数据</td>  </tr>";
+            }
+            $("#"+this.tableId+" tbody").html(html);
+        },
+        isAbled: function () {
+            if (this.currentPage <= 1){
+                $("#"+this.containerId+" .previous").addClass("disabled");
+            }
+            if (this.currentPage > 1){
+                $("#"+this.containerId+" .previous").removeClass("disabled");
+            }
+            if (this.currentPage >= this.pageCount){
+                $("#"+this.containerId+" .next").addClass("disabled");
+            }
+            if (this.currentPage < this.pageCount){
+                $("#"+this.containerId+" .next").removeClass("disabled");
+            }
+        }
+    };
+
+    // 从父页面获取店名
+    var gShop = parent.document.getElementById("shop").value;
+    $(function () {
+        //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
+//        if(window.localStorage && localStorage.getItem("area-month")){
+//            $("#month").val(localStorage.getItem("area-month"));
+//        }else{
+        $("#month").val(getMonthByNow(0));
+//        }
+        getCharts();
+    });
+    //选择时间时获取图
+    $("#month").change(getCharts);
+    //客户特征下载报告
+    function loadReport() {
+        var account,time;
+        account = gShop;
+        //时间
+        var timeValue = $(".select-group .input-wrap").children("input").val();
+        time = timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+//        console.log(time);
+        window.location = "/label/custAreaDownload?account="+account+"&time="+time;
+    }
+    function getCharts() {
+        var time = $("#month").val();
+        var _time = time.replace(/\D/g,"-").slice(0,time.length-1);//时间参数
+        $.ajax({
+            url: "/label/custArea",
+            data: {account: gShop,time: _time},
+            type:'GET',
+            timeout:60000,
+            beforeSend:function(XMLHttpRequest){
+//                $(".loadingDiv").css('display','');
+            },
+            success:function(obj){
+//                console.log(obj);
+                //本地存储时间
+                if(window.localStorage){
+                    localStorage.setItem("area-month",time);
+                }
+                //获取时间
+                $(".selectedTime").html(time);
+                //绘图
+                //************中国地图**********************
+                var chinaMap = document.getElementById("chinaMap");
+                var top5 = document.getElementById("top5");
+                $(chinaMap).empty();
+                $(top5).empty();
+                var mapChart = echarts.init(chinaMap);
+                mapChart.showLoading();
+                if (obj.data.length > 0){
+                    optionMap.series[0].data = obj.data;
+                    optionMap.tooltip.formatter = '{b} : {c} 人';
+                    optionMap.visualMap.show = true;
+                    optionMap.visualMap.max = obj.data[0].value;
+                    mapChart.hideLoading();
+                    mapChart.setOption(optionMap);
+                    //top5
+                    var topChart = echarts.init(top5);
+                    topChart.showLoading();
+                    optionPie.series[0].data = [];
+                    optionPie.title.text = "占比TOP5";
+                    optionPie.series[0].name = "占比TOP5";
+                    for (var i = 0;i < 5;i ++){
+                        optionPie.series[0].data.push(obj.data[i]);
+                    }
+                    topChart.hideLoading();
+                    topChart.setOption(optionPie);
+                    window.onresize = function () {
+                        mapChart.resize();//地图分布
+                        topChart.resize();//top5占比
+                    };
+                }else{
+                    optionMap.series[0].data = [];
+                    optionMap.tooltip.formatter = '{b}';
+                    optionMap.visualMap.show = false;
+                    optionMap.visualMap.max = 0;
+                    mapChart.hideLoading();
+                    mapChart.setOption(optionMap);
+//                    $(chinaMap).html("<div class='no-data'>无数据</div>");
+
+                    $(top5).html("<div class='no-data'>无数据</div>");
+                }
+                //*****************渲染表格数据*************************
+                gMapDataList = obj.data;
+                $("#total").html(gMapDataList.length);
+                //求和
+                for (var i = 0,sum = 0;i < gMapDataList.length;i ++){
+                    sum += gMapDataList[i].value;
+                }
+                for (var i = 0;i < gMapDataList.length;i ++){
+                    gMapDataList[i].percent = (100 * gMapDataList[i].value/sum).toFixed(2) + "%";
+                }
+                //初始化分页条
+                myPage.init(gMapDataList,10);
+
+            },
+            error:function(XMLHttpRequest,textStatus,message){
+                new $.zui.Messager(message || "错误", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+            },
+            complete:function(XMLHttpRequest,textStatus){
+//                $(".loadingDiv").css('display','none');
+            }
+        });
+    }
+    //初始化月选择框
+    $(".form-date-month").datetimepicker({
+        language:  "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 3,
+        minView: 3,
+        forceParse: 0,
+        format: "yyyy年mm月"
+    });
+    //环形图模板
+    var optionPie={
+        title : {
+            text : '',
+            textStyle:{
+                fontWeight:"bold",
+                color: "#333",
+                fontSize: 14
+            },
+            top: 16,
+            left: 'center'
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:null
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b} {c} 人"
+        },
+        color:["#045B86","#0684BE","#09A2E6","#40BCEF","#98D5F4","#EFEFEF"],
+        series : [ {
+            name : '',
+            type : 'pie',
+            radius: ['50%', '70%'],
+            data : null,
+            label : {
+                normal:{
+                    show : true,
+                    formatter : '{b} \n {c} 人 占比{d}%'
+                }
+            },
+            labelLine : {
+                normal:{
+                    show : true
+                }
+            }
+        } ]
+    };
+    //地图模板
+    var optionMap = {
+        title: {
+            text: '',
+            left: 'center'
+        },
+        tooltip: {
+//            trigger: 'item',
+            formatter: '{b} : {c}人'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        visualMap: {
+            min: 0,
+            max: 20,
+            left: 'left',
+            top: 'bottom',
+            text: ['高','低'],           // 文本，默认为数值文本
+            calculable: true,
+            inRange: {
+                color: ['#e0ffff', '#006edd']
+            }
+        },
+//        toolbox: {
+//            show: true,
+//            orient: 'vertical',
+//            left: 'right',
+//            top: 'center',
+//            feature: {
+//                dataView: {readOnly: false},
+//                restore: {},
+//                saveAsImage: {}
+//            }
+//        },
+        geo: {
+            map: 'china',
+//            roam: true,
+            label: {
+                normal: {
+                    show: false,
+                    textStyle: {
+                        color: 'rgba(0,0,0,0.4)'
+                    }
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                normal:{
+                    borderColor: '#ffffff'
+//                    borderColor: 'rgba(0, 0, 0, 0.2)'
+                },
+                emphasis:{
+                    areaColor: '#44a6ff',
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    shadowBlur: 20,
+                    borderWidth: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        },
+        series: [
+            {
+                name: '',
+                type: 'map',
+                geoIndex: 0,
+//                mapType: 'china',
+//                roam: false,
+//                label: {
+//                    normal: {
+//                        show: false
+//                    },
+//                    emphasis: {
+//                        show: false
+//                    }
+//                },
+                data: null
+            }
+        ]
+    };
+    //    var initData = [
+    //        {name: '北京',value: 0 },
+    //        {name: '天津',value: 0 },
+    //        {name: '上海',value: 0 },
+    //        {name: '重庆',value: 0 },
+    //        {name: '河北',value: 0 },
+    //        {name: '河南',value: 0 },
+    //        {name: '云南',value: 0 },
+    //        {name: '辽宁',value: 0 },
+    //        {name: '黑龙江',value: 0 },
+    //        {name: '湖南',value: 0 },
+    //        {name: '安徽',value: 0 },
+    //        {name: '山东',value: 0 },
+    //        {name: '新疆',value: 0 },
+    //        {name: '江苏',value: 0 },
+    //        {name: '浙江',value: 0 },
+    //        {name: '江西',value: 0 },
+    //        {name: '湖北',value: 0 },
+    //        {name: '广西',value: 0 },
+    //        {name: '甘肃',value: 0 },
+    //        {name: '山西',value: 0 },
+    //        {name: '内蒙古',value: 0 },
+    //        {name: '陕西',value: 0 },
+    //        {name: '吉林',value: 0 },
+    //        {name: '福建',value: 0 },
+    //        {name: '贵州',value: 0 },
+    //        {name: '广东',value: 0 },
+    //        {name: '青海',value: 0 },
+    //        {name: '西藏',value: 0 },
+    //        {name: '四川',value: 0 },
+    //        {name: '宁夏',value: 0 },
+    //        {name: '海南',value: 0 },
+    //        {name: '台湾',value: 0 },
+    //        {name: '香港',value: 0 },
+    //        {name: '澳门',value: 0 }
+    //    ];
+</script>
+</body>
+</html>

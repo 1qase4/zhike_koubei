@@ -1,0 +1,358 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="renderer" content="webkit">
+    <title>客户特征</title>
+    <link href="/css/common.css" rel="stylesheet" type="text/css">
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <link href="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/css/weekSelect.css">
+    <link rel="stylesheet" type="text/css" href="/css/clientFeature.css">
+</head>
+<body>
+<div class="child-container">
+    <div class="title-box clearfix">
+        <div class="common-title lf">客流分析-客户特征 ( <span id="selectedTime"></span> ) </div>
+        <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
+    </div>
+    <!--图表区-->
+    <div class="common-box">
+        <div class="select-box clearfix">
+            <!--月客流量-->
+            <div class="select-group">
+                <label class="mylabel lf">选择时间</label>
+                <div class="input-wrap lf">
+                    <input type="text" id="month" class="form-control form-date-month" readonly="readonly" placeholder="选择月份">
+                    <i class="icon icon-caret-down my-caret-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <!--性别比例-->
+            <div class="sub-chart-wrap">
+                <div class="chart-title">性别比例</div>
+                <div class="chart-box" id="gender">
+                    <div class="no-data" style="display: none">无数据</div>
+                    <div class="mainContent" style="display: none">
+                        <ul class="people">
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                            <li><div class="male"></div></li>
+                        </ul>
+                        <div class="progress-box clearfix">
+                            <div class="progress-female">
+                                <div class="progress-female-bar"></div>
+                                <div class="progress-percent">
+                                    女 <span class="female-percent">20</span>%
+                                </div>
+                            </div>
+                            <div class="progress-male">
+                                <div class="progress-male-bar"></div>
+                                <div class="progress-percent">
+                                    男 <span class="male-percent">80</span>%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--年龄分布-->
+            <div class="sub-chart-wrap">
+                <div class="chart-title">年龄分布</div>
+                <div class="chart-box" id="age"></div>
+            </div>
+        </div>
+    </div>
+    <div class="common-box mt20 clearfix">
+        <!--职业-->
+        <div class="sub-chart-wrap">
+            <div class="chart-title">职业</div>
+            <div class="chart-box" id="job"></div>
+        </div>
+        <!--有小孩占比-->
+        <div class="sub-chart-wrap">
+            <div class="chart-title">有小孩占比</div>
+            <div class="chart-box" id="children"></div>
+        </div>
+    </div>
+    <!--星座-->
+    <div class="common-box mt20" style="padding: 20px;">
+        <div class="chart-title">星座</div>
+        <div class="chart-box" id="constellation"></div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" charset="UTF-8"></script>
+<script src="/js/utils.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<script src="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.js"></script>
+<script type="text/javascript" src="/js/weekSelect.js"></script>
+<script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+<script>
+    //    从父页面获取店名
+    var gShop = parent.document.getElementById("shop").value;
+    $(function () {
+        //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
+//        if(window.localStorage && localStorage.getItem("cust-month")){
+//            $("#month").val(localStorage.getItem("cust-month"));
+//        }else{
+        $("#month").val(getMonthByNow(0));
+//        }
+        getCharts();
+    });
+    //选择时间时获取图
+    $("#month").change(getCharts);
+    function getCharts() {
+        var time = $("#month").val();
+        var _time = time.replace(/\D/g,"-").slice(0,time.length-1);//时间参数
+        $.ajax({
+            url: "/label/custFeature",
+            data: {account: gShop,time: _time},
+            type:'GET',
+            timeout:60000,
+            beforeSend:function(XMLHttpRequest){
+                $(".loadingDiv").css('display','');
+            },
+            success:function(obj){
+                //本地存储时间
+                if(window.localStorage){
+                    localStorage.setItem("cust-month",time);
+                }
+                //获取时间
+                $("#selectedTime").html(time);
+                //绘图
+                //******************性别比例*********************
+                var genderList = obj.data.gender.subdata;
+                if(!$.isEmptyObject(genderList)){
+                    $("#gender").children(".no-data").hide().siblings().show();
+                    var femaleVal = genderList["女"];
+                    var maleVal = genderList["男"];
+                    $(".progress-female").css('width',femaleVal+"%");
+                    $(".progress-male").css('width',maleVal+"%");
+                    $(".female-percent").html(femaleVal);
+                    $(".male-percent").html(maleVal);
+                    var femaleNum = Math.round(femaleVal*0.1);
+                    var lis = $(".people li");
+                    for (var i = 0;i < femaleNum;i ++){
+                        $(lis[i]).children().removeClass("male").addClass("female");
+                    }
+                }else{//如果没有数据
+                    $("#gender").children(".no-data").show().siblings().hide();
+                }
+                //************年龄分布**********************
+                var age = document.getElementById("age");
+                $(age).empty();
+                var ageList = obj.data["age"].subdata;
+                if (!$.isEmptyObject(ageList)){
+                    var ageChart = echarts.init(age);
+                    ageChart.showLoading();
+                    ageChart.setOption(getOption(optionBar,"age",obj));
+                    ageChart.hideLoading();
+                }else{//没有返回数据
+                    $(age).html("<div class='no-data'>无数据</div>");
+                }
+                //****************职业***************************
+                var job = document.getElementById("job");
+                $(job).empty();
+                var jobList = obj.data["job"].subdata;
+                if (!$.isEmptyObject(jobList)){
+                    var jobChart = echarts.init(document.getElementById("job"));
+                    jobChart.showLoading();
+                    jobChart.setOption(getOption(optionPie,"job",obj));
+                    jobChart.hideLoading();
+                }else{
+                    $(job).html("<div class='no-data'>无数据</div>");
+                }
+                //*****************有小孩占比****************************
+                var children = document.getElementById("children");
+                $(children).empty();
+                var childrenList = obj.data["children"].subdata;
+                if (!$.isEmptyObject(childrenList)){
+                    var childrenChart = echarts.init(children);
+                    childrenChart.showLoading();
+                    childrenChart.setOption(getOption(optionPie,"children",obj));
+                    childrenChart.hideLoading();
+                }else{
+                    $(children).html("<div class='no-data'>无数据</div>");
+                }
+                //******************星座****************************
+                var constellation = document.getElementById("constellation");
+                $(constellation).empty();
+                var signList = obj.data["constellation"].subdata;
+                if (!$.isEmptyObject(signList)){
+                    var signChart = echarts.init(constellation);
+                    signChart.showLoading();
+                    signChart.setOption(getOption(optionBar,"constellation",obj));
+                    signChart.hideLoading();
+                }else{
+                    $(constellation).html("<div class='no-data'>无数据</div>");
+                }
+
+                window.onresize = function () {
+                    ageChart && ageChart.resize();//年龄分布
+                    jobChart && jobChart.resize();//婚姻状况
+                    childrenChart && childrenChart.resize();//有车占比
+                    signChart && signChart.resize();//星座
+                };
+            },
+            error:function(XMLHttpRequest,textStatus,message){
+                new $.zui.Messager(message || "错误", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+            },
+            complete:function(XMLHttpRequest,textStatus){
+                $(".loadingDiv").css('display','none');
+            }
+        });
+    }
+    //在原有模板基础上再根据后台传过来的数据重新渲染模板
+    function getOption(option,elemId,returnData) {//option为模板，returnData为后台传过来的数据，elemId为echarts容器
+        option.series[0].data = [];
+        option.legend && (option.legend.data = []);
+        option.xAxis && (option.xAxis.data = []);
+        var list = returnData.data[elemId].subdata;
+        option.series[0].name = returnData.data[elemId].name;
+        switch (option.series[0].type){
+            case "pie":
+                for (var key in list){
+                    var subobj = {};
+                    subobj.name = key;
+                    subobj.value = list[key];
+                    option.series[0].data.push(subobj);
+                }
+                break;
+            case "bar":
+                for (var key in list){
+                    option.xAxis.data.push(key);
+                    option.series[0].data.push(list[key]);
+                }
+                break;
+        }
+        return option;
+    }
+    //客户特征下载报告
+    function loadReport() {
+        var account,time;
+        account = gShop;
+        //时间
+        var timeValue = $(".select-group .input-wrap").children("input").val();
+        time = timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+//        console.log(time);
+        window.location = "/label/custFeatureDownload?account="+account+"&time="+time;
+    }
+    //初始化月选择框
+    $(".form-date-month").datetimepicker({
+        language:  "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 3,
+        minView: 3,
+        forceParse: 0,
+        format: "yyyy年mm月"
+    });
+    //柱状图模板
+    var optionBar = {
+        title: {
+            show:true,
+            text: '',
+            textStyle:{
+                fontWeight:"bold",
+                color: "#333",
+                fontSize: 14
+            },
+            top: 16,
+            left: 20
+        },
+        legend: {
+            data: []
+        },
+        tooltip : {
+            trigger: 'axis',
+            formatter: '{b}:{c}%',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        color: ['#477CD8','#FF7700'],
+        yAxis:  {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value}%'
+            }
+        },
+        xAxis: {
+            type: 'category',
+            data: []
+        },
+        series: [
+            {
+                name: '',
+                type: 'bar',
+                barWidth: '50%',
+                label: {
+                    normal: {
+                        show: true,
+                        formatter: '{c} %',
+                        position: 'top'
+                    }
+                },
+                data: []
+            }
+        ]
+    };
+    //环形图模板
+    var optionPie={
+        title : {
+            text : '',
+            textStyle:{
+                fontWeight:"bold",
+                color: "#333",
+                fontSize: 14
+            },
+            top: 16,
+            left: 20
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:[]
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}占比{c}%"
+        },
+        color:["#6C96E0","#A7A7A7"],
+        series : [ {
+            name : '',
+            type : 'pie',
+            radius: ['50%', '70%'],
+            data : [],
+            label : {
+                normal:{
+                    show : true,
+                    formatter : '{b} \n 占比{c}%'
+                }
+            },
+            labelLine : {
+                normal:{
+                    show : true
+                }
+            }
+        } ]
+    };
+</script>
+</body>
+</html>

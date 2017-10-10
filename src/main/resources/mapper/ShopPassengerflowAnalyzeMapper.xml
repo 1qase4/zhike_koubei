@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.czc.bi.mapper.ShopPassengerflowAnalyzeMapper">
+
+    <select id="selectByPrimaryKey" parameterType="Integer">
+        SELECT
+        `id`,
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `shop_ passengerflow_analyze`
+        WHERE `id` = #{key}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery" resultType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
+        SELECT
+        `id`,
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `shop_ passengerflow_analyze`
+        WHERE 1 = 1
+        <if test="query.type != null">
+            AND `type` ${query.typeOperator} #{query.type}
+        </if>
+        <if test="query.account != null">
+            AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.shop != null">
+            AND `shop` ${query.shopOperator} #{query.shop}
+        </if>
+        <if test="query.rank != null">
+            AND `rank` ${query.rankOperator} #{query.rank}
+        </if>
+        <if test="query.label != null">
+            AND `label` ${query.labelOperator} #{query.label}
+        </if>
+        <if test="query.value != null">
+            AND `value` ${query.valueOperator} #{query.value}
+        </if>
+        <if test="query.pdate != null">
+            AND `pdate` ${query.pdateOperator} #{query.pdate}
+        </if>
+        <if test="query.orderBy!=null">
+            ORDER BY ${query.orderBy}
+            <if test="!query.asc">
+                DESC
+            </if>
+        </if>
+        <if test="query.startRecord != null and query.pageSize != null">
+            LIMIT ${query.startRecord}, ${query.pageSize}
+        </if>
+    </select>
+
+    <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery" resultType="Integer">
+        SELECT COUNT(1)
+        FROM
+        `shop_ passengerflow_analyze`
+        WHERE 1 = 1
+        <if test="query.type != null">
+            AND `type` = #{query.type}
+        </if>
+        <if test="query.account != null">
+            AND `account` = #{query.account}
+        </if>
+        <if test="query.shop != null">
+            AND `shop` = #{query.shop}
+        </if>
+        <if test="query.rank != null">
+            AND `rank` = #{query.rank}
+        </if>
+        <if test="query.label != null">
+            AND `label` = #{query.label}
+        </if>
+        <if test="query.value != null">
+            AND `value` = #{query.value}
+        </if>
+        <if test="query.pdate != null">
+            AND `pdate` = #{query.pdate}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
+        INSERT INTO `shop_custflow_analyze`(
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES(
+        #{type},
+        #{account},
+        #{shop},
+        #{rank},
+        #{label},
+        #{value},
+        #{pdate},
+        NOW(),
+        NOW()
+        )
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="Integer">
+        DELETE FROM `shop_ passengerflow_analyze`
+        WHERE id = #{key}
+    </delete>
+
+    <select id="selectByCondition" parameterType="com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery" resultType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
+        SELECT
+        `id`,
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `shop_ passengerflow_analyze`
+        WHERE ${condition}
+    </select>
+
+</mapper>

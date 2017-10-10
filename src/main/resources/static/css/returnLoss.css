@@ -1,0 +1,107 @@
+.data-common-table{
+    width: 100%;
+}
+.data-common-table td{
+    text-align: center;
+    height: 40px;
+}
+.data-common-table thead{
+    background-color: #FBFBFB;
+    border-bottom: 1px solid #EAEAEA;
+}
+.data-common-table tr:not(:last-child){
+    border-bottom: 1px solid #EAEAEA;
+}
+.select-box{
+    padding: 10px 10px 10px 45px;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #F9F9F9;
+}
+.select-group{
+    float: left;
+    /*display: none;*/
+}
+.mylabel{
+    height: 32px;
+    line-height: 32px;
+    padding: 0 15px;
+    margin-bottom: 0;
+}
+/*.hide{*/
+/*display: none;*/
+/*}*/
+/*.show{*/
+/*display: inline-block;*/
+/*}*/
+.switch{
+    position: relative;
+    top: 5px;
+    /*font-size: 0;*/
+    border: 1px solid #E0E0E0;
+}
+.switch span{
+    display: inline-block;
+    width: 37px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    cursor: pointer;
+}
+.switch span.selected{
+    background-color: #477CD8;
+    color: #ffffff;
+}
+.input-wrap{
+    position: relative;
+    width: 156px;
+}
+.my-caret-down{
+    position: absolute;
+    right: 6px;
+    top: 9px;
+}
+.lf-chart{
+    float: left;
+    width: 80%;
+    height: 100%;
+}
+.rt-txt{
+    float: left;
+    width: 20%;
+    height: 100%;
+    padding-top: 120px;
+}
+.chart-txt-box{
+    overflow: hidden;
+}
+.dl-box{
+    margin-bottom: 30px;
+}
+.dl-box span{
+    font-size: 24px;
+}
+.dl-box dd{
+    padding-left: 20px;
+}
+.dl-box i{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 2px solid #dddddd
+}
+.dl-box i.lost-color{
+    border-color: #03CC28;
+}
+.dl-box i.back_flow-color{
+    border-color: #477AD5;
+}
+.dl-box i.frequent-color{
+    border-color: #FF7701;
+}
+.dl-box i.return-color{
+    border-color: #477CD8;
+}

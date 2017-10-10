@@ -1,0 +1,449 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="renderer" content="webkit">
+    <title>回流流失</title>
+    <link href="/css/common.css" rel="stylesheet" type="text/css">
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <link href="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/css/weekSelect.css">
+    <link rel="stylesheet" type="text/css" href="/css/returnLoss.css">
+</head>
+<body>
+<div class="child-container">
+    <div class="title-box clearfix">
+        <div class="common-title lf">客流分析-回流流失 ( <span id="selectedTime"></span> ) </div>
+        <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
+    </div>
+    <!--图表区-->
+    <div class="common-box">
+        <div class="select-box clearfix">
+            <div id="switchWay" class="switch lf">
+                <span class="selected" data-time="week">周</span>
+                <span data-time="month">月</span>
+            </div>
+            <div class="select-group" id="inputBox">
+                <label class="mylabel lf">选择时间</label>
+                <div class="input-wrap lf">
+                    <input type="text" id="week" readonly class="common-select myWeek current mr10" placeholder="请选择周"/>
+                    <i class="icon icon-caret-down my-caret-down"></i>
+                </div>
+                <div class="input-wrap lf" style="display: none">
+                    <input type="text" id="month" class="form-control form-date-month" readonly="readonly" placeholder="选择月份">
+                    <i class="icon icon-caret-down my-caret-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="chart-txt-box chart-common-wrap" style="border-bottom: 1px solid #DADADA">
+            <div id="chartLine" class="lf-chart"></div>
+            <div class="rt-txt">
+                <dl class="dl-box">
+                    <dt> <i class="lost-color"></i>流失客户</dt>
+                    <dd> <span id="lostClient">845</span>人</dd>
+                </dl>
+                <dl class="dl-box">
+                    <dt> <i class="back_flow-color"></i>回流客户</dt>
+                    <dd> <span id="back_flowClient">845</span>人</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="chart-txt-box chart-common-wrap" style="border-bottom: 1px solid #DADADA">
+            <div id="chartBar" class="lf-chart"></div>
+            <div class="rt-txt">
+                <dl class="dl-box">
+                    <dt> <i class="return-color"></i>回头客</dt>
+                    <dd> <span id="returnClient">845</span>人</dd>
+                </dl>
+                <dl class="dl-box">
+                    <dt> <i class="frequent-color"></i>常客</dt>
+                    <dd> <span id="frequentClient">845</span>人</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <!--客流列表-->
+    <div class="mt20">
+        <div class="title-box clearfix">
+            <div class="common-title lf">客户回流流失分析数据表 ( <span id="tableTitle"></span> ) </div>
+        </div>
+        <div class="common-box">
+            <table id="tableData" class="data-common-table">
+                <thead>
+                <tr>
+                    <td data-id="time">时间</td>
+                    <td data-name="lsot">流失客户</td>
+                    <td data-name="back_flow">回流客户</td>
+                    <td data-name="return">回头客</td>
+                    <td data-name="frequent">常客</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>周一(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>周二(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>周三(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>周四(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>周五(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>周六(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>周日(2017-7-17)</td>
+                    <td>832</td>
+                    <td>70%</td>
+                    <td>999</td>
+                    <td>70%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<script src="/js/utils.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<script src="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.js"></script>
+<script type="text/javascript" src="/js/weekSelect.js"></script>
+<script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+<script>
+    $(function () {
+        loadTime();
+        //页面加载完成时渲染图表
+        getCharts();
+    });
+    //    从父页面获取店名
+    var gShop = parent.document.getElementById("shop").value;
+    //切换周/月时获取图表
+    $("#switchWay").on("click","span",function () {
+        var state = $(this).data("time");
+        $(this).addClass("selected").siblings().removeClass("selected");
+        $("#"+state).parent().show().addClass("current").siblings(".input-wrap").hide().removeClass("current");
+        //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
+        loadTime();
+        getCharts();
+    });
+    //选择时间时获取图表
+    $("#inputBox").on("change","input",getCharts);
+    //初始化月选择框
+    $(".form-date-month").datetimepicker({
+        language:  "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 3,
+        minView: 3,
+        forceParse: 0,
+        format: "yyyy年mm月"
+    });
+    //加载时间
+    function loadTime(){
+        //页面加载完成时加载时间
+        var state = $("#switchWay .selected").data("time");
+        var input = $('#'+state);
+        //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
+//        if(window.localStorage && localStorage.getItem("return"+state)){//如果本地存储有时间
+        input.val(localStorage.getItem("return"+state));
+//            console.log(localStorage.getItem("return"+state))
+//        }else{//如果本地存储中没有时间就选择默认时间
+        if (state === "week"){//默认选择本周
+            var obj1 = getWeek(new Date());
+            input.val("第"+obj1.order+"周"+obj1.monDate);
+        }else if (state === "month"){//默认选择本月
+            input.val(getMonthByNow(0));
+        }
+//        }
+    }
+    //回流流失下载报告
+    function loadReport() {
+        var account,type,time;
+        account = gShop;
+        //year/month/week/date类型
+        type = $("#switchWay .selected").data("time");
+        //时间
+        var timeValue = $("#"+type).val();
+        time = type === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+//        console.log(type,time);
+        window.location = "/flow/backFlowDownload?account="+account+"&type="+type+"&time="+time;
+    }
+    //获取图和表
+    function getCharts() {
+        var state = $("#switchWay .selected").data("time");
+        var input = $("#"+state);
+        var timeValue = input.val();
+        var xAxis;//x轴
+        //时间参数
+        var time = state === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+        var myChartLine = echarts.init(document.getElementById("chartLine"));
+        var myChartbar = echarts.init(document.getElementById("chartBar"));
+        myChartLine.showLoading();
+        myChartbar.showLoading();
+        $.ajax({
+            url: "/flow/"+state+"BackFlow",
+            data: {account: gShop,time: time},
+            type:'GET',
+            timeout:60000,
+            beforeSend:function(XMLHttpRequest){
+                $(".loadingDiv").css('display','');
+            },
+            success:function(obj){
+//                var obj = {
+//                    "result":true,
+//                    "data":{
+//                        "lost":{"name":"流失客户","subdata":[2433,1728,2796,2559,2581,1832,2307]},
+//                        "back_flow":{"name":"回流客户","subdata":[232,440,550,660,770,880,990]},
+//                        "return":{"name":"回头客","subdata":[1500,2003,2300,2399,2476,2566,2799]},
+//                        "frequent":{"name":"常客","subdata":[150,203,230,299,246,266,279]}
+//                    }
+//                };
+                var time1 = input.val();
+                window.localStorage && localStorage.setItem("return"+state,time1);//查询的时间存到本地
+//                var time2 = input.attr("title");
+                //如果是周就把日期加到x轴上
+                if (state === "week"){
+                    optionLine.dataZoom = null;
+                    optionBar.dataZoom = null;
+                    xAxis = ["周一","周二","周三","周四","周五","周六","周日"];
+                    var startTime = time.slice(0,10);
+                    for (var i = 0;i < xAxis.length;i ++){
+                        xAxis[i] += "("+getDateByDate(startTime,i)+")";
+                    }
+                }else if(state === "month"){
+                    optionLine.dataZoom = dataZoom;
+                    optionBar.dataZoom = dataZoom;
+                    xAxis = ["1日","2日","3日","4日","5日","6日","7日","8日","9日","10日","11日","12日","13日","14日","15日","16日","17日","18日","19日","20日","21日","22日","23日","24日","25日","26日","27日","28日","29日","30日","31日"];
+                }
+                //获取时间
+                $("#selectedTime").html(time1);
+                $("#tableTitle").html(time1);
+                //获取右侧数据求和
+                for (var i = 0,lostClient = 0;i < obj.data["lost"].subdata.length;i ++){
+                    lostClient += obj.data["lost"].subdata[i];
+                }
+                $("#lostClient").html(lostClient);
+                for (var i = 0,back_flowClient = 0;i < obj.data["back_flow"].subdata.length;i ++){
+                    back_flowClient += obj.data["back_flow"].subdata[i];
+                }
+                $("#back_flowClient").html(back_flowClient);
+                for (var i = 0,returnClient = 0;i < obj.data["return"].subdata.length;i ++){
+                    returnClient += obj.data["return"].subdata[i];
+                }
+                $("#returnClient").html(returnClient);
+                for (var i = 0,frequentClient = 0;i < obj.data["frequent"].subdata.length;i ++){
+                    frequentClient += obj.data["frequent"].subdata[i];
+                }
+                $("#frequentClient").html(frequentClient);
+                //绘图
+                //折线图
+                optionLine.series = [];
+                optionLine.legend.data = [];
+                for (var key in obj.data){
+                    if (key === "lost" || key === "back_flow"){
+                        var myobj = {};
+                        myobj.name = obj.data[key].name;
+                        myobj.type = 'line';
+                        myobj.data = obj.data[key].subdata;
+                        optionLine.series.push(myobj);
+                        optionLine.legend.data.push(obj.data[key].name);
+                    }
+                }
+                optionLine.xAxis.data = xAxis;
+                myChartLine.hideLoading();
+//                console.log(optionLine);
+                myChartLine.setOption(optionLine);
+                //柱形图
+                optionBar.series = [];
+                optionBar.legend.data = [];
+                for (var key in obj.data){
+                    if (key === "return" || key === "frequent"){
+                        var myobj = {};
+                        myobj.name = obj.data[key].name;
+                        myobj.type = 'bar';
+                        myobj.stack = '总量';
+                        myobj.barWidth = '50%';
+                        myobj.data = obj.data[key].subdata;
+                        optionBar.series.push(myobj);
+                        optionBar.legend.data.push(obj.data[key].name);
+                    }
+                }
+                optionBar.xAxis.data = xAxis;
+                myChartbar.hideLoading();
+                myChartbar.setOption(optionBar);
+                window.onresize = function () {
+                    myChartbar.resize();
+                    myChartLine.resize();
+                };
+                //渲染数据表格
+                for(var i = 0,htmlBody = "";i < xAxis.length;i ++){
+                    var lost = obj.data["lost"].subdata[i];
+                    var back_flow = obj.data["back_flow"].subdata[i];
+                    var ret = obj.data["return"].subdata[i];
+                    var frequent = obj.data["frequent"].subdata[i];
+                    htmlBody += "<tr><td>"+xAxis[i]+"</td><td>"+ (typeof lost === "undefined" ? "-" : lost) +"</td><td>"+ (typeof back_flow === "undefined" ? "-" : back_flow) +"</td><td>"+ (typeof ret === "undefined" ? "-" : ret) +"</td><td>"+ (typeof frequent === "undefined" ? "-" : frequent) +"</td></tr>";
+                }
+                $("#tableData tbody").html(htmlBody);
+            },
+            error:function(XMLHttpRequest,textStatus,message){
+                new $.zui.Messager(message || "错误", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+            },
+            complete:function(XMLHttpRequest,textStatus){
+                $(".loadingDiv").css('display','none');
+            }
+        });
+    }
+    //折线图模板
+    var dataZoom = [
+        {
+            type: 'slider',
+            start: 0,
+            end: 50
+        }
+    ];
+    var optionLine = {
+        backgroundColor: '#ffffff',
+        title: {
+            show:true,
+            text: '',
+            textStyle:{
+                fontWeight:"normal",
+                color: "#9A9A9A",
+                fontSize: 14
+            },
+            top: 16,
+            left: 125
+        },
+        grid: [{x: '8%', y: '12%', width: '85%', height: '66%'}],
+        color:['#477AD5','#03CC28'],
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            top: 10,
+            data:["流失客户","回流客户"]
+        },
+        xAxis: {
+            type: 'category',
+            data: null,//["周一","周二","周三","周四","周五","周六","周日"],
+            axisLabel:{
+                interval: 0,
+                rotate:-30
+            }
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} 人'
+            }
+        },
+        series: [{
+            name: "",
+            type: 'line',
+            smooth:false,
+            // label: {
+            //     normal:{
+            //         show:true,
+            //         position:"top"
+            //     }
+            // },
+            data: null//[38993,37639,17602,15499,18426,0,0]
+        }]
+    };
+    //柱状图模板
+    var optionBar = {
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: [{x: '8%', y: '12%', width: '85%', height: '66%'}],
+        legend: {
+            data: ['回头客', '常客'],
+            left: '50%',
+            top: '20'
+        },
+        color: ['#FF7701','#477CD8'],
+        yAxis:  {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} 人'
+            }
+        },
+        xAxis: {
+            type: 'category',
+            axisLabel:{
+                interval: 0,
+                rotate:-30
+            },
+            data: ['周一','周二','周三','周四','周五','周六','周日']
+        },
+        series: [
+            {
+                name: '回头客',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [320, 302, 301, 334, 390, 330, 320]
+            },
+            {
+                name: '常客',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [120, 132, 101, 134, 90, 230, 210]
+            }
+        ]
+    };
+</script>
+</body>
+</html>

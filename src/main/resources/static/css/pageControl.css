@@ -1,0 +1,27 @@
+#pageControl a{min-width:30px;width:auto;height:25px;line-height:25px;margin-left:10px;border:1px solid #ddd;display:inline-block;text-align: center;border-radius:4px;color:#1159bb;
+    cursor: default;}
+#pageControl a:not(.select):hover{background-color:#4679D4;color:white;cursor:pointer;}
+.etc{border:0 !important;}
+.front,.next{width:70px !important;}
+#pageControl .select{color:#333;border:0;}
+.disable{color:#ddd!important;}
+.disable:hover{background-color:white!important;cursor: default !important}
+.jumpContainer{color:gray;margin:0px 10px;font-size:13px;}
+.page-box{width:40px;
+    height: 20px;margin:0px 10px;text-align: center;
+    border: 1px solid #dddddd;}
+.page-btn{
+    height: 24px;
+    padding: 0 10px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    color: #1159bb;
+    cursor: pointer;
+}
+.page-btn:hover{
+    background: #4679D4;
+    color: #ffffff;
+}
+.choice{margin:10px 0px 20px 10px;}
+.choice span{margin-right:20px;}
+.choice input{width:40px;margin:10px;}

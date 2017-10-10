@@ -1,0 +1,81 @@
+.data-common-table{
+    width: 100%;
+}
+.data-common-table td{
+    text-align: center;
+    height: 36px;
+}
+.data-common-table thead{
+    background-color: #FBFBFB;
+    border-bottom: 1px solid #EAEAEA;
+}
+.data-common-table tr:not(:last-child){
+    border-bottom: 1px solid #EAEAEA;
+}
+.select-box{
+    padding: 10px 10px 10px 45px;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #F9F9F9;
+}
+.select-group{
+    float: left;
+    display: none;
+}
+.time-label{
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    margin-bottom: 0;
+}
+.mylabel{
+    height: 32px;
+    line-height: 32px;
+    padding-right: 10px;
+    margin-bottom: 0;
+    cursor: pointer;
+    -moz-user-select:none;/*火狐*/
+    -webkit-user-select:none;/*webkit浏览器*/
+    -ms-user-select:none;/*IE10*/
+    -khtml-user-select:none;/*早期浏览器*/
+    user-select:none;
+}
+.compare-checkbox{
+    position: relative;
+    /*top: 2px;*/
+    left: -99999px;
+    /*margin-right: 10px;*/
+}
+.nowSelected{
+    display: block;
+}
+.zk-btn{
+    height: 32px;
+    width: 60px;
+    margin-right: 15px;
+    color: #ffffff;
+    background-color: #4679D4;
+}
+.zk-btn:hover{
+    background-color: #0362fd;
+}
+.my-checkbox{
+    position: relative;
+    top: 1px;
+    margin-right: 10px
+}
+.input-wrap{
+    position: relative;
+    display: inline-block;
+    width: 156px;
+}
+.my-caret-down{
+    position: absolute;
+    right: 6px;
+    top: 9px;
+}
+.hide{
+    display: none;
+}
+/*.show{*/
+/*display: inline-block;*/
+/*}*/

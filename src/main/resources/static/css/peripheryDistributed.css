@@ -1,0 +1,39 @@
+.select-box{
+    padding: 10px 10px 10px 45px;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #F9F9F9;
+}
+.select-group{
+    float: left;
+}
+.mylabel{
+    height: 32px;
+    line-height: 32px;
+    padding-right: 15px;
+    margin-bottom: 0;
+}
+.input-wrap{
+    position: relative;
+    display: inline-block;
+    width: 130px;
+}
+.my-caret-down{
+    position: absolute;
+    right: 6px;
+    top: 9px;
+}
+.chart-wrap{
+    padding: 0 45px;
+}
+.chart-title{
+    padding: 10px 0;
+    font-weight: bold;
+}
+@media screen and (min-width: 1500px) {
+    .chart-common-wrap{
+        height: 500px;
+    }
+}
+svg{
+    max-width: none;
+}

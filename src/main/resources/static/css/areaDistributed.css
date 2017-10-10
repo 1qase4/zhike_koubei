@@ -1,0 +1,62 @@
+
+.data-common-table{
+    width: 100%;
+}
+.data-common-table td{
+    text-align: center;
+    height: 40px;
+}
+.data-common-table thead{
+    background-color: #FBFBFB;
+    border-bottom: 1px solid #EAEAEA;
+}
+.data-common-table tr:not(:last-child){
+    border-bottom: 1px solid #EAEAEA;
+}
+.select-box{
+    padding: 10px 10px 10px 45px;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #F9F9F9;
+}
+.select-group{
+    float: left;
+}
+.mylabel{
+    height: 32px;
+    line-height: 32px;
+    padding: 0 15px;
+    margin-bottom: 0;
+}
+.control-box{
+    padding: 20px 10px;
+}
+.page-size{
+    outline: none;
+    height: 30px;
+    margin: 0 6px;
+}
+.input-wrap{
+    position: relative;
+    display: inline-block;
+    width: 130px;
+}
+.my-caret-down{
+    position: absolute;
+    right: 6px;
+    top: 9px;
+}
+.chart-wrap{
+    height: 448px;
+}
+.sub-chart-wrap{
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+.no-data{
+    font-size: 60px;
+    font-family: 'Microsoft YaHei';
+    color: #DEDEDE;
+    text-align: center;
+    padding-top: 100px;
+}

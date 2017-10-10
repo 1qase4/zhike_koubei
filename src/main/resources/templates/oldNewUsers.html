@@ -1,0 +1,411 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="renderer" content="webkit">
+    <title>新老用户</title>
+    <link href="/css/common.css" rel="stylesheet" type="text/css">
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <link href="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/css/weekSelect.css">
+    <link rel="stylesheet" type="text/css" href="/css/oldNewUsers.css">
+</head>
+<body>
+<div class="child-container">
+    <div class="title-box clearfix">
+        <div class="common-title lf">客流分析-新老用户 ( <span id="selectedTime"></span> ) </div>
+        <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
+    </div>
+    <!--图表区-->
+    <div class="common-box">
+        <div class="select-box clearfix">
+            <div id="switchWay" class="switch lf">
+                <span class="selected" data-time="week">周</span>
+                <span data-time="month">月</span>
+            </div>
+            <div class="select-group" id="inputGroup">
+                <label class="mylabel lf">选择时间</label>
+                <div class="input-wrap lf">
+                    <input type="text" id="week" readonly="readonly" class="common-select myWeek current mr10" placeholder="请选择周"/>
+                    <i class="icon icon-caret-down my-caret-down"></i>
+                </div>
+                <div class="input-wrap lf" style="display: none">
+                    <input type="text" id="month" class="form-control form-date-month" readonly="readonly" placeholder="选择月份">
+                    <i class="icon icon-caret-down my-caret-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="chart-common-wrap">
+            <div class="sub-chart-wrap lf" id="chartsPie"></div>
+            <div class="sub-chart-wrap fr">
+                <dl class="small-box">
+                    <dt>新用户</dt>
+                    <dd><span id="newNum">0</span>人</dd>
+                </dl>
+                <dl class="small-box">
+                    <dt>新用户占比</dt>
+                    <dd><span id="newPercent">0</span>%</dd>
+                </dl>
+                <dl class="small-box">
+                    <dt>老用户</dt>
+                    <dd><span id="oldNum">0</span>人</dd>
+                </dl>
+                <dl class="small-box">
+                    <dt>老用户占比</dt>
+                    <dd><span id="oldPercent">0</span>%</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="common-box mt20">
+        <div class="chart-common-wrap" id="chartsLine"></div>
+    </div>
+    <!--客流列表-->
+    <div class="mt20">
+        <div class="title-box clearfix">
+            <div class="common-title lf">新老用户数据表 ( <span id="tableTitle"></span> ) </div>
+        </div>
+        <div class="common-box">
+            <table class="data-common-table" id="tableData">
+                <thead>
+                <tr>
+                    <td>时间</td>
+                    <td>新用户</td>
+                    <td>占比</td>
+                    <td>老用户</td>
+                    <td>占比</td>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" charset="UTF-8"></script>
+<script src="/js/utils.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<script src="/zui-1.7.0-dist/dist/lib/datetimepicker/datetimepicker.min.js"></script>
+
+<script type="text/javascript" src="/js/weekSelect.js"></script>
+<script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+<script>
+    //    从父页面获取店名
+    var gShop = parent.document.getElementById("shop").value;
+    $(function () {
+        loadTime();
+        //获取图表
+        getCharts();
+    });
+    //    var obj = {
+    //        "result":true,
+    //        "data":[
+    //            {"name":"总客流","subdata":[2433,1728,2796,2559,2581,1832,2307,1731,1851,1829,1940,2262,2191,1564,2192]},
+    //            {"name":"新用户","subdata":[232,44,55,66,77,88,99,90,99,122,123,222,333,544,666]},
+    //            {"name":"老用户","subdata":[23,44,55,66,77,88,99,90,99,122,123,222,33,54,66]}
+    //        ]
+    //    };
+    //切换周/月
+    $("#switchWay").on("click","span",function () {
+        var state = $(this).data("time");
+        $("#test").val(state);
+        $(this).addClass("selected").siblings().removeClass("selected");
+        $("#"+state).parent().show().addClass("current").siblings(".input-wrap").hide().removeClass("current");
+        loadTime();
+        //获取图表
+        getCharts();
+    });
+    //切换时间
+    $("#inputGroup").on("change","input",getCharts);
+    //初始化月选择框
+    $(".form-date-month").datetimepicker({
+        language:  "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 3,
+        minView: 3,
+        forceParse: 0,
+        format: "yyyy年mm月"
+    });
+    //新老用户下载报告
+    function loadReport() {
+        var account,type,time;
+        account = gShop;
+        //year/month/week/date类型
+        type = $("#switchWay .selected").data("time");
+        //时间
+        var timeValue = $("#"+type).val();
+        time = type === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+//        console.log(type,time);
+        window.location = "/flow/newOldCustDownload?account="+account+"&type="+type+"&time="+time;
+    }
+    //加载时间
+    function loadTime(){
+        //页面加载完成时加载时间
+        var state = $("#switchWay .selected").data("time");
+        var input = $('#'+state);
+        //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
+//        if(window.localStorage && localStorage.getItem("oldNew"+state)){
+//            input.val(localStorage.getItem("oldNew"+state));
+//        }else{
+        if (state === "week"){
+            var obj1 = getWeek(new Date());
+            input.val("第"+obj1.order+"周"+obj1.monDate);
+        }else if (state === "month"){
+            input.val(getMonthByNow(0));
+        }
+//        }
+    }
+    //获取图和表
+    function getCharts() {
+        var state = $("#switchWay .selected").data("time");
+        var input = $("#"+state);
+        var timeValue = input.val();
+        var xAxis;//x轴
+        //时间参数
+        var time = state === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+//        var time = state === "week" ? input.attr("title") : input.val().replace(/\D/g,"-").slice(0,input.val().length-1);
+        $.ajax({
+            url: "/flow/"+state+"NewOldCust",
+            data: {account: gShop,time: time},
+            type:'GET',
+            timeout:60000,
+            beforeSend:function(XMLHttpRequest){
+//                $(".loadingDiv").css('display','');
+            },
+            success:function(obj){
+//                var obj = {//测试数据
+//                    "result":true,
+//                    "data":{
+//                        "totalUser":{"name":"总客流","subdata":[2433,1728,2796,2559,2581,1832,2307]},
+//                        "newUser":{"name":"新用户","subdata":[232,440,550,660,770,880,990]},
+//                        "oldUser":{"name":"老用户","subdata":[1500,2003,2300,2399,2476,2566,2799]}
+//                    }
+//                };
+
+                //如果是周就把日期加到x轴上
+                if (state === "week"){
+                    xAxis = ["周一","周二","周三","周四","周五","周六","周日"];
+                    var startTime = time.slice(0,10);
+                    //周后面加日期
+                    for (var i = 0;i < xAxis.length;i ++){
+                        xAxis[i] += "("+getDateByDate(startTime,i)+")";
+                    }
+                }else if(state === "month"){
+                    xAxis = ["1日","2日","3日","4日","5日","6日","7日","8日","9日","10日","11日","12日","13日","14日","15日","16日","17日","18日","19日","20日","21日","22日","23日","24日","25日","26日","27日","28日","29日","30日","31日"];
+                }
+                //本地存储时间
+//                if(window.localStorage){
+//                    var time1 = input.val();
+////                    var time2 = input.attr("title");
+////                    if (state === "week"){
+////                        localStorage.setItem("oldNew"+state,time1 + "&" + time2);
+////                    }else if(state === "month"){
+////                        localStorage.setItem("oldNew"+state,time1);
+////                    }
+//                    localStorage.setItem("oldNew"+state,time1);
+//                }
+                var time1 = input.val();
+                window.localStorage && localStorage.setItem("oldNew"+state,time1);//查询的时间存到本地
+//                var time2 = input.attr("title");
+                //如果是周就把日期加到x轴上
+                if (state === "week"){
+                    optionLine.dataZoom = null;
+                    xAxis = ["周一","周二","周三","周四","周五","周六","周日"];
+                    var startTime = time.slice(0,10);
+                    for (var i = 0;i < xAxis.length;i ++){
+                        xAxis[i] += "("+getDateByDate(startTime,i)+")";
+                    }
+                }else if(state === "month"){
+                    optionLine.dataZoom = dataZoom;
+                    xAxis = ["1日","2日","3日","4日","5日","6日","7日","8日","9日","10日","11日","12日","13日","14日","15日","16日","17日","18日","19日","20日","21日","22日","23日","24日","25日","26日","27日","28日","29日","30日","31日"];
+                }
+                //获取时间
+                $("#selectedTime").html(time1);
+                $("#tableTitle").html(time1);
+                //绘图
+                //环形图
+                optionPie.series[0].data = [];
+                //获取环形图数据
+                for (var i=0,newUser = 0;i<obj.data["newUser"].subdata.length;i++){//新用户总客流量
+                    newUser += obj.data["newUser"].subdata[i];
+                }
+                for (var j=0,oldUser = 0;j<obj.data["oldUser"].subdata.length;j++){//老用户总客流量
+                    oldUser += obj.data["oldUser"].subdata[j];
+                }
+                $("#newNum").html(newUser);
+                $("#oldNum").html(oldUser);
+                //两个图
+                var chartsPie = document.getElementById("chartsPie");
+                var total = newUser+oldUser;
+                if(total > 0){
+                    var myChartPie = echarts.init(chartsPie);
+                    myChartPie.showLoading();
+                    $("#newPercent").html((100*newUser/total).toFixed(2));
+                    $("#oldPercent").html((100*oldUser/total).toFixed(2));
+                    optionPie.series[0].data = [{value: newUser,name: '新用户'},{value: oldUser,name: '老用户'}];
+                    myChartPie.hideLoading();
+                    myChartPie.setOption(optionPie);
+                }else{
+                    $("#newPercent").html(0);
+                    $("#oldPercent").html(0);
+                    $(chartsPie).html("<div class='no-data'>无数据</div>")
+                }
+
+                //折线图
+                var myChartLine = echarts.init(document.getElementById("chartsLine"));
+                myChartLine.showLoading();
+                optionLine.series = [];
+                optionLine.legend.data = [];
+                for (var key in obj.data){
+                    if (obj.data[key].name != "总客流"){
+                        var myobj = {};
+                        myobj.name = obj.data[key].name;
+                        myobj.type = 'line';
+                        myobj.stack = '总量';
+                        myobj.areaStyle = {normal: {}};
+//                    myobj.smooth = true;
+//                    myobj.label = {
+//                        normal:{
+//                            show:true
+//                        }
+//                    };
+                        myobj.data = obj.data[key].subdata;
+                        optionLine.series.push(myobj);
+                        optionLine.legend.data.push(obj.data[key].name);
+                    }
+                }
+                optionLine.xAxis.data = xAxis;
+                myChartLine.hideLoading();
+                myChartLine.setOption(optionLine);
+                window.onresize = function () {
+                    myChartPie && myChartPie.resize();
+                    myChartLine && myChartLine.resize();
+                };
+                //渲染数据表格
+                for(var i = 0,htmlBody = "";i < xAxis.length;i ++){
+                    var newUsers = obj.data["newUser"].subdata[i];
+                    var oldUsers = obj.data["oldUser"].subdata[i];
+                    var total = obj.data["newUser"].subdata[i] + obj.data["oldUser"].subdata[i];
+                    htmlBody += "<tr><td>"+xAxis[i]+"</td><td>"+(newUsers ? newUsers : "-")+"</td><td>"+(newUsers && oldUsers ? Math.round(obj.data["newUser"].subdata[i]/total*100)+"%" : "-")+"</td><td>"+(oldUsers ? oldUsers : "-")+"</td><td>"+(newUsers && oldUsers ? Math.round(obj.data["oldUser"].subdata[i]/total*100)+"%" : "-")+"</td></tr>";
+                }
+                $("#tableData tbody").html(htmlBody);
+            },
+            error:function(XMLHttpRequest,textStatus,message){
+                new $.zui.Messager(message || "错误", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 1000
+                }).show();
+            },
+            complete:function(XMLHttpRequest,textStatus){
+//                $(".loadingDiv").css('display','none');
+            }
+        });
+    }
+
+    //环形图模板
+    var optionPie={
+        title : {
+            text : '',
+            textStyle : {
+                fontWeight : 'normal',//标题颜色
+                color : '#666'
+            }
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}占比{d}%"
+        },
+        color:["#6C96E0","#A7A7A7"],
+        series : [ {
+            name : '新老用户占比',
+            type : 'pie',
+            radius: ['50%', '70%'],
+            data : null,
+            label : {
+                normal:{
+                    show : true,
+                    formatter : '{b} \n {c} 人 {d}%'
+                }
+            },
+            labelLine : {
+                normal:{
+                    show : true
+                }
+            }
+        } ]
+    };
+    //折线图模板
+    var dataZoom = [
+        {
+            type: 'slider',
+            start: 0,
+            end: 50
+        }
+    ];
+    var optionLine = {
+        backgroundColor: '#ffffff',
+        title: {
+            show:true,
+            text: '客流量',
+            textStyle:{
+                fontWeight:"normal",
+                color: "#9A9A9A",
+                fontSize: 14
+            },
+            top: 16,
+            left: 125
+        },
+        grid: [{x: '8%', y: '12%', width: '85%', height: '66%'}],
+//        color:['#FF7701','#01CB27','#6F96E3'],
+        color:['#8DB9BE','#D06E6B'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            top: 10,
+            data:["总客流","新用户","老用户"]
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap : false,
+            data: null,//["周一","周二","周三","周四","周五","周六","周日"],
+            axisLabel:{
+                interval: 0,
+                rotate:-30
+            }
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} 人'
+            }
+        },
+        series: [{
+            name: "",
+            type: 'line',
+            smooth:false,
+            stack: '总量',
+            // label: {
+            //     normal:{
+            //         show:true,
+            //         position:"top"
+            //     }
+            // },
+            data: null//[38993,37639,17602,15499,18426,0,0]
+        }]
+    };
+</script>
+</body>
+</html>

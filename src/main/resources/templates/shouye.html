@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="renderer" content="webkit">
+    <meta content="大数据" name="Keywords">
+    <meta content="" name="Description">
+    <title>首页</title>
+    <link href="/image/favicon-20170908021540662.ico"  rel="shortcut icon"/>
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/iconfont/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/shouye.css">
+</head>
+<body>
+<div class="layout-wrapper">
+    <div class="header-box">
+        <div class="logo">
+            <a href="javascript:;" title="辰数知客"></a>
+        </div>
+        <div class="user-info">
+            <ul class="nav nav-pills">
+                <!--<li><a href="#">消息</a></li>-->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">账号 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/modify" target="_blank">修改密码</a></li>
+                        <li><a href="/index/dmpLoginOut">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="shop-wrap">
+        <div class="shop">
+            <select id="shop">
+                <option value="gyhn">贵阳海纳</option>
+                <option value="yfy">鱼非鱼</option>
+                <option value="os">欧尚</option>
+            </select>
+        </div>
+    </div>
+    <div class="layout-body">
+        <div class="layout-aside">
+            <ul class="nav-list" id="navList">
+                <li>
+                    <dl>
+                        <dt>客流分析</dt>
+                        <dd class="active" data-link="todayProfile">今日概况</dd>
+                        <dd data-link="dataTrends">数据趋势</dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt >客户分析</dt>
+                        <dd data-link="oldNewUsers">新老用户</dd>
+                        <dd data-link="returnLoss">回流流失</dd>
+                        <dd data-link="clientFeature">客户特征</dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>客户来源</dt>
+                        <dd data-link="areaDistributed">地区分布</dd>
+                        <dd data-link="peripheryDistributed">周边分布</dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>商圈分析</dt>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div class="layout-main">
+            <iframe src="" id="myFrame" frameborder="no" border="no" height="100%" width="100%" scrolling="auto"></iframe>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<!--<script type="text/javascript" src="/media/js/echarts.min.js"></script>-->
+<script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+<script>
+    $(function () {
+        var src = $("#navList dd.active").data("link");
+        $("iframe").attr("src", src);
+    });
+    //切换店铺
+    $("#shop").change(function () {
+        //切换店铺就重新加载子页面
+        $('iframe').attr('src', $("#navList dd.active").data("link"));
+    });
+    //    点击左侧导航切换右侧子页面
+    $("#navList").on("click","dd",function () {
+        if($(this).hasClass("active")){
+            return false;
+        }
+        $("#navList dd").removeClass("active");
+        $(this).addClass("active");
+        var src = $(this).data("link");
+        $("iframe").attr("src",src);
+    });
+</script>
+</body>
+</html>
