@@ -22,6 +22,4 @@ public interface ShopLabelAnalyzeMapper extends BaseMapper<ShopLabelAnalyze> {
 
     List<SimpleKV<String, String>> selectKYByQuery(@Param("query") BaseQuery query);
 
-    int deleteByAccountPdate(@Param("account") String account, @Param("pdate") String pdate);
-
 }

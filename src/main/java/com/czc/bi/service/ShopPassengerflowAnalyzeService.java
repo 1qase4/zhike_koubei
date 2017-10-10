@@ -1,9 +1,7 @@
 package com.czc.bi.service;
 
 import com.czc.bi.mapper.ShopPassengerflowAnalyzeMapper;
-import com.czc.bi.mapper.ShowMapper;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
-import com.czc.bi.pojo.dto.DeviceStatDto;
 import com.czc.bi.pojo.dto.Result;
 import com.czc.bi.pojo.echarts3.Option;
 import com.czc.bi.pojo.echarts3.axis.CategoryAxis;
@@ -50,10 +48,6 @@ public class ShopPassengerflowAnalyzeService {
 
     @Autowired
     private ShopPassengerflowAnalyzeMapper shopPassengerflowAnalyzeMapper;
-
-    @Autowired
-    private ShowMapper showMapper;
-
 
     // 今日概况
     // 获取首页的当前客流信息

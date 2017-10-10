@@ -3,9 +3,9 @@ package com.czc.bi.pojo;
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
- * @author : fw
+ * @author : zchong
  * @Desc :
- * @date :   2017/9/27.
+ * @date :   2016/11/7.
  * @version: V1.0
  */
 public class StayShow {
