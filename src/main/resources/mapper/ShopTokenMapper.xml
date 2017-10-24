@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.czc.bi.mapper.ShopTokenMapper">
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer">
+        SELECT
+        `id`,
+        `account`,
+        `name`,
+        `app_auth_code`,
+        `app_auth_token`,
+        `user_id`,
+        `auth_app_id`,
+        `expires_in`,
+        `re_expires_in`,
+        `app_refresh_token`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `shop_token`
+        WHERE `id` = #{key}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.czc.bi.pojo.query.ShopTokenQuery" resultType="com.czc.bi.pojo.ShopToken">
+        SELECT
+        `id`,
+        `account`,
+        `name`,
+        `app_auth_code`,
+        `app_auth_token`,
+        `user_id`,
+        `auth_app_id`,
+        `expires_in`,
+        `re_expires_in`,
+        `app_refresh_token`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `shop_token`
+        WHERE 1 = 1
+        <if test="query.account != null">
+            AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.name != null">
+            AND `name` ${query.nameOperator} #{query.name}
+        </if>
+        <if test="query.app_auth_code != null">
+            AND `app_auth_code` ${query.app_auth_codeOperator} #{query.app_auth_code}
+        </if>
+        <if test="query.app_auth_token != null">
+            AND `app_auth_token` ${query.app_auth_tokenOperator} #{query.app_auth_token}
+        </if>
+        <if test="query.user_id != null">
+            AND `user_id` ${query.user_idOperator} #{query.user_id}
+        </if>
+        <if test="query.auth_app_id != null">
+            AND `auth_app_id` ${query.auth_app_idOperator} #{query.auth_app_id}
+        </if>
+        <if test="query.expires_in != null">
+            AND `expires_in` ${query.expires_inOperator} #{query.expires_in}
+        </if>
+        <if test="query.re_expires_in != null">
+            AND `re_expires_in` ${query.re_expires_inOperator} #{query.re_expires_in}
+        </if>
+        <if test="query.app_refresh_token != null">
+            AND `app_refresh_token` ${query.app_refresh_tokenOperator} #{query.app_refresh_token}
+        </if>
+        <if test="query.stat != null">
+            AND `stat` ${query.statOperator} #{query.stat}
+        </if>
+        <if test="query.orderBy!=null">
+            ORDER BY ${query.orderBy}
+            <if test="!query.asc">
+                DESC
+            </if>
+        </if>
+        <if test="query.startRecord != null and query.pageSize != null">
+            LIMIT ${query.startRecord}, ${query.pageSize}
+        </if>
+    </select>
+
+    <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.ShopTokenQuery" resultType="Integer">
+        SELECT COUNT(1)
+        FROM
+        `shop_token`
+        WHERE 1 = 1
+        <if test="query.account != null">
+            AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.name != null">
+            AND `name` ${query.nameOperator} #{query.name}
+        </if>
+        <if test="query.app_auth_code != null">
+            AND `app_auth_code` ${query.app_auth_codeOperator} #{query.app_auth_code}
+        </if>
+        <if test="query.app_auth_token != null">
+            AND `app_auth_token` ${query.app_auth_tokenOperator} #{query.app_auth_token}
+        </if>
+        <if test="query.user_id != null">
+            AND `user_id` ${query.user_idOperator} #{query.user_id}
+        </if>
+        <if test="query.auth_app_id != null">
+            AND `auth_app_id` ${query.auth_app_idOperator} #{query.auth_app_id}
+        </if>
+        <if test="query.expires_in != null">
+            AND `expires_in` ${query.expires_inOperator} #{query.expires_in}
+        </if>
+        <if test="query.re_expires_in != null">
+            AND `re_expires_in` ${query.re_expires_inOperator} #{query.re_expires_in}
+        </if>
+        <if test="query.app_refresh_token != null">
+            AND `app_refresh_token` ${query.app_refresh_tokenOperator} #{query.app_refresh_token}
+        </if>
+        <if test="query.stat != null">
+            AND `stat` ${query.statOperator} #{query.stat}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.czc.bi.pojo.ShopToken">
+        INSERT INTO `shop_token`
+        (
+        `account`,
+        `name`,
+        `app_auth_code`,
+        `app_auth_token`,
+        `user_id`,
+        `auth_app_id`,
+        `expires_in`,
+        `re_expires_in`,
+        `app_refresh_token`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES(
+        #{record.account},
+        #{record.name},
+        #{record.app_auth_code},
+        #{record.app_auth_token},
+        #{record.user_id},
+        #{record.auth_app_id},
+        #{record.expires_in},
+        #{record.re_expires_in},
+        #{record.app_refresh_token},
+        #{record.stat},
+        NOW(),
+        NOW()
+        )
+    </insert>
+
+    <insert id="inserts" parameterType="java.util.List">
+        INSERT INTO `shop_token`
+        (
+        `account`,
+        `name`,
+        `app_auth_code`,
+        `app_auth_token`,
+        `user_id`,
+        `auth_app_id`,
+        `expires_in`,
+        `re_expires_in`,
+        `app_refresh_token`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+            (
+            #{record.account},
+            #{record.name},
+            #{record.app_auth_code},
+            #{record.app_auth_token},
+            #{record.user_id},
+            #{record.auth_app_id},
+            #{record.expires_in},
+            #{record.re_expires_in},
+            #{record.app_refresh_token},
+            #{record.stat},
+            NOW(),
+            NOW()
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectByCondition" resultType="com.czc.bi.pojo.ShopToken">
+        SELECT
+        `id`,
+        `account`,
+        `name`,
+        `app_auth_code`,
+        `app_auth_token`,
+        `user_id`,
+        `auth_app_id`,
+        `expires_in`,
+        `re_expires_in`,
+        `app_refresh_token`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `shop_token`
+        WHERE ${condition}
+    </select>
+
+</mapper>

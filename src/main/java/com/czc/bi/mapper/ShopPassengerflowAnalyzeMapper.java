@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @version: V1.0
  */
 
-@Mapper
+
 public interface ShopPassengerflowAnalyzeMapper extends BaseMapper<ShopPassengerflowAnalyze> {
 
 }
