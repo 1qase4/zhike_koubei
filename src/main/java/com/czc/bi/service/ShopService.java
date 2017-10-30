@@ -15,7 +15,7 @@ public class ShopService {
     private ShopMapper shopMapper;
 
     public void save (Shop shop){
-        shopMapper.insert(shop);
-        int i = 1/0;
+//        shopMapper.insert(shop);
+//        int i = 1/0;
     }
 }
