@@ -43,6 +43,14 @@ public class ZhikeKoubeiApplicationTests {
     @Autowired
     private ShopPassengerflowAnalyzeService shopPassengerflowAnalyzeService;
 
+    @Autowired
+    private AlipayClient alipayClient;
+
+    @Test
+    public void getClient(){
+        System.out.println("获取的client---------------------->" + alipayClient);
+    }
+
     @Test
 	public void contextLoads() {
         String pdate1 = "2017-09-18";

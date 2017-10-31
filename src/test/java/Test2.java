@@ -8,10 +8,7 @@ import java.util.Random;
 public class Test2 {
 
     public static void main(String[] args) {
-        ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk("123454");
-        rc.addCondition("id",">","15");
-        String string = BaseUtil.jsonToString(rc);
-        System.out.println(string);
+        String k = "11-12点";
+        System.out.println(Integer.valueOf(k.split("-")[0]));
     }
 }

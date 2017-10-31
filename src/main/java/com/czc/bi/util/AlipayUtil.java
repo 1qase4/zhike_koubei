@@ -12,6 +12,7 @@ import com.czc.bi.pojo.alipay.ReportDataContext;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.czc.bi.util.Constant.*;
 
@@ -34,6 +35,19 @@ public class AlipayUtil {
         return "{" + sj.toString() + "}";
     }
 
+    // 获取一行数据的字段数据
+    public static Map<String, String> getColumnValue(List<AlisisReportColumn> rowData, String... names) {
+        Map<String, String> map = Arrays.stream(names).collect(Collectors.toMap(a -> a, a -> ""));
+
+        for (AlisisReportColumn rowDatum : rowData) {
+            String alias = rowDatum.getAlias();
+            if(map.containsKey(alias)){
+                map.put(alias,rowDatum.getData());
+            }
+        }
+        return map;
+    }
+
     public static Map getKoubeiReport(ReportDataContext rc) throws AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 GATEWAT,
@@ -48,16 +62,16 @@ public class AlipayUtil {
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
         kbrequest.putOtherTextParam("app_auth_token", "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
         KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String, Object> map = new HashMap<String, Object>();
         if (kbresponse.isSuccess()) {
             List<AlisisReportRow> reportData = kbresponse.getReportData();
-            map.put("status",0);
-            map.put("msg","数据查询调用成功");
-            map.put("data",reportData);
+            map.put("status", 0);
+            map.put("msg", "数据查询调用成功");
+            map.put("data", reportData);
             return map;
         } else {
-            map.put("status",1);
-            map.put("msg","数据查询调用失败:"+kbresponse.getSubCode()+","+kbresponse.getSubMsg());
+            map.put("status", 1);
+            map.put("msg", "数据查询调用失败:" + kbresponse.getSubCode() + "," + kbresponse.getSubMsg());
             return map;
         }
     }
