@@ -1,8 +1,19 @@
 package com.czc.bi.util;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlisisReportColumn;
+import com.alipay.api.domain.AlisisReportRow;
+import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
+import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
+import com.czc.bi.pojo.ShopPassengerflowAnalyze;
+import com.czc.bi.pojo.alipay.ReportDataContext;
+import org.apache.poi.ss.formula.functions.T;
+
+import java.util.*;
+
+import static com.czc.bi.util.Constant.*;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -22,6 +33,35 @@ public class AlipayUtil {
         }
         return "{" + sj.toString() + "}";
     }
+
+    public static Map getKoubeiReport(ReportDataContext rc) throws AlipayApiException {
+        AlipayClient alipayClient = new DefaultAlipayClient(
+                GATEWAT,
+                PPID,
+                PRIVATE_KEY,
+                FORMAT,
+                CHARSET,
+                ALIPAY_PUBLIC_KEY,
+                SIGN_TYPE);
+
+        KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
+        kbrequest.setBizContent(BaseUtil.jsonToString(rc));
+        kbrequest.putOtherTextParam("app_auth_token", "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
+        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);
+        Map<String,Object> map = new HashMap<String,Object>();
+        if (kbresponse.isSuccess()) {
+            List<AlisisReportRow> reportData = kbresponse.getReportData();
+            map.put("status",0);
+            map.put("msg","数据查询调用成功");
+            map.put("data",reportData);
+            return map;
+        } else {
+            map.put("status",1);
+            map.put("msg","数据查询调用失败:"+kbresponse.getSubCode()+","+kbresponse.getSubMsg());
+            return map;
+        }
+    }
+
 
     public static void main(String[] args) {
         Map<String, String> map = new HashMap<>();

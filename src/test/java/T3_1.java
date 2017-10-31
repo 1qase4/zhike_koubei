@@ -33,10 +33,10 @@ public class T3_1 {
 
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk("QK171024n83s62ea");
-        rc.addCondition("shop_id", "=", "2015060200077000000000121608");
-        // rc.addCondition("day","=","2017-07-12" );
-         rc.addCondition("week", ">", "12");
+        rc.setReport_uk("QK171025k863e26v");
+        //rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+        // rc.addCondition("day","=","2017-08-10" );
+        // rc.addCondition("week", ">", "12");
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
         kbrequest.putOtherTextParam("app_auth_token", "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
         KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);

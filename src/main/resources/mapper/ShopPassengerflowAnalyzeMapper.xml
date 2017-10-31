@@ -141,4 +141,30 @@
         WHERE ${condition}
     </select>
 
+    <update id="updataByPdate" >
+        UPDATE `shop_ passengerflow_analyze` SET pdate = #{pdate1,jdbcType=VARCHAR} WHERE pdate = #{pdate2,jdbcType=VARCHAR};
+    </update>
+
+    <update id="updataByLabel" >
+        UPDATE `shop_ passengerflow_analyze` SET label = #{label1,jdbcType=VARCHAR} WHERE label = #{label2,jdbcType=VARCHAR};
+    </update>
+
+    <insert id="inserts" parameterType="java.util.List">
+        replace INTO `shop_ passengerflow_analyze`(
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="item" index="index" separator="," >
+            (#{item.type},#{item.account},#{item.shop},#{item.rank},#{item.label},#{item.value},#{item.pdate},NOW(),NOW())
+        </foreach>
+    </insert>
+
 </mapper>
