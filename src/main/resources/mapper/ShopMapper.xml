@@ -414,7 +414,7 @@
 	</select>
 
 	<insert id="inserts" parameterType="java.util.List">
-		replace INTO `shop` (
+		replace INTO `shop_copy` (
 		`name`,
 		`account`,
 		`inshort`,

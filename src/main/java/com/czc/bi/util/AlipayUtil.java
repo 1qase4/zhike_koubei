@@ -7,9 +7,12 @@ import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
 import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
+import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.alipay.ReportDataContext;
 import org.apache.poi.ss.formula.functions.T;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -82,5 +85,24 @@ public class AlipayUtil {
         map.put("page", "10");
         map.put("end", "2017-06-10");
         System.out.println(buildBiz(map));
+    }
+
+    public static Map getKoubeiReportData(ReportDataContext rc,String token,AlipayClient alipayClient) throws AlipayApiException {
+        KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
+        kbrequest.setBizContent(BaseUtil.jsonToString(rc));
+        kbrequest.putOtherTextParam("app_auth_token", token);
+        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (kbresponse.isSuccess()) {
+            List<AlisisReportRow> reportData = kbresponse.getReportData();
+            map.put("status", 0);
+            map.put("msg", "数据查询调用成功");
+            map.put("data", reportData);
+            return map;
+        } else {
+            map.put("status", 1);
+            map.put("msg", "数据查询调用失败:" + kbresponse.getSubCode() + "," + kbresponse.getSubMsg());
+            return map;
+        }
     }
 }

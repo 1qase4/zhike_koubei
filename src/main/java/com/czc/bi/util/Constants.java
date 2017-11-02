@@ -56,4 +56,7 @@ public class Constants {
     // 热力坐标
     public static final String ELEVATION_TYPE = "热力坐标";
 
+    // 按月统计消费群
+    public static final String CONSUME_LEVLE_MONTH = "按月统计消费群";
+
 }

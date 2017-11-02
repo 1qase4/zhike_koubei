@@ -3,6 +3,7 @@ package com.czc.bi.service;
 import com.czc.bi.mapper.ShopLabelAnalyzeMapper;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.pojo.Shop;
+import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.SimpleKV;
 import com.czc.bi.pojo.dto.NameValue;
 import com.czc.bi.pojo.excel.DataRow;
@@ -192,6 +193,10 @@ public class ShopLabelAnalyzeService {
             dataRows.add(new DataRow().addRecord("城市名称").addRecord(nameValue.getName()).addRecord(String.valueOf(nameValue.getValue())));
         }
         return ExportData.writeExcel(dataRows);
+    }
+
+    public int saves(List<ShopLabelAnalyze> list) {
+        return shopLabelAnalyzeMapper.inserts(list);
     }
 
     class Elevation {
