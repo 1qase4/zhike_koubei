@@ -110,7 +110,7 @@
     </insert>
 
     <insert id="inserts" parameterType="java.util.List">
-        INSERT INTO `shop_Label_Analyze`
+        replace INTO `shop_Label_Analyze`
         (
         `type`,
         `account`,

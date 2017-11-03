@@ -2,12 +2,8 @@ package com.czc.bi.scheduling;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
-import com.alipay.api.domain.ContactFollower;
-import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
-import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
 import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
@@ -16,18 +12,13 @@ import com.czc.bi.service.ShopLabelAnalyzeService;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
 import com.czc.bi.util.AlipayUtil;
-import com.czc.bi.util.BaseUtil;
 import com.czc.bi.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.czc.bi.util.Constant.*;
 
@@ -233,6 +224,58 @@ public class AlipayDataSync {
                     s1.setShop(columnValue.get("shop_name"));
                     logger.debug("--------------------");
                     list.add(s1);
+                }
+                shopLabelAnalyzeService.saves(list);
+            }
+        }
+    }
+
+    //客户特征
+    public void syncShopPropertyArea(String shopId, String date, String token) throws AlipayApiException {
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA);  //QK171101gk69jc69
+        rc.addCondition("shop_id", "=", shopId);
+        rc.addCondition("month","=",date );
+        Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
+        Integer status = (Integer) map.get("status");
+        System.out.println(map.get("msg"));
+        if (status == 0){
+            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
+            List<ShopLabelAnalyze> list = new ArrayList<>();
+            Map<String,ShopLabelAnalyze> provinceMap = new HashMap<>(34);
+            if (reportData == null){
+                logger.debug("报表无数据");
+            } else {
+                for (AlisisReportRow reportDatum : reportData) {
+                    ShopLabelAnalyze s1 = new ShopLabelAnalyze();
+
+                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
+                    Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
+                            "shop_id",
+                            "month",
+                            "indicator",
+                            "province",
+                            "usr_cnt",
+                            "shop_name");
+                    s1.setAccount(columnValue.get("shop_id"));
+                    s1.setPdate(columnValue.get("month"));
+                    s1.setType(Constants.PROVINCE_TYPE_MONTH);
+                    s1.setKey(columnValue.get("province"));
+                    s1.setShop(columnValue.get("shop_name"));
+                    String province = columnValue.get("province");
+                    Integer total = 0;
+                    if(provinceMap.containsKey(province)){
+                        ShopLabelAnalyze labelAnalyze = provinceMap.get(province);
+                        total = Integer.parseInt(labelAnalyze.getValue());
+                    }
+                    total += Integer.parseInt(columnValue.get("usr_cnt"));
+                    s1.setValue(String.valueOf(total));
+                    provinceMap.put(province,s1);
+                }
+                Collection<ShopLabelAnalyze> values =  provinceMap.values();
+                Iterator<ShopLabelAnalyze> it = values.iterator();
+                while(it.hasNext()) {
+                    list.add(it.next());
                 }
                 shopLabelAnalyzeService.saves(list);
             }

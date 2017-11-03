@@ -442,4 +442,73 @@ public class ZhikeKoubeiApplicationTests {
         }
     }
 
+    //各省客流量
+    @Test
+    public void demo6() throws AlipayApiException {
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA);  //QK171101gk69jc69
+        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+        rc.addCondition("month","=","2017-04" );
+//        rc.addCondition("province","=","黑龙江省" );
+        Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
+        Integer status = (Integer) map.get("status");
+        System.out.println(map.get("msg"));
+        if (status == 0){
+            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
+            List<ShopLabelAnalyze> list = new ArrayList<>();
+            Map<String,ShopLabelAnalyze> provinceMap = new HashMap<>(34);
+            if (reportData == null){
+                logger.debug("报表无数据");
+            } else {
+                for (AlisisReportRow reportDatum : reportData) {
+                    ShopLabelAnalyze s1 = new ShopLabelAnalyze();
+
+                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
+                    Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
+                            "shop_id",
+                            "month",
+                            "indicator",
+                            "province",
+                            "pct",
+                            "shop_name");
+                    s1.setAccount(columnValue.get("shop_id"));
+                    s1.setPdate(columnValue.get("month"));
+                    s1.setType(Constants.PROVINCE_TYPE_MONTH);
+                    s1.setKey(columnValue.get("province"));
+                    s1.setShop(columnValue.get("shop_name"));
+                    String province = columnValue.get("province");
+                    Double total = 0d;
+                    if(provinceMap.containsKey(province)){
+                        ShopLabelAnalyze labelAnalyze = provinceMap.get(province);
+                        total = Double.parseDouble(labelAnalyze.getValue());
+                    }
+                    Double pct = Double.parseDouble(columnValue.get("pct"));
+                    total += pct;
+                    s1.setValue(String.valueOf(total));
+                    provinceMap.put(province,s1);
+                }
+                Collection<ShopLabelAnalyze> values =  provinceMap.values();
+                Iterator<ShopLabelAnalyze> it = values.iterator();
+                while(it.hasNext()) {
+                    list.add(it.next());
+                }
+                shopLabelAnalyzeService.saves(list);
+            }
+        }
+    }
+
+    @Test
+    public void dem(){
+        ShopLabelAnalyze s1 = new ShopLabelAnalyze();
+        ShopLabelAnalyze s2 = new ShopLabelAnalyze();
+        List<ShopLabelAnalyze> list = new ArrayList<>();
+        s1.setValue("50");
+        s1.setKey("上海市");
+        s1.setAccount("555555555");
+        list.add(s1);
+        s2.setValue("10");
+        s2.setKey("上海市");
+        s2.setAccount("11111");
+        System.out.println(list.lastIndexOf(s2));
+    }
 }
