@@ -33,7 +33,7 @@ public class T3_1 {
 
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA);
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);
         rc.addCondition("shop_id", "=", "2015051400077000000000046605");
         rc.addCondition("month","=","2017-04" );
         // rc.addCondition("week", ">", "12");

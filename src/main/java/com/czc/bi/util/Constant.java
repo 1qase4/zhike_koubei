@@ -51,6 +51,7 @@ public class Constant {
     public static String UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS = "QK171024vnw9va74";
     public static String UK_REPORT_YFY_SHOP_PROPERTY = "QK1711019f6d4557";
     public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA = "QK171101gk69jc69";
+    public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS = "QK17110221vjfg3r";
 
 
     private Constant() {

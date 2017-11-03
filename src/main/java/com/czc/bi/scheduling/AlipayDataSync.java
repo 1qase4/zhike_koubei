@@ -230,10 +230,10 @@ public class AlipayDataSync {
         }
     }
 
-    //客户特征
+    //客户区域特征
     public void syncShopPropertyArea(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA);  //QK171101gk69jc69
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
         rc.addCondition("shop_id", "=", shopId);
         rc.addCondition("month","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);

@@ -446,7 +446,7 @@ public class ZhikeKoubeiApplicationTests {
     @Test
     public void demo6() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA);  //QK171101gk69jc69
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
         rc.addCondition("shop_id", "=", "2015051400077000000000046605");
         rc.addCondition("month","=","2017-04" );
 //        rc.addCondition("province","=","黑龙江省" );
@@ -469,7 +469,7 @@ public class ZhikeKoubeiApplicationTests {
                             "month",
                             "indicator",
                             "province",
-                            "pct",
+                            "usr_cnt",
                             "shop_name");
                     s1.setAccount(columnValue.get("shop_id"));
                     s1.setPdate(columnValue.get("month"));
@@ -477,12 +477,12 @@ public class ZhikeKoubeiApplicationTests {
                     s1.setKey(columnValue.get("province"));
                     s1.setShop(columnValue.get("shop_name"));
                     String province = columnValue.get("province");
-                    Double total = 0d;
+                    Integer total = 0;
                     if(provinceMap.containsKey(province)){
                         ShopLabelAnalyze labelAnalyze = provinceMap.get(province);
-                        total = Double.parseDouble(labelAnalyze.getValue());
+                        total = Integer.parseInt(labelAnalyze.getValue());
                     }
-                    Double pct = Double.parseDouble(columnValue.get("pct"));
+                    Integer pct = Integer.parseInt(columnValue.get("usr_cnt"));
                     total += pct;
                     s1.setValue(String.valueOf(total));
                     provinceMap.put(province,s1);
