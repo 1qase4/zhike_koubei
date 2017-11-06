@@ -511,4 +511,61 @@ public class ZhikeKoubeiApplicationTests {
         s2.setAccount("11111");
         System.out.println(list.lastIndexOf(s2));
     }
+
+    //各省客流量
+    @Test
+    public void demo7() throws AlipayApiException {
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk("QK171101ozq154g7");  //QK17110221vjfg3r
+//        rc.addCondition("shop_id", "=", "2015052800077000000000121715");
+//        rc.addCondition("month","=","201710" );
+//        rc.addCondition("province","=","黑龙江省" );
+        Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
+        Integer status = (Integer) map.get("status");
+        System.out.println(map.get("msg"));
+        if (status == 0){
+            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
+            List<ShopLabelAnalyze> list = new ArrayList<>();
+            Map<String,ShopLabelAnalyze> gisMap = new HashMap<>();
+            if (reportData == null){
+                logger.debug("报表无数据");
+            } else {
+                for (AlisisReportRow reportDatum : reportData) {
+                    ShopLabelAnalyze s1 = new ShopLabelAnalyze();
+
+                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
+                    Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
+                            "shop_id",
+                            "month",
+                            "longitude",
+                            "latitude",
+                            "lng",
+                            "lat",
+                            "user_cnt",
+                            "shop_name");
+                    s1.setAccount(columnValue.get("shop_id"));
+                    s1.setPdate(columnValue.get("month"));
+                    s1.setType(Constants.ELEVATION_TYPE);
+                    String key = columnValue.get("lng")+","+columnValue.get("lat");
+                    s1.setKey(key);
+                    s1.setShop(columnValue.get("shop_name"));
+                    Integer total = 0;
+                    if(gisMap.containsKey(key)){
+                        ShopLabelAnalyze labelAnalyze = gisMap.get(key);
+                        total = Integer.parseInt(labelAnalyze.getValue());
+                    }
+                    Integer pct = Integer.parseInt(columnValue.get("user_cnt"));
+                    total += pct;
+                    s1.setValue(String.valueOf(total));
+                    gisMap.put(key,s1);
+                }
+                Collection<ShopLabelAnalyze> values =  gisMap.values();
+                Iterator<ShopLabelAnalyze> it = values.iterator();
+                while(it.hasNext()) {
+                    list.add(it.next());
+                }
+                shopLabelAnalyzeService.saves(list);
+            }
+        }
+    }
 }

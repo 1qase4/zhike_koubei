@@ -33,9 +33,9 @@ public class T3_1 {
 
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);
-        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-        rc.addCondition("month","=","2017-04" );
+        rc.setReport_uk("QK171101ozq154g7");
+//        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+//        rc.addCondition("month","=","2017-04" );
         // rc.addCondition("week", ">", "12");
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
         kbrequest.putOtherTextParam("app_auth_token", "201710BB587b6a2bf52a4795bba5e7eca40c1C55");

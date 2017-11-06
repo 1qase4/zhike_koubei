@@ -152,6 +152,9 @@ public class ShopLabelAnalyzeService {
                 .setPdate(time);
         List<SimpleKV<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
 
+//        ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
+//            return new Elevation().setCoord(Double.valueOf(a.getKey().split(",")[0]), Double.valueOf(a.getKey().split(",")[1])).setElevation(Integer.parseInt(a.getValue()));
+//        }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
         ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
             return new Elevation().setCoord(Double.valueOf(a.getKey()), Double.valueOf(a.getValue())).setElevation(1);
         }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
