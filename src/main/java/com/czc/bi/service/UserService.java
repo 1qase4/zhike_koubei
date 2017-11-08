@@ -6,8 +6,11 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayOpenAuthTokenAppRequest;
 import com.alipay.api.response.AlipayOpenAuthTokenAppResponse;
 import com.czc.bi.mapper.ShopTokenMapper;
+import com.czc.bi.mapper.UserMapper;
 import com.czc.bi.pojo.ShopToken;
+import com.czc.bi.pojo.User;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,6 +34,9 @@ public class UserService {
 
     @Resource
     private ShopTokenMapper shopTokenMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     public String authAlipay(String app_id, String account, String app_auth_code) {
         logger.info(String.format("authAlipay-->用户[%s]授权返回信息app_auth_code为[%s],appid[%s]", account, app_auth_code, app_id));
@@ -87,6 +93,10 @@ public class UserService {
         shopTokenMapper.insert(shopToken);
 
         return "授权完成";
+    }
+
+    public User findUserByAccount(String username) {
+        return userMapper.findUserByAccount(username);
     }
 }
 

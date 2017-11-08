@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @MapperScan("com.czc.bi.mapper")
-@ImportResource("classpath:applicationContext.xml")
+@ImportResource(locations = {"classpath:applicationContext.xml"})
 @EnableScheduling
 public class ZhikeKoubeiApplication {
 
