@@ -150,7 +150,7 @@
     </update>
 
     <insert id="inserts" parameterType="java.util.List">
-        replace INTO `shop_ passengerflow_analyze`(
+        replace INTO `shop_ passengerflow_analyze_copy`(
         `type`,
         `account`,
         `shop`,

@@ -497,21 +497,6 @@ public class ZhikeKoubeiApplicationTests {
         }
     }
 
-    @Test
-    public void dem(){
-        ShopLabelAnalyze s1 = new ShopLabelAnalyze();
-        ShopLabelAnalyze s2 = new ShopLabelAnalyze();
-        List<ShopLabelAnalyze> list = new ArrayList<>();
-        s1.setValue("50");
-        s1.setKey("上海市");
-        s1.setAccount("555555555");
-        list.add(s1);
-        s2.setValue("10");
-        s2.setKey("上海市");
-        s2.setAccount("11111");
-        System.out.println(list.lastIndexOf(s2));
-    }
-
     //各省客流量
     @Test
     public void demo7() throws AlipayApiException {
@@ -565,6 +550,56 @@ public class ZhikeKoubeiApplicationTests {
                     list.add(it.next());
                 }
                 shopLabelAnalyzeService.saves(list);
+            }
+        }
+    }
+
+    //保存每周回流客户
+    @Test
+    public void demo8() throws AlipayApiException {
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
+//        rc.addCondition("shop_id", "=", "2015060200077000000000124999");
+//        rc.addCondition("day","=","2017-08-23" );
+        Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
+        Integer status = (Integer) map.get("status");
+        System.out.println(map.get("msg"));
+        if (status == 0){
+            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
+            List<ShopPassengerflowAnalyze> list = new ArrayList<>();
+            if (reportData == null){
+                logger.debug("报表无数据");
+            } else {
+                for (AlisisReportRow reportDatum : reportData) {
+                    ShopPassengerflowAnalyze s1 = new ShopPassengerflowAnalyze();
+                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
+                    Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
+                            "shop_id",
+                            "day",
+                            "categoryidx",
+                            "user_cnt",
+                            "shop_name");
+                    s1.setRank(1);
+                    s1.setAccount(columnValue.get("shop_id"));
+                    s1.setPdate(columnValue.get("day"));
+                    s1.setLabel(columnValue.get("day"));
+                    s1.setShop(columnValue.get("shop_name"));
+                    if ("1".equals(columnValue.get("categoryidx"))){
+                        s1.setType(Constants.LOST_TYPE);
+                    }else if ("2".equals(columnValue.get("categoryidx"))){
+                        s1.setType(Constants.BACK_FLOW_TYPE);
+                    }
+                    if (Constants.LOST_TYPE.equals(s1.getType())){
+                        s1.setValue(Integer.parseInt(columnValue.get("user_cnt")));
+                    }else if (Constants.BACK_FLOW_TYPE.equals(s1.getType())){
+                        s1.setValue(Integer.parseInt(columnValue.get("user_cnt")));
+                    }
+                    if (s1.getType()!=null){
+                        list.add(s1);
+                    }
+                    logger.debug("--------------------");
+                }
+                shopPassengerflowAnalyzeService.saves(list);
             }
         }
     }

@@ -130,7 +130,7 @@ public class AlipayDataSync {
     }
 
     //保存：按天统计回头客
-    public void syncUsrLostandbackForweekk(String shopId, String date, String token) throws AlipayApiException {
+    public void syncUsrBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK);  //QK171025k863e26v
         rc.addCondition("shop_id", "=", shopId);
@@ -159,8 +159,57 @@ public class AlipayDataSync {
                     s1.setLabel(columnValue.get("day"));
                     s1.setShop(columnValue.get("shop_name"));
                     if ("2".equals(columnValue.get("categoryidx"))){
-                        s1.setType(Constants.LOST_TYPE);
+                        s1.setType(Constants.RETURN_TYPE);
                     }else if ("3".equals(columnValue.get("categoryidx"))){
+                        s1.setType(Constants.FREQUENT_TYPE);
+                    }
+                    if (Constants.RETURN_TYPE.equals(s1.getType())){
+                        s1.setValue(Integer.parseInt(columnValue.get("user_cnt")));
+                    }else if (Constants.FREQUENT_TYPE.equals(s1.getType())){
+                        s1.setValue(Integer.parseInt(columnValue.get("user_cnt")));
+                    }
+                    if (s1.getType()!=null){
+                        list.add(s1);
+                    }
+                    logger.debug("--------------------");
+                }
+                shopPassengerflowAnalyzeService.saves(list);
+            }
+        }
+    }
+
+    //保存：按天统计回流情况
+    public void syncUsrLostBackForweek(String shopId, String date, String token) throws AlipayApiException {
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
+        rc.addCondition("shop_id", "=", shopId);
+        rc.addCondition("day","=",date );
+        Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
+        Integer status = (Integer) map.get("status");
+        System.out.println(map.get("msg"));
+        if (status == 0){
+            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
+            List<ShopPassengerflowAnalyze> list = new ArrayList<>();
+            if (reportData == null){
+                logger.debug("报表无数据");
+            } else {
+                for (AlisisReportRow reportDatum : reportData) {
+                    ShopPassengerflowAnalyze s1 = new ShopPassengerflowAnalyze();
+                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
+                    Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
+                            "shop_id",
+                            "day",
+                            "categoryidx",
+                            "user_cnt",
+                            "shop_name");
+                    s1.setRank(1);
+                    s1.setAccount(columnValue.get("shop_id"));
+                    s1.setPdate(columnValue.get("day"));
+                    s1.setLabel(columnValue.get("day"));
+                    s1.setShop(columnValue.get("shop_name"));
+                    if ("1".equals(columnValue.get("categoryidx"))){
+                        s1.setType(Constants.LOST_TYPE);
+                    }else if ("2".equals(columnValue.get("categoryidx"))){
                         s1.setType(Constants.BACK_FLOW_TYPE);
                     }
                     if (Constants.LOST_TYPE.equals(s1.getType())){
