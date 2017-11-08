@@ -1,5 +1,6 @@
 package com.czc.bi.shiro;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -16,9 +17,12 @@ import java.util.Properties;
 //shiro配置
 @Configuration
 public class ShiroConfig {
+
+	private Logger logger = Logger.getLogger(this.getClass().getName());
+
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
-		System.out.println("ShiroConfiguration.shirFilter()");
+		logger.debug("ShiroConfig.shirFilter()");
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		//拦截器.
