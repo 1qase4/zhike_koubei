@@ -167,4 +167,24 @@
         </foreach>
     </insert>
 
+    <select id="selectPdateByAccount" parameterType="String" resultType="String">
+        SELECT
+        `pdate`
+        FROM
+        `shop_ passengerflow_analyze_copy`
+        WHERE `account` = #{account}
+        ORDER BY pdate DESC LIMIT 1
+    </select>
+
+    <select id="selectPdate" resultType="String">
+        SELECT
+        `pdate`
+        FROM
+        `etl_date`
+    </select>
+
+    <update id="updataEtlDate" >
+        UPDATE `etl_date` SET pdate = #{pdate,jdbcType=VARCHAR};
+    </update>
+
 </mapper>

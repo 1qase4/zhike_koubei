@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.czc.bi.util.Constant.*;
@@ -84,8 +86,8 @@ public class AlipayDataSync {
     public void syncUsranalysisForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_FORWEEK);
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -133,8 +135,8 @@ public class AlipayDataSync {
     public void syncUsrBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK);  //QK171025k863e26v
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -182,8 +184,8 @@ public class AlipayDataSync {
     public void syncUsrLostBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -283,8 +285,8 @@ public class AlipayDataSync {
     public void syncShopPropertyArea(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("month","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("month","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -388,8 +390,15 @@ public class AlipayDataSync {
         }
     }
 
-    @Scheduled(cron = "0 0 12 * * ?") // 每天中午12点
-    public void syncAlipayData(){
+    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
+    public void syncAlipayData() throws ParseException {
+        String pdate = shopPassengerflowAnalyzeService.selectPdate();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sf.parse(pdate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE,1);
+        String format = sf.format(calendar.getTime());
         String token = "201710BB587b6a2bf52a4795bba5e7eca40c1C55";
         try {
             logger.info("开始同步支付宝口碑数据");
@@ -400,8 +409,10 @@ public class AlipayDataSync {
             syncUsranalysisForweek(null,null,token);
             syncUsrBackForweek(null,null,token);
             syncUsrLostBackForweek(null,null,token);
+            logger.info("同步支付宝口碑数据结束");
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
+        shopPassengerflowAnalyzeService.updataEtlDate(format);
     }
 }

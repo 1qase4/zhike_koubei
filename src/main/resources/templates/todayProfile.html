@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="renderer" content="webkit">
-    <title>今日概况</title>
+    <title>当日概况</title>
     <link href="/css/common.css" rel="stylesheet" type="text/css">
     <!--zui-->
     <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-今日概况 ( <span id="today"></span> ) </div>
+        <div class="common-title lf">客流分析-当日概况 ( <span id="today"></span> ) </div>
         <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
     </div>
     <div class="data-wrap common-box">
@@ -24,7 +24,7 @@
         <ul class="data-content clearfix">
             <li>
                 <dl>
-                    <dt>今日客流</dt>
+                    <dt>当日客流</dt>
                     <dd>
                         <i style="display: inline-block;margin-right: 5px" class="iconfont icon-zhexiantu today-color"></i>
                         <span class="today-color" data-n="currentFlow">0</span> 人
@@ -33,7 +33,7 @@
             </li>
             <li>
                 <dl>
-                    <dt>昨日客流</dt>
+                    <dt>上日客流</dt>
                     <dd>
                         <i style="display: inline-block;margin-right: 5px" class="iconfont icon-tubiaozhexiantu1 yesterday-color"></i>
                         <span class="yesterday-color" data-n="yesterdayFlow">0</span> 人
@@ -64,7 +64,7 @@
     <div class="common-box mt20">
         <div class="switch-box">
             <div class="switch fr">
-                <span class="selected" data-time="DayFlow">今日</span>
+                <span class="selected" data-time="DayFlow">当日</span>
                 <span data-time="WeekFlow">本周</span>
             </div>
         </div>

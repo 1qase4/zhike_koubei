@@ -126,24 +126,25 @@ public class ShopLabelAnalyzeService {
                 .setPdate(time);
         List<SimpleKV<String, String>> kvs = shopLabelAnalyzeMapper.selectKYByQuery(query);
         Map<String, String> provinceMap = Constants.ProvinceMap;
-        Map<String, Integer> province = new HashMap<>();
+        Map<String, Integer> province = new LinkedHashMap<>();
         for (String p : provinceMap.values()) {
             province.put(p,0);
         }
         for (int i = 0;i<kvs.size();i++){
             province.put(kvs.get(i).getKey(),Integer.parseInt(kvs.get(i).getValue()));
         }
-        ArrayList<NameValue> collect = new ArrayList<>();
+        ArrayList<NameValue> collect = kvs.stream().map(a -> {
+            return new NameValue(a.getKey(), Integer.valueOf(a.getValue()));
+        })
+                .sorted((a1, a2) -> (a2.getValue().compareTo(a1.getValue())))
+                .collect(Collectors.toCollection(ArrayList<NameValue>::new));
+        for (int i = 0;i<collect.size();i++){
+            province.put(collect.get(i).getName(),collect.get(i).getValue());
+        }
+        collect.clear();
         for (Map.Entry<String, Integer> entry : province.entrySet()) {
             collect.add(new NameValue(entry.getKey(),entry.getValue()));
         }
-
-//        ArrayList<NameValue> collect = kvs.stream().map(a -> {
-//            return new NameValue(a.getKey(), Integer.valueOf(a.getValue()));
-//        })
-//                .sorted((a1, a2) -> (a2.getValue().compareTo(a1.getValue())))
-//                .collect(Collectors.toCollection(ArrayList<NameValue>::new));
-
         return collect;
     }
 

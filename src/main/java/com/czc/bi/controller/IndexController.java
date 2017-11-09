@@ -1,5 +1,6 @@
 package com.czc.bi.controller;
 
+import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.UserService;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -21,6 +22,9 @@ public class IndexController {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    @Autowired
+    private ShopPassengerflowAnalyzeService shopPassengerflowAnalyzeService;
+
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
         model.addAttribute("name", name);
@@ -28,7 +32,8 @@ public class IndexController {
     }
 
     @RequestMapping("/")
-    public String shouye() {
+    public String shouye(HttpServletRequest request) {
+        request.getSession().setAttribute("today",shopPassengerflowAnalyzeService.selectPdate());
         return "shouye";
     }
 

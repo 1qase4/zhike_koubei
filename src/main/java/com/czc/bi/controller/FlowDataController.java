@@ -3,6 +3,8 @@ package com.czc.bi.controller;
 import com.czc.bi.pojo.dto.Result;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
