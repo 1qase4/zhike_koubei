@@ -1,5 +1,8 @@
 package com.czc.bi.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2017/9/28.
  */
@@ -36,6 +39,24 @@ public class Constant {
         SIGN_TYPE = "RSA2";
     }
 
+    // 支付宝-报表-UK
+    public static String UK_REPORT_SHOP_INFO_LIST = "QK171030940e6aqv";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_WEEK_SUM = "QK171025xq8h93fs";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_MONTH_SUM = "QK171025t560649g";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK = "QK171025k863e26v";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK = "QK171106873ffwly";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK = "QK171025l0z832ev";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_FORWEEK_SUMMARY = "QK171025r854lj1a";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_FORWEEK = "QK1710256q45gfz4";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS_FORMONTH_SUMMARY = "QK171025c03sh8p4";
+    public static String UK_REPORT_YFY_SHOP_USRANALYSIS = "QK17102573r1022d";
+    public static String UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD = "QK171024w055awh3";
+    public static String UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORWEEK = "QK171024n83s62ea";
+    public static String UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS = "QK171024vnw9va74";
+    public static String UK_REPORT_YFY_SHOP_PROPERTY = "QK1711019f6d4557";
+    public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA = "QK171101gk69jc69";
+    public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS = "QK17110221vjfg3r";
+    public static String UK_REPORT_YFY_SHOP_HOT_DIAGRAM = "QK171101ozq154g7";
 
     private Constant() {
     }

@@ -17,7 +17,7 @@ import java.util.List;
  * @version: V1.0
  */
 
-@Mapper
+
 public interface ShopLabelAnalyzeMapper extends BaseMapper<ShopLabelAnalyze> {
 
     List<SimpleKV<String, String>> selectKYByQuery(@Param("query") BaseQuery query);

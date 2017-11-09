@@ -950,4 +950,16 @@ public class ShopPassengerflowAnalyzeService {
         headers.setContentDispositionFormData("attachment", new String(file.getBytes("UTF-8"), "iso-8859-1"));
         return new ResponseEntity<>(bytes, headers, HttpStatus.CREATED);
     }
+
+    public void updataByPadte(String pdate1,String pdate2){
+        //shopPassengerflowAnalyzeMapper.updataByPdate(pdate1,pdate2);
+    }
+
+    public void updataByLabel(String label1,String label2){
+        //shopPassengerflowAnalyzeMapper.updataByLabel(label1,label2);
+    }
+
+    public int saves(List<ShopPassengerflowAnalyze> list) {
+        return shopPassengerflowAnalyzeMapper.inserts(list);
+    }
 }

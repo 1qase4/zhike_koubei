@@ -3,10 +3,12 @@ package com.czc.bi.service;
 import com.czc.bi.mapper.ShopLabelAnalyzeMapper;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.pojo.Shop;
+import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.SimpleKV;
 import com.czc.bi.pojo.dto.NameValue;
 import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.ShopLabelAnalyzeQuery;
+import com.czc.bi.util.Constant;
 import com.czc.bi.util.Constants;
 import com.czc.bi.util.ExportData;
 import org.springframework.stereotype.Service;
@@ -123,11 +125,25 @@ public class ShopLabelAnalyzeService {
                 .setType(Constants.PROVINCE_TYPE_MONTH)
                 .setPdate(time);
         List<SimpleKV<String, String>> kvs = shopLabelAnalyzeMapper.selectKYByQuery(query);
-        ArrayList<NameValue> collect = kvs.stream().map(a -> {
-            return new NameValue(a.getKey(), Integer.valueOf(a.getValue()));
-        })
-                .sorted((a1, a2) -> (a2.getValue().compareTo(a1.getValue())))
-                .collect(Collectors.toCollection(ArrayList<NameValue>::new));
+        Map<String, String> provinceMap = Constants.ProvinceMap;
+        Map<String, Integer> province = new HashMap<>();
+        for (String p : provinceMap.values()) {
+            province.put(p,0);
+        }
+        for (int i = 0;i<kvs.size();i++){
+            province.put(kvs.get(i).getKey(),Integer.parseInt(kvs.get(i).getValue()));
+        }
+        ArrayList<NameValue> collect = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : province.entrySet()) {
+            collect.add(new NameValue(entry.getKey(),entry.getValue()));
+        }
+
+//        ArrayList<NameValue> collect = kvs.stream().map(a -> {
+//            return new NameValue(a.getKey(), Integer.valueOf(a.getValue()));
+//        })
+//                .sorted((a1, a2) -> (a2.getValue().compareTo(a1.getValue())))
+//                .collect(Collectors.toCollection(ArrayList<NameValue>::new));
+
         return collect;
     }
 
@@ -151,6 +167,9 @@ public class ShopLabelAnalyzeService {
                 .setPdate(time);
         List<SimpleKV<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
 
+//        ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
+//            return new Elevation().setCoord(Double.valueOf(a.getKey().split(",")[0]), Double.valueOf(a.getKey().split(",")[1])).setElevation(Integer.parseInt(a.getValue()));
+//        }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
         ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
             return new Elevation().setCoord(Double.valueOf(a.getKey()), Double.valueOf(a.getValue())).setElevation(1);
         }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
@@ -192,6 +211,10 @@ public class ShopLabelAnalyzeService {
             dataRows.add(new DataRow().addRecord("城市名称").addRecord(nameValue.getName()).addRecord(String.valueOf(nameValue.getValue())));
         }
         return ExportData.writeExcel(dataRows);
+    }
+
+    public int saves(List<ShopLabelAnalyze> list) {
+        return shopLabelAnalyzeMapper.inserts(list);
     }
 
     class Elevation {
