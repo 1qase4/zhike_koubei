@@ -402,17 +402,39 @@ public class AlipayDataSync {
         String token = "201710BB587b6a2bf52a4795bba5e7eca40c1C55";
         try {
             logger.info("开始同步支付宝口碑数据");
+            logger.info("开始同步热力图数据");
             syncShopHotDiagram(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步商铺信息数据");
             syncShopList(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步客户特征数据");
             syncShopProperty(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步客户区域特征数据");
             syncShopPropertyArea(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步每周新老客户数据");
             syncUsranalysisForweek(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步回头客数据");
             syncUsrBackForweek(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步回流情况数据");
             syncUsrLostBackForweek(null,null,token);
-            logger.info("同步支付宝口碑数据结束");
+
         } catch (AlipayApiException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        logger.info("同步支付宝口碑数据结束");
         shopPassengerflowAnalyzeService.updataEtlDate(format);
     }
 }
