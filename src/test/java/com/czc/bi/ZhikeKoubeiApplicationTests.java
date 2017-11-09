@@ -297,8 +297,8 @@ public class ZhikeKoubeiApplicationTests {
     public void demo2() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk("QK1710256q45gfz4");
-        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-        rc.addCondition("day","=","2017-08-10" );
+//        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+//        rc.addCondition("day","=","2017-08-10" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
         Integer status = (Integer) map.get("status");
         logger.debug((String) map.get("msg"));
@@ -345,8 +345,8 @@ public class ZhikeKoubeiApplicationTests {
     public void demo3() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK);  //QK171025k863e26v
-        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-        rc.addCondition("day","=","2017-09-25" );
+//        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+//        rc.addCondition("day","=","2017-09-25" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -371,13 +371,13 @@ public class ZhikeKoubeiApplicationTests {
                     s1.setLabel(columnValue.get("day"));
                     s1.setShop(columnValue.get("shop_name"));
                     if ("2".equals(columnValue.get("categoryidx"))){
-                        s1.setType(Constants.LOST_TYPE);
+                        s1.setType(Constants.RETURN_TYPE);
                     }else if ("3".equals(columnValue.get("categoryidx"))){
-                        s1.setType(Constants.BACK_FLOW_TYPE);
+                        s1.setType(Constants.FREQUENT_TYPE);
                     }
-                    if (Constants.LOST_TYPE.equals(s1.getType())){
+                    if (Constants.RETURN_TYPE.equals(s1.getType())){
                         s1.setValue(Integer.parseInt(columnValue.get("user_cnt")));
-                    }else if (Constants.BACK_FLOW_TYPE.equals(s1.getType())){
+                    }else if (Constants.FREQUENT_TYPE.equals(s1.getType())){
                         s1.setValue(Integer.parseInt(columnValue.get("user_cnt")));
                     }
                     if (s1.getType()!=null){
@@ -395,8 +395,8 @@ public class ZhikeKoubeiApplicationTests {
     public void demo5() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY);  //QK1711019f6d4557
-        rc.addCondition("shop_id", "=", "2016042300077000000015402772");
-        rc.addCondition("month","=","2017-05" );
+//        rc.addCondition("shop_id", "=", "2016042300077000000015402772");
+//        rc.addCondition("month","=","2017-05" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -447,8 +447,8 @@ public class ZhikeKoubeiApplicationTests {
     public void demo6() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
-        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-        rc.addCondition("month","=","2017-04" );
+//        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+//        rc.addCondition("month","=","2017-04" );
 //        rc.addCondition("province","=","黑龙江省" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
         Integer status = (Integer) map.get("status");
@@ -474,7 +474,9 @@ public class ZhikeKoubeiApplicationTests {
                     s1.setAccount(columnValue.get("shop_id"));
                     s1.setPdate(columnValue.get("month"));
                     s1.setType(Constants.PROVINCE_TYPE_MONTH);
-                    s1.setKey(columnValue.get("province"));
+                    if (Constants.ProvinceMap.containsKey(columnValue.get("province"))){
+                        s1.setKey(Constants.ProvinceMap.get(columnValue.get("province")));
+                    }
                     s1.setShop(columnValue.get("shop_name"));
                     String province = columnValue.get("province");
                     Integer total = 0;
@@ -497,7 +499,7 @@ public class ZhikeKoubeiApplicationTests {
         }
     }
 
-    //各省客流量
+    //热力图
     @Test
     public void demo7() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();

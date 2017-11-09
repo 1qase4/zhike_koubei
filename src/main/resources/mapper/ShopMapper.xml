@@ -3,7 +3,7 @@
 <mapper namespace="com.czc.bi.mapper.ShopMapper">
 
 	<insert id="insert" parameterType="com.czc.bi.pojo.Shop">
-		INSERT INTO `shop` (
+		INSERT INTO `shop_copy` (
 		`name`,
 		`account`,
 		`inshort`,
@@ -61,7 +61,7 @@
 		`shoptime`
 		,a1.`createdt` AS
 		`createdt`
-		FROM `shop` a1
+		FROM `shop_copy` a1
 		LEFT JOIN
 		`province` a2
 		ON a1.`province` =
@@ -91,14 +91,14 @@
 	<select id="selectNameNums" resultType="int">
 		SELECT COUNT(1)
 		FROM
-		`shop`
+		`shop_copy`
 		WHERE `name` = #{0}
 	</select>
 
 	<select id="selectAccountNums" resultType="int">
 		SELECT COUNT(1)
 		FROM
-		`shop`
+		`shop_copy`
 		WHERE `account` = #{0}
 	</select>
 
@@ -224,7 +224,7 @@
 		FROM
 		`cust_stay`
 		WHERE
-		`shop` = #{0}
+		`shop_copy` = #{0}
 		LIMIT 1000
 	</select>
 
@@ -246,7 +246,7 @@
 		FROM
 		`cust_stay`
 		WHERE
-		`shop` = #{0}
+		`shop_copy` = #{0}
 	</select>
 	<select id="selectPotentialExport" resultType="com.czc.bi.pojo.StayShow">
 		SELECT
@@ -258,7 +258,7 @@
 		FROM
 		`cust_stay`
 		WHERE
-		`shop` = #{0}
+		`shop_copy` = #{0}
 	</select>
 
 
@@ -282,12 +282,12 @@
 		`shoptime`,
 		`introduce`
 		FROM
-		`shop` where `account` = #{0}
+		`shop_copy` where `account` = #{0}
 	</select>
 
-	<update id="updateShopByCode" parameterType="com.czc.bi.pojo.Shop">
+	<update id="updateshopByCode" parameterType="com.czc.bi.pojo.Shop">
 		UPDATE
-		`shop`
+		`shop_copy`
 		SET
 		<if test="inshort != null and inshort != ''">
 			`inshort` = #{inshort,jdbcType=VARCHAR},
@@ -337,7 +337,7 @@
 		SELECT
 		`account`
 		FROM
-		`shop`
+		`shop_copy`
 		where `name` like '%${value}%'
 	</select>
 
@@ -362,7 +362,7 @@
 		`introduce`,
 		`createdt`,
 		`updatedt`
-		FROM `shop` where
+		FROM `shop_copy` where
 		`merchant` = #{merchant,jdbcType=VARCHAR}
 	</select>
 
@@ -370,7 +370,7 @@
 		SELECT
 		`account`
 		FROM
-		`shop`
+		`shop_copy`
 		where `name` = #{name,jdbcType=VARCHAR}
 	</select>
 
@@ -378,7 +378,7 @@
 		SELECT
 		`name`
 		FROM
-		`shop`
+		`shop_copy`
 		where `account` = #{0}
 	</select>
 
@@ -388,7 +388,7 @@
 		SELECT
 		`phone`
 		FROM
-		`shop`
+		`shop_copy`
 		where `name` = #{name,jdbcType=VARCHAR}
 	</select>
 
@@ -396,7 +396,7 @@
 		SELECT
 		`phone`
 		FROM
-		`shop`
+		`shop_copy`
 		where `account` = #{account,jdbcType=VARCHAR}
 	</select>
 
@@ -404,12 +404,12 @@
 		SELECT
 		`shoptime`
 		FROM
-		`shop` where `name` = #{name,jdbcType=VARCHAR}
+		`shop_copy` where `name` = #{name,jdbcType=VARCHAR}
 	</select>
 
 	<select id="selectMerchentShop" resultType="java.lang.String">
 		select `name` from
-		`shop` where `merchant`=(SELECT `name` from `cfg_user` WHERE
+		`shop_copy` where `merchant`=(SELECT `name` from `user` WHERE
 		`account`=#{account,jdbcType=VARCHAR});
 	</select>
 
