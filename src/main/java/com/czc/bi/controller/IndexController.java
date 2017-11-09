@@ -16,6 +16,11 @@ public class IndexController {
     }
 
     @RequestMapping("/")
+    public String index() {
+        return "index";
+    }
+
+    @RequestMapping("/shouye")
     public String shouye() {
         return "shouye";
     }
