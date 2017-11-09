@@ -95,7 +95,7 @@
     </select>
 
     <insert id="insert" parameterType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
-        INSERT INTO `shop_custflow_analyze`(
+        INSERT INTO `shop_ passengerflow_analyze`(
         `type`,
         `account`,
         `shop`,
@@ -107,13 +107,13 @@
         `updatedt`
         )
         VALUES(
-        #{type},
-        #{account},
-        #{shop},
-        #{rank},
-        #{label},
-        #{value},
-        #{pdate},
+        #{record.type},
+        #{record.account},
+        #{record.shop},
+        #{record.rank},
+        #{record.label},
+        #{record.value},
+        #{record.pdate},
         NOW(),
         NOW()
         )
@@ -150,7 +150,51 @@
     </update>
 
     <insert id="inserts" parameterType="java.util.List">
-        replace INTO `shop_ passengerflow_analyze_copy`(
+      INSERT INTO `shop_ passengerflow_analyze_copy`(
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="item" index="index" separator="," >
+            (#{item.type},#{item.account},#{item.shop},#{item.rank},#{item.label},#{item.value},#{item.pdate},NOW(),NOW())
+        </foreach>
+    </insert>
+
+
+    <insert id="replace" parameterType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
+        REPLACE INTO `shop_ passengerflow_analyze_copy`(
+        `type`,
+        `account`,
+        `shop`,
+        `rank`,
+        `label`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES(
+        #{record.type},
+        #{record.account},
+        #{record.shop},
+        #{record.rank},
+        #{record.label},
+        #{record.value},
+        #{record.pdate},
+        NOW(),
+        NOW()
+        )
+    </insert>
+
+    <insert id="replaces" parameterType="java.util.List">
+        REPLACE INTO `shop_ passengerflow_analyze_copy`(
         `type`,
         `account`,
         `shop`,

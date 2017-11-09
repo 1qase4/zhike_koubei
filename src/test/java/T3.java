@@ -40,7 +40,7 @@ public class T3 {
 
         request.setBizContent("{" +
                 "\"page\":\"1\"," +
-                "\"size\":\"20\"" +
+                "\"size\":\"30\"" +
                 " }");
 
         KoubeiMarketingDataAlisisReportBatchqueryResponse response = alipayClient.execute(request);

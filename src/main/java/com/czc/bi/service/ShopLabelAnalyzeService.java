@@ -4,7 +4,7 @@ import com.czc.bi.mapper.ShopLabelAnalyzeMapper;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
-import com.czc.bi.pojo.SimpleKV;
+import com.czc.bi.pojo.Simple;
 import com.czc.bi.pojo.dto.NameValue;
 import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.ShopLabelAnalyzeQuery;
@@ -42,10 +42,10 @@ public class ShopLabelAnalyzeService {
         query.setAccount(account)
                 .setType(Constants.GENDER_TYPE_MONTH)
                 .setPdate(time);
-        List<SimpleKV<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
+        List<Simple<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         int total = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
-        for (SimpleKV<String, String> simple : simpleKVS) {
+        for (Simple<String, String> simple : simpleKVS) {
             map.put(simple.getKey(),
                     new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
@@ -61,7 +61,7 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         total = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
-        for (SimpleKV<String, String> simple : simpleKVS) {
+        for (Simple<String, String> simple : simpleKVS) {
             map.put(simple.getKey(),
                     new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
@@ -78,7 +78,7 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         total = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
-        for (SimpleKV<String, String> simple : simpleKVS) {
+        for (Simple<String, String> simple : simpleKVS) {
             map.put(simple.getKey(),
                     new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
@@ -95,7 +95,7 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         total = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
-        for (SimpleKV<String, String> simple : simpleKVS) {
+        for (Simple<String, String> simple : simpleKVS) {
             map.put(simple.getKey(),
                     new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
@@ -123,7 +123,7 @@ public class ShopLabelAnalyzeService {
         query.setAccount(account)
                 .setType(Constants.PROVINCE_TYPE_MONTH)
                 .setPdate(time);
-        List<SimpleKV<String, String>> kvs = shopLabelAnalyzeMapper.selectKYByQuery(query);
+        List<Simple<String, String>> kvs = shopLabelAnalyzeMapper.selectKYByQuery(query);
         ArrayList<NameValue> collect = kvs.stream().map(a -> {
             return new NameValue(a.getKey(), Integer.valueOf(a.getValue()));
         })
@@ -150,7 +150,7 @@ public class ShopLabelAnalyzeService {
         query.setAccount(account)
                 .setType(Constants.ELEVATION_TYPE)
                 .setPdate(time);
-        List<SimpleKV<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
+        List<Simple<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
 
 //        ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
 //            return new Elevation().setCoord(Double.valueOf(a.getKey().split(",")[0]), Double.valueOf(a.getKey().split(",")[1])).setElevation(Integer.parseInt(a.getValue()));
@@ -231,7 +231,7 @@ public class ShopLabelAnalyzeService {
     }
 
     // 格式化星座数据
-    private Map<String, Integer> formartConstellations(List<SimpleKV<String, String>> kvs) {
+    private Map<String, Integer> formartConstellations(List<Simple<String, String>> kvs) {
         // 初始化12星座数据
         Map<String, Integer> map = new LinkedHashMap<>(12);
         map.put("白羊座", 0);
@@ -249,7 +249,7 @@ public class ShopLabelAnalyzeService {
 
         int total = kvs.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
-        for (SimpleKV<String, String> kv : kvs) {
+        for (Simple<String, String> kv : kvs) {
             map.put(kv.getKey(), Integer.valueOf(kv.getValue()));
         }
         return map;

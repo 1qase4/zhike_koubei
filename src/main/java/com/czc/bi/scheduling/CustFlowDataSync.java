@@ -13,6 +13,8 @@ import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.BaseUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,13 +32,15 @@ import static com.czc.bi.util.Constant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_F
  * @date : 2017/10/31.
  * @version: V1.0
  */
+@Service
 public class CustFlowDataSync {
+
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Autowired
     private AlipayClient client;
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
-
+    @Autowired
     private ShopPassengerflowAnalyzeMapper shopPassengerflowAnalyzeMapper;
 
     public void syncDayFlow(String shopId, String date, String token) throws AlipayApiException {
@@ -83,7 +87,7 @@ public class CustFlowDataSync {
             analyze.setShop(columnValue.get("shop_name"));
 
             // 执行数据插入
-            shopPassengerflowAnalyzeMapper.insert(analyze);
+            shopPassengerflowAnalyzeMapper.replace(analyze);
             logger.debug(String.format("客户[%s]在日期[%s]时的当日流数据获取完成", shopId, date));
         }
 
@@ -167,7 +171,7 @@ public class CustFlowDataSync {
 
         // 执行记录插入
         if (list.size() > 0) {
-            shopPassengerflowAnalyzeMapper.inserts(list);
+            shopPassengerflowAnalyzeMapper.replaces(list);
             logger.debug(String.format("客户[%s]在日期[%s]时的分区段客流数据获取完成", shopId, date));
         }
     }

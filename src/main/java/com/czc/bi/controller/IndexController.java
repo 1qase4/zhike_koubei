@@ -1,9 +1,13 @@
 package com.czc.bi.controller;
 
+import com.czc.bi.pojo.Simple;
+import com.czc.bi.service.ShopService;
 import com.czc.bi.service.UserService;
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.web.session.HttpServletSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,8 +33,16 @@ public class IndexController {
         return "hello";
     }
 
+    @Autowired
+    private ShopService shopService;
+
     @RequestMapping("/")
-    public String shouye() {
+    public String shouye(HttpSession session,Model model) {
+        String account = (String) SecurityUtils.getSubject().getPrincipal();
+        session.setAttribute("account",account);
+
+        List<Simple<String,String>> shops = shopService.selectShopsByMerchant(account);
+        model.addAttribute("shops",shops);
         return "shouye";
     }
 

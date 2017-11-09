@@ -1,7 +1,7 @@
 package com.czc.bi.mapper;
 
 import com.czc.bi.pojo.ShopLabelAnalyze;
-import com.czc.bi.pojo.SimpleKV;
+import com.czc.bi.pojo.Simple;
 import com.czc.bi.pojo.query.BaseQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,6 +20,6 @@ import java.util.List;
 
 public interface ShopLabelAnalyzeMapper extends BaseMapper<ShopLabelAnalyze> {
 
-    List<SimpleKV<String, String>> selectKYByQuery(@Param("query") BaseQuery query);
+    List<Simple<String, String>> selectKYByQuery(@Param("query") BaseQuery query);
 
 }
