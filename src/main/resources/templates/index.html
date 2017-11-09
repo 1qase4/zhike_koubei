@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta content="width=device-width, initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no" name="viewport" />-->
+    <meta name="renderer" content="webkit">
+    <title>辰智 | 知客管理系统</title>
+    <script>
+        if(/AppleWebKit.*mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))){
+            window.location.href = "/loginPage";
+        }
+        if(window !=top){
+            top.location.href=location.href;
+        }
+    </script>
+    <link href="/image/favicon-20170908021540662.ico"  rel="shortcut icon"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/common.css">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/responsiveslides.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/login-soft.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/iconfont/iconfont.css">
+    <!--提示低版本IE浏览器-->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/iealert.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"></script>
+    <!--浏览器IE9以下不兼容提示-->
+    <script type="text/javascript" src="/js/iealert.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("body").iealert();
+        });
+    </script>
+</head>
+<body class="login-body">
+<div class="banner">
+    <div class="heade">
+        <!--顶部logo-->
+        <div class="logo-box">
+            <div class="lf">
+                <img src="/image/logo_top_02.png" alt="">
+            </div>
+            <div class="lf top_right">
+                <a href="http://www.shangquanshow.com/" target="_blank">辰智首页</a>
+                <a href="http://www.shangquanshow.com/about_us.html" target="_blank">关于我们</a>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content-layout">
+            <div class="link-img lf">
+                <ul class="rslides" id="slider">
+                    <li>
+                        <img src="/image/slider2.jpg">
+                        <p class="caption">客流追踪，能及时反映客流变化，助力流量运营</p>
+                    </li>
+                    <li>
+                        <img src="/image/slider_mall.jpg">
+                        <p class="caption">专注于商业领域的大数据聚合应用，助力商家准确把握客流变化、洞察客流特征、进行精准引流</p>
+                    </li>
+                    <li>
+                        <img src="/image/slider_restaurant.jpg">
+                        <p class="caption">客源地分析，让您把握客流来源，做出精准引流决策</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="login-content fr">
+                <form autocomplete="off" id="sqs" class="login-box">
+                    <div class="login-logo">登录知客口碑</div>
+                    <!--错误提示-->
+                    <div class="cwts" style="display: none">
+                        <div class="error"></div>
+                        <span class="errorTips"></span>
+                    </div>
+                    <!--用户名-->
+                    <div class="login-input uname">
+                        <!--小图标-->
+                        <span><i class="iconfont icon-denglu"></i></span>
+                        <input type="text" class="login-text" name="username" placeholder="商圈秀账号" autocomplete="off">
+                    </div>
+                    <!--密码-->
+                    <div class="login-input upwd">
+                        <label class="abs"></label>
+                        <!--小图标-->
+                        <span><i class="iconfont icon-denglumima"></i></span>
+                        <input type="password" class="login-text" name="password" placeholder="密码" autocomplete="off">
+                    </div>
+                    <!--验证码-->
+                    <div class="login-input mycode clearfix">
+                        <!--小图标-->
+                        <span><i class="iconfont icon-yanzhengma1"></i></span>
+                        <input type="text" class="code-text" name="code" placeholder="验证码">
+                        <img id="sqsCode" class="code" src="" title="更换验证码">
+                    </div>
+                    <div class="submitArea">
+                        <button type="button" class="xsubmit">登&nbsp;&nbsp;录</button>
+                    </div>
+                    <!--<div class="login-method">-->
+                        <!--<a href="http://www.chenzhidata.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>-->
+                    <!--</div>-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--版权声明-->
+<div class="logl-footer">
+    <div class="copyright">
+        <div class="sub-footer clearfix">
+            <!--左侧地址-->
+            <div class="footer-address lf">
+                <div class="addr-name">上海office</div>
+                <div class="addr-list">
+                    <ul>
+                        <li>地址: 上海市杨浦区黄兴路2005弄2号楼15层</li>
+                        <li>电话：<span>021-52736567-8030</span></li>
+                        <li>电邮：davidhu@shangquanshow.com</li>
+                        <li style="padding-top: 30px;color: #989898;">版权所有 © 2017 上海辰智信息技术有限公司
+                            <a href="http://www.miitbeian.gov.cn" style="color: inherit;" target="_blank">沪ICP备11014632号</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <!--右侧二维码-->
+            <div class="footer-qrcode fr">
+                <div class="addr-code lf">
+                    <img src="/image/footer_code1.png" alt="">
+                    <p>关注辰智微博</p>
+                </div>
+                <div class="addr-code lf">
+                    <img src="/image/footer_code2.jpg" alt="">
+                    <p>关注辰智微信</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--轮播图-->
+<script type="text/javascript" src="/js/responsiveslides.min.js"></script>
+<script type="text/javascript" src="/js/jquery.md5.min.js"></script>
+<script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>
+<script type="text/javascript" src="/js/index1.js"></script>
+<script>
+    $(function () {
+        new SecurityCode("sqsCode").init();
+    });
+</script>
+</body>
+</html>
