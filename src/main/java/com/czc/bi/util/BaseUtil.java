@@ -107,10 +107,22 @@ public class BaseUtil {
 		return sf.format(calendar.getTime());
 	}
 
+	// 获取n天前后的日期
+	public static String getDay(String start,int amount) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sf.parse(start);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE,amount);
+		return sf.format(calendar.getTime());
+	}
+
 	public static void main(String[] args) throws ParseException {
 		String after7Day = BaseUtil.getAfter7Day("2017-09-04");
 		System.out.println(after7Day);
 		String begin7Day = BaseUtil.getBegin7Day("2017-09-04");
 		System.out.println(begin7Day);
+		String day = BaseUtil.getDay("2017-11-07",-1);
+		System.out.println(day);
 	}
 }

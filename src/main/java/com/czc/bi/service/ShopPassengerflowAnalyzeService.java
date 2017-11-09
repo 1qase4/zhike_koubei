@@ -51,7 +51,7 @@ public class ShopPassengerflowAnalyzeService {
 
     // 今日概况
     // 获取首页的当前客流信息
-    public Map getCurrentFlow(String account) {
+    public Map getCurrentFlow(String account) throws Exception {
         // 取今天的日期
 //        String date = BaseUtil.getCurrentDate();
         String date = shopPassengerflowAnalyzeMapper.selectPdate();
@@ -81,9 +81,11 @@ public class ShopPassengerflowAnalyzeService {
         map.put("maxFlow", maxFlow);
 
         // 获取昨天客流
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        date = BaseUtil.getDateString(cal.getTime());
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DATE, -1);
+//        Date time = cal.getTime();
+//        date = BaseUtil.getDateString(cal.getTime());
+        date = BaseUtil.getDay(date,-1);
         query.setType(Constants.CUSTFLOW_TYPE_DAY).setPdate(date);
         ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         Integer yesterdayFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
@@ -91,8 +93,9 @@ public class ShopPassengerflowAnalyzeService {
         map.put("yesterdayFlow", yesterdayFlow);
 
         // 获取上周同期客流
-        cal.add(Calendar.DATE, -6);
-        date = BaseUtil.getDateString(cal.getTime());
+//        cal.add(Calendar.DATE, -6);
+//        date = BaseUtil.getDateString(cal.getTime());
+        date = BaseUtil.getDay(date,-6);
         query.setPdate(date);
         ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         Integer lastWeekFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
@@ -103,7 +106,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 获取首页上面的今日客流走势
-    public Result getMainDayFlow(String account) {
+    public Result getMainDayFlow(String account) throws Exception {
         // 取今天的日期
 //        String date = BaseUtil.getCurrentDate();
         String date = shopPassengerflowAnalyzeMapper.selectPdate();
@@ -132,10 +135,11 @@ public class ShopPassengerflowAnalyzeService {
                 .data(values));
 
         // 获取昨日客流
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        logger.debug("获取昨日[" + date + "]的客流信息");
-        date = BaseUtil.getDateString(cal.getTime());
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DATE, -1);
+//        logger.debug("获取昨日[" + date + "]的客流信息");
+//        date = BaseUtil.getDateString(cal.getTime());
+        date = BaseUtil.getDay(date,-1);
         query.setPdate(date);
         shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         values = shopPassengerflowAnalyzes.stream().map(a -> a.getValue()).collect(Collectors.toList());
@@ -143,8 +147,9 @@ public class ShopPassengerflowAnalyzeService {
                 .data(values));
 
         // 获取上周同期
-        cal.add(Calendar.DATE, -6);
-        date = BaseUtil.getDateString(cal.getTime());
+//        cal.add(Calendar.DATE, -6);
+//        date = BaseUtil.getDateString(cal.getTime());
+        date = BaseUtil.getDay(date,-6);
         logger.debug("获取上周同期[" + date + "]的客流信息");
         query.setPdate(date);
         shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
@@ -562,7 +567,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 当前页面的数据下载
-    public byte[] currentDownload(String account) throws IOException {
+    public byte[] currentDownload(String account) throws Exception {
 
         String callValue = null;
         // 初始化Excel环境

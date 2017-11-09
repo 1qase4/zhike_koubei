@@ -41,7 +41,7 @@ public class FlowDataController {
 
     // 当前客流情况
     @RequestMapping(value = "current")
-    public Result current(@RequestParam("account") String account) {
+    public Result current(@RequestParam("account") String account) throws Exception {
         if (account == null) {
             return null;
         }
@@ -52,7 +52,7 @@ public class FlowDataController {
 
     // 今日客流走势
     @RequestMapping(value = "mainDayFlow")
-    public Result mainDayFlow(@RequestParam("account") String account) {
+    public Result mainDayFlow(@RequestParam("account") String account) throws Exception {
         if (account == null) {
             return null;
         }
@@ -155,7 +155,7 @@ public class FlowDataController {
     @RequestMapping("currentDownload")
     public ResponseEntity<byte[]> currentDownload(
             @RequestParam("account") String account
-            ) throws IOException {
+            ) throws Exception {
         logger.debug("今日概况下载！！！");
         if (account == null) {
             return null;

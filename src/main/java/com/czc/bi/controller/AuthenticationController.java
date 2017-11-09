@@ -38,7 +38,7 @@ public class AuthenticationController {
 
     // 今日客流走势
     @RequestMapping(value = "mainDayFlow")
-    public Result mainDayFlow(@RequestParam("account") String account) {
+    public Result mainDayFlow(@RequestParam("account") String account) throws Exception {
         if (account == null) {
             return null;
         }
