@@ -1,5 +1,6 @@
 package com.czc.bi.controller;
 
+import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.UserService;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.IncorrectCredentialsException;
