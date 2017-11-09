@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
@@ -21,4 +22,6 @@ public interface ShopPassengerflowAnalyzeMapper extends BaseMapper<ShopPassenger
     int replace(@Param("record") ShopPassengerflowAnalyze record);
 
     int replaces(@Param("records") List<ShopPassengerflowAnalyze> records);
+
+    String selectPdateByAccount(@Param("account") String account);
 }

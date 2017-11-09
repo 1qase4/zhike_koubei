@@ -16,8 +16,11 @@ import com.czc.bi.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.czc.bi.util.Constant.*;
@@ -53,7 +56,6 @@ public class AlipayDataSync {
 
     //保存商户信息
     public void syncShopList(String shopId, String date, String token) throws AlipayApiException {
-
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_SHOP_INFO_LIST);
         Map map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
@@ -84,8 +86,8 @@ public class AlipayDataSync {
     public void syncUsranalysisForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_FORWEEK);
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -133,8 +135,8 @@ public class AlipayDataSync {
     public void syncUsrBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK);  //QK171025k863e26v
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -182,8 +184,8 @@ public class AlipayDataSync {
     public void syncUsrLostBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -231,8 +233,8 @@ public class AlipayDataSync {
     public void syncShopProperty(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY);  //QK1711019f6d4557
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("day","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("day","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -283,8 +285,8 @@ public class AlipayDataSync {
     public void syncShopPropertyArea(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
-        rc.addCondition("shop_id", "=", shopId);
-        rc.addCondition("month","=",date );
+//        rc.addCondition("shop_id", "=", shopId);
+//        rc.addCondition("month","=",date );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -309,7 +311,9 @@ public class AlipayDataSync {
                     s1.setAccount(columnValue.get("shop_id"));
                     s1.setPdate(columnValue.get("month"));
                     s1.setType(Constants.PROVINCE_TYPE_MONTH);
-                    s1.setKey(columnValue.get("province"));
+                    if (Constants.ProvinceMap.containsKey(columnValue.get("province"))){
+                        s1.setKey(Constants.ProvinceMap.get(columnValue.get("province")));
+                    }
                     s1.setShop(columnValue.get("shop_name"));
                     String province = columnValue.get("province");
                     Integer total = 0;
@@ -334,7 +338,7 @@ public class AlipayDataSync {
     //周边分布
     public void syncShopHotDiagram(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk(shopId);  //QK171101ozq154g7
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_HOT_DIAGRAM);  //QK171101ozq154g7
 //        rc.addCondition("shop_id", "=", "2015052800077000000000121715");
 //        rc.addCondition("month","=","201710" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -384,5 +388,53 @@ public class AlipayDataSync {
                 shopLabelAnalyzeService.saves(list);
             }
         }
+    }
+
+    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
+    public void syncAlipayData() throws ParseException {
+        String pdate = shopPassengerflowAnalyzeService.selectPdate();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sf.parse(pdate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE,1);
+        String format = sf.format(calendar.getTime());
+        String token = "201710BB587b6a2bf52a4795bba5e7eca40c1C55";
+        try {
+            logger.info("开始同步支付宝口碑数据");
+            logger.info("开始同步热力图数据");
+            syncShopHotDiagram(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步商铺信息数据");
+            syncShopList(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步客户特征数据");
+            syncShopProperty(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步客户区域特征数据");
+            syncShopPropertyArea(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步每周新老客户数据");
+            syncUsranalysisForweek(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步回头客数据");
+            syncUsrBackForweek(null,null,token);
+
+            Thread.sleep(1000);
+            logger.info("开始同步回流情况数据");
+            syncUsrLostBackForweek(null,null,token);
+
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        logger.info("同步支付宝口碑数据结束");
+        shopPassengerflowAnalyzeService.updataEtlDate(format);
     }
 }

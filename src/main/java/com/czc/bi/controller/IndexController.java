@@ -1,13 +1,13 @@
 package com.czc.bi.controller;
 
 import com.czc.bi.pojo.Simple;
+import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
 import com.czc.bi.service.UserService;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.web.session.HttpServletSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +27,9 @@ public class IndexController {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    @Autowired
+    private ShopPassengerflowAnalyzeService shopPassengerflowAnalyzeService;
+
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
         model.addAttribute("name", name);
@@ -37,17 +40,18 @@ public class IndexController {
     private ShopService shopService;
 
     @RequestMapping("/")
-    public String shouye(HttpSession session,Model model) {
+    public String shouye(HttpSession session, Model model) {
         String account = (String) SecurityUtils.getSubject().getPrincipal();
-        session.setAttribute("account",account);
+        session.setAttribute("account", account);
 
-        List<Simple<String,String>> shops = shopService.selectShopsByMerchant(account);
-        model.addAttribute("shops",shops);
+        List<Simple<String, String>> shops = shopService.selectShopsByMerchant(account);
+        model.addAttribute("shops", shops);
+        session.setAttribute("today", shopPassengerflowAnalyzeService.selectPdate());
         return "shouye";
     }
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request, Map<String, Object> map) throws Exception{
+    public String login(HttpServletRequest request, Map<String, Object> map) throws Exception {
         System.out.println("IndexController.login()");
         // 登录失败从request中获取shiro处理的异常信息。
         // shiroLoginFailure:就是shiro异常类的全类名.
@@ -65,7 +69,7 @@ public class IndexController {
                 System.out.println("kaptchaValidateFailed -- > 验证码错误");
                 msg = "kaptchaValidateFailed -- > 验证码错误";
             } else {
-                msg = "else >> "+exception;
+                msg = "else >> " + exception;
                 System.out.println("else -- >" + exception);
             }
         }
@@ -75,7 +79,7 @@ public class IndexController {
     }
 
     @RequestMapping("/403")
-    public String unauthorizedRole(){
+    public String unauthorizedRole() {
         System.out.println("------没有权限-------");
         return "403";
     }

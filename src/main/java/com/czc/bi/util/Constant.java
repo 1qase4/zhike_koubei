@@ -1,5 +1,8 @@
 package com.czc.bi.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2017/9/28.
  */
@@ -53,7 +56,7 @@ public class Constant {
     public static String UK_REPORT_YFY_SHOP_PROPERTY = "QK1711019f6d4557";
     public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA = "QK171101gk69jc69";
     public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS = "QK17110221vjfg3r";
-
+    public static String UK_REPORT_YFY_SHOP_HOT_DIAGRAM = "QK171101ozq154g7";
 
     private Constant() {
     }

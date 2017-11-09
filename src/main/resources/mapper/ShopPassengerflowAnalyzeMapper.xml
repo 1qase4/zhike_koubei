@@ -15,7 +15,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_ passengerflow_analyze`
+        `shop_ passengerflow_analyze_copy`
         WHERE `id` = #{key}
     </select>
 
@@ -32,7 +32,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_ passengerflow_analyze`
+        `shop_ passengerflow_analyze_copy`
         WHERE 1 = 1
         <if test="query.type != null">
             AND `type` ${query.typeOperator} #{query.type}
@@ -69,7 +69,7 @@
     <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery" resultType="Integer">
         SELECT COUNT(1)
         FROM
-        `shop_ passengerflow_analyze`
+        `shop_ passengerflow_analyze_copy`
         WHERE 1 = 1
         <if test="query.type != null">
             AND `type` = #{query.type}
@@ -120,7 +120,7 @@
     </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="Integer">
-        DELETE FROM `shop_ passengerflow_analyze`
+        DELETE FROM `shop_ passengerflow_analyze_copy`
         WHERE id = #{key}
     </delete>
 
@@ -137,16 +137,16 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_ passengerflow_analyze`
+        `shop_ passengerflow_analyze_copy`
         WHERE ${condition}
     </select>
 
     <update id="updataByPdate" >
-        UPDATE `shop_ passengerflow_analyze` SET pdate = #{pdate1,jdbcType=VARCHAR} WHERE pdate = #{pdate2,jdbcType=VARCHAR};
+        UPDATE `shop_ passengerflow_analyze_copy` SET pdate = #{pdate1,jdbcType=VARCHAR} WHERE pdate = #{pdate2,jdbcType=VARCHAR};
     </update>
 
     <update id="updataByLabel" >
-        UPDATE `shop_ passengerflow_analyze` SET label = #{label1,jdbcType=VARCHAR} WHERE label = #{label2,jdbcType=VARCHAR};
+        UPDATE `shop_ passengerflow_analyze_copy` SET label = #{label1,jdbcType=VARCHAR} WHERE label = #{label2,jdbcType=VARCHAR};
     </update>
 
     <insert id="inserts" parameterType="java.util.List">
@@ -210,5 +210,25 @@
             (#{item.type},#{item.account},#{item.shop},#{item.rank},#{item.label},#{item.value},#{item.pdate},NOW(),NOW())
         </foreach>
     </insert>
+
+    <select id="selectPdateByAccount" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        `pdate`
+        FROM
+        `shop_ passengerflow_analyze_copy`
+        WHERE `account` = #{account}
+        ORDER BY pdate DESC LIMIT 1
+    </select>
+
+    <select id="selectPdate" resultType="java.lang.String">
+        SELECT
+        `pdate`
+        FROM
+        `etl_date`
+    </select>
+
+    <update id="updataEtlDate" >
+        UPDATE `etl_date` SET pdate = #{pdate,jdbcType=VARCHAR};
+    </update>
 
 </mapper>

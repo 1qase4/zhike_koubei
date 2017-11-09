@@ -53,8 +53,8 @@ public class ShopPassengerflowAnalyzeService {
     // 获取首页的当前客流信息
     public Map getCurrentFlow(String account) {
         // 取今天的日期
-        String date = BaseUtil.getCurrentDate();
-
+//        String date = BaseUtil.getCurrentDate();
+        String date = shopPassengerflowAnalyzeMapper.selectPdate();
         Map<String, Object> map = new HashMap<>(4);
         // 获取今日客流
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
@@ -105,8 +105,9 @@ public class ShopPassengerflowAnalyzeService {
     // 获取首页上面的今日客流走势
     public Result getMainDayFlow(String account) {
         // 取今天的日期
-        String date = BaseUtil.getCurrentDate();
-        logger.debug("获取今日[" + date + "]的客流信息");
+//        String date = BaseUtil.getCurrentDate();
+        String date = shopPassengerflowAnalyzeMapper.selectPdate();
+        logger.debug("获取当日[" + date + "]的客流信息");
         // 获取今日客流
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
         query.setAccount(account)
@@ -121,13 +122,13 @@ public class ShopPassengerflowAnalyzeService {
         List<Integer> values = shopPassengerflowAnalyzes.stream().map(a -> a.getValue()).collect(Collectors.toList());
         GsonOption option = new GsonOption();
         option.tooltip().trigger(Trigger.axis);
-        option.legend("今日客流", "昨日客流", "上周同期");
+        option.legend("当日客流", "上日客流", "上周同期");
         option.toolbox().show(true);
         option.xAxis(new CategoryAxis().boundaryGap(false)
                 .data("7-8点", "8-9点", "9-10点", "10-11点", "11-12点", "12-13点", "13-14点", "14-15点",
                         "15-16点", "16-17点", "17-18点", "18-19点", "19-20点", "20-21点", "21-22点"));
         option.yAxis(new ValueAxis());
-        option.series(new Line().name("今日客流")
+        option.series(new Line().name("当日客流")
                 .data(values));
 
         // 获取昨日客流
@@ -138,7 +139,7 @@ public class ShopPassengerflowAnalyzeService {
         query.setPdate(date);
         shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         values = shopPassengerflowAnalyzes.stream().map(a -> a.getValue()).collect(Collectors.toList());
-        option.series(new Line().name("昨日客流")
+        option.series(new Line().name("上日客流")
                 .data(values));
 
         // 获取上周同期
@@ -961,5 +962,13 @@ public class ShopPassengerflowAnalyzeService {
 
     public int saves(List<ShopPassengerflowAnalyze> list) {
         return shopPassengerflowAnalyzeMapper.inserts(list);
+    }
+
+    public String selectPdate() {
+        return shopPassengerflowAnalyzeMapper.selectPdate();
+    }
+
+    public void updataEtlDate(String format) {
+        shopPassengerflowAnalyzeMapper.updataEtlDate(format);
     }
 }

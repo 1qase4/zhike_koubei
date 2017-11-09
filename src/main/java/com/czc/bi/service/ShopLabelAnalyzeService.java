@@ -8,6 +8,7 @@ import com.czc.bi.pojo.Simple;
 import com.czc.bi.pojo.dto.NameValue;
 import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.ShopLabelAnalyzeQuery;
+import com.czc.bi.util.Constant;
 import com.czc.bi.util.Constants;
 import com.czc.bi.util.ExportData;
 import org.springframework.stereotype.Service;
@@ -124,11 +125,28 @@ public class ShopLabelAnalyzeService {
                 .setType(Constants.PROVINCE_TYPE_MONTH)
                 .setPdate(time);
         List<Simple<String, String>> kvs = shopLabelAnalyzeMapper.selectKYByQuery(query);
+
+        Map<String, String> provinceMap = Constants.ProvinceMap;
+        Map<String, Integer> province = new LinkedHashMap<>();
+        for (String p : provinceMap.values()) {
+            province.put(p,0);
+        }
+        for (int i = 0;i<kvs.size();i++){
+            province.put(kvs.get(i).getKey(),Integer.parseInt(kvs.get(i).getValue()));
+        }
+
         ArrayList<NameValue> collect = kvs.stream().map(a -> {
             return new NameValue(a.getKey(), Integer.valueOf(a.getValue()));
         })
                 .sorted((a1, a2) -> (a2.getValue().compareTo(a1.getValue())))
                 .collect(Collectors.toCollection(ArrayList<NameValue>::new));
+        for (int i = 0;i<collect.size();i++){
+            province.put(collect.get(i).getName(),collect.get(i).getValue());
+        }
+        collect.clear();
+        for (Map.Entry<String, Integer> entry : province.entrySet()) {
+            collect.add(new NameValue(entry.getKey(),entry.getValue()));
+        }
         return collect;
     }
 

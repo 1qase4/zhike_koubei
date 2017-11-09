@@ -37,4 +37,7 @@ public interface BaseMapper<T> {
     // 自定义where查询
     List<T> selectByCondition(@Param("condition") String condition);
 
+    String selectPdate();
+
+    void updataEtlDate(@Param("pdate") String format);
 }

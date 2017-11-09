@@ -3,7 +3,7 @@
 <mapper namespace="com.czc.bi.mapper.ShopMapper">
 
 	<insert id="insert" parameterType="com.czc.bi.pojo.Shop">
-		INSERT INTO `shop` (
+		INSERT INTO `shop_copy` (
 		`name`,
 		`account`,
 		`inshort`,
@@ -69,7 +69,7 @@
 		`shoptime`,
 		`introduce`
 		FROM
-		`shop` where `account` = #{0}
+		`shop_copy` where `account` = #{0}
 	</select>
 	<select id="selectAllShopId" resultType="java.lang.String">
 		SELECT account FROM `shop_copy`
