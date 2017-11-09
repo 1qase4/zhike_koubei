@@ -6,6 +6,7 @@
         SELECT
         `id`,
         `account`,
+        `sqs_account`
         `password`,
         `name`,
         `inshort`,
@@ -21,6 +22,225 @@
         FROM
         `user`
         WHERE `account` = #{account}
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer">
+        SELECT
+        `id`,
+        `account`,
+        `sqs_account`
+        `password`,
+        `name`,
+        `inshort`,
+        `address`,
+        `phone`,
+        `email`,
+        `link`,
+        `role`,
+        `agent`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `user`
+        WHERE `id` = #{key}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.czc.bi.pojo.query.UserQuery" resultType="com.czc.bi.pojo.User">
+        SELECT
+        `id`,
+        `account`,
+        `password`,
+        `name`,
+        `inshort`,
+        `address`,
+        `phone`,
+        `email`,
+        `link`,
+        `role`,
+        `agent`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `user`
+        WHERE 1 = 1
+        <if test="query.account != null">
+            AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.sqsAccount != null">
+            AND `sqs_account` ${query.sqsAccountOperator} #{query.sqsAccount}
+        </if>
+        <if test="query.password != null">
+            AND `password` ${query.passwordOperator} #{query.password}
+        </if>
+        <if test="query.name != null">
+            AND `name` ${query.nameOperator} #{query.name}
+        </if>
+        <if test="query.inshort != null">
+            AND `inshort` ${query.inshortOperator} #{query.inshort}
+        </if>
+        <if test="query.address != null">
+            AND `address` ${query.addressOperator} #{query.address}
+        </if>
+        <if test="query.phone != null">
+            AND `phone` ${query.phoneOperator} #{query.phone}
+        </if>
+        <if test="query.email != null">
+            AND `email` ${query.emailOperator} #{query.email}
+        </if>
+        <if test="query.link != null">
+            AND `link` ${query.linkOperator} #{query.link}
+        </if>
+        <if test="query.role != null">
+            AND `role` ${query.roleOperator} #{query.role}
+        </if>
+        <if test="query.agent != null">
+            AND `agent` ${query.agentOperator} #{query.agent}
+        </if>
+        <if test="query.stat != null">
+            AND `stat` ${query.statOperator} #{query.stat}
+        </if>
+    </select>
+
+    <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.UserQuery" resultType="Integer">
+        SELECT COUNT(1)
+        FROM
+        `user`
+        WHERE 1 = 1
+        <if test="query.account != null">
+            AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.sqsAccount != null">
+            AND `sqs_account` ${query.sqsAccountOperator} #{query.sqsAccount}
+        </if>
+        <if test="query.password != null">
+            AND `password` ${query.passwordOperator} #{query.password}
+        </if>
+        <if test="query.name != null">
+            AND `name` ${query.nameOperator} #{query.name}
+        </if>
+        <if test="query.inshort != null">
+            AND `inshort` ${query.inshortOperator} #{query.inshort}
+        </if>
+        <if test="query.address != null">
+            AND `address` ${query.addressOperator} #{query.address}
+        </if>
+        <if test="query.phone != null">
+            AND `phone` ${query.phoneOperator} #{query.phone}
+        </if>
+        <if test="query.email != null">
+            AND `email` ${query.emailOperator} #{query.email}
+        </if>
+        <if test="query.link != null">
+            AND `link` ${query.linkOperator} #{query.link}
+        </if>
+        <if test="query.role != null">
+            AND `role` ${query.roleOperator} #{query.role}
+        </if>
+        <if test="query.agent != null">
+            AND `agent` ${query.agentOperator} #{query.agent}
+        </if>
+        <if test="query.stat != null">
+            AND `stat` ${query.statOperator} #{query.stat}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.czc.bi.pojo.User">
+        INSERT INTO `user`
+        (
+        `account`,
+        `sqs_account`,
+        `password`,
+        `name`,
+        `inshort`,
+        `address`,
+        `phone`,
+        `email`,
+        `link`,
+        `role`,
+        `agent`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES(
+        #{record.account},
+        #{record.sqsAccount},
+        #{record.password},
+        #{record.name},
+        #{record.inshort},
+        #{record.address},
+        #{record.phone},
+        #{record.email},
+        #{record.link},
+        #{record.role},
+        #{record.agent},
+        #{record.stat},
+        NOW(),
+        NOW()
+        )
+    </insert>
+
+    <insert id="inserts" parameterType="java.util.List">
+        INSERT INTO `user`
+        (
+        `account`,
+        `sqs_account`,
+        `password`,
+        `name`,
+        `inshort`,
+        `address`,
+        `phone`,
+        `email`,
+        `link`,
+        `role`,
+        `agent`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+            (
+            #{record.account},
+            #{record.sqsAccount},
+            #{record.password},
+            #{record.name},
+            #{record.inshort},
+            #{record.address},
+            #{record.phone},
+            #{record.email},
+            #{record.link},
+            #{record.role},
+            #{record.agent},
+            #{record.stat},
+            NOW(),
+            NOW()
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectByCondition" resultType="com.czc.bi.pojo.User">
+        SELECT
+        `id`,
+        `account`,
+        `sqs_account`,
+        `password`,
+        `name`,
+        `inshort`,
+        `address`,
+        `phone`,
+        `email`,
+        `link`,
+        `role`,
+        `agent`,
+        `stat`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `user`
+        WHERE ${condition}
     </select>
 
 </mapper>

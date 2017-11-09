@@ -12,6 +12,7 @@ import java.util.List;
 public class User {
     private Integer id;
     private String account;
+    private String sqsAccount;
     private String password;
     private String name;
     private String inshort;
@@ -23,6 +24,14 @@ public class User {
     private String role;
     private String agent;
     private List<String> shop;
+
+    public String getSqsAccount() {
+        return sqsAccount;
+    }
+
+    public void setSqsAccount(String sqsAccount) {
+        this.sqsAccount = sqsAccount;
+    }
 
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date createDt;
@@ -146,5 +155,27 @@ public class User {
 
     public void setUpdateDt(Date updateDt) {
         this.updateDt = updateDt;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("User{");
+        sb.append("id=").append(id);
+        sb.append(", account='").append(account).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", inshort='").append(inshort).append('\'');
+        sb.append(", address='").append(address).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", link='").append(link).append('\'');
+        sb.append(", stat='").append(stat).append('\'');
+        sb.append(", role='").append(role).append('\'');
+        sb.append(", agent='").append(agent).append('\'');
+        sb.append(", shop=").append(shop);
+        sb.append(", createDt=").append(createDt);
+        sb.append(", updateDt=").append(updateDt);
+        sb.append('}');
+        return sb.toString();
     }
 }

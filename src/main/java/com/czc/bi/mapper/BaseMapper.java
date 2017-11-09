@@ -29,7 +29,7 @@ public interface BaseMapper<T> {
     List<T> selectByQuery(@Param("query") BaseQuery query);
 
     // 根据Query查询记录条数
-    List<T> selectRowsByQuery(@Param("query") BaseQuery query);
+    int selectRowsByQuery(@Param("query") BaseQuery query);
 
     // 根据主键删除记录
     int deleteByPrimaryKey(@Param("key") Integer key);

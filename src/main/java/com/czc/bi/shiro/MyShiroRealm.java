@@ -1,15 +1,26 @@
 package com.czc.bi.shiro;
 
+import com.czc.bi.mapper.UserMapper;
 import com.czc.bi.pojo.User;
+import com.czc.bi.pojo.query.UserQuery;
 import com.czc.bi.service.UserService;
+import com.czc.bi.util.EncryptUtils;
+import com.czc.bi.util.HttpUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 // 自定义Realm ，实现安全数据 连接
 public class MyShiroRealm extends AuthorizingRealm {
@@ -19,12 +30,15 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     // 授权...
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         logger.debug("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        User user  = (User)principals.getPrimaryPrincipal();
+        User user = (User) principals.getPrimaryPrincipal();
 
         // 调用业务层，查询角色
 //        List<Role> roles = roleService.findByUser(user);
@@ -40,29 +54,88 @@ public class MyShiroRealm extends AuthorizingRealm {
     }
 
     /*主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。*/
+    private static final String SQS_URL = "http://www.shangquanshow.com";
+    private static final String KEY = "8ae4a027f1b34f80b1b56308f4f8e7ad";
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
             throws AuthenticationException {
         logger.debug("MyShiroRealm.doGetAuthenticationInfo()");
-        //获取用户的输入的账号.
-//        String username = (String)authenticationToken.getPrincipal();
-        UsernamePasswordToken token = (UsernamePasswordToken)authenticationToken;
-        System.out.println(token.getCredentials());
-        //通过username从数据库中查找 User对象，如果找到，没找到.
-        //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        User userInfo = userService.findUserByAccount(token.getUsername());
-        logger.debug("----->>userInfo="+userInfo);
-        if(userInfo == null){
-            throw new UnknownAccountException();
-//            return null;
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        String account = token.getUsername();
+        char[] password = token.getPassword();
+        // 那用户信息去商圈秀验证
+        logger.debug(String.format("用户[%s]请求商圈秀系统验证",account));
+        String tokenUrl = String.format("%s/co/gettoken?key=%s", SQS_URL, KEY);
+        String res = HttpUtil.sendGet(tokenUrl);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map resMap = mapper.readValue(res, Map.class);
+            Integer status = (Integer) resMap.get("status");
+            if (status != 1) {
+                throw new AuthenticationException("系统错误");
+            }
+
+            String loginToken = (String) resMap.get("token");
+            logger.debug(String.format("获取的token[%s]",loginToken));
+            Map<String, Object> map = new HashMap<>(5);
+            map.put("token", loginToken);
+            map.put("user", EncryptUtils.encrypt3DES(account, loginToken));
+            map.put("password", EncryptUtils.encrypt3DES(new String(password), loginToken));
+            map.put("type", "1");
+            String identifyUrl = String.format("%s/share/Identification", SQS_URL);
+            res = HttpUtil.sendPost(identifyUrl, map);
+            resMap = mapper.readValue(res, Map.class);
+            String status1 = (String) resMap.get("status");
+            // 验证不通过
+            if (!"OK".equals(status1)) {
+                String message = (String) resMap.get("message");
+                logger.debug(String.format("验证不通过,提示信息为[%s]",message));
+                throw new IncorrectCredentialsException(message);
+            }
+            Map userInfo = (Map) resMap.get("text");
+            String name =(String) userInfo.get("name");
+            if(name.equals("")){
+                name = account;
+            }
+            logger.debug(String.format("用户账号[%s],名称[%s]验证通过",account,name));
+            // 检查用户信息表
+            UserQuery query = new UserQuery();
+            query.setSqsAccount(account);
+
+            int i = userMapper.selectRowsByQuery(query);
+            // 如果用户不存在  插入用户信息
+            if(i==0){
+                User user = new User();
+                user.setAccount("None");
+                user.setSqsAccount(account);
+                user.setName(name);
+                user.setRole("商户");
+                // 插入用户信息
+                i = userMapper.insert(user);
+                if(i==1){
+                    logger.debug(String.format("用户[%s]信息同步数据库完成",user));
+                } else {
+                    logger.warn(String.format("用户[%s]信息同步数据库失败",user));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        System.out.println(token.getCredentials());
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                userInfo.getAccount(), //用户名
-                token.getPassword(), //密码
-                //ByteSource.Util.bytes(userInfo.getCredentialsSalt()),//salt=username+salt
-                getName()  //realm name
+                account, //用户名
+                null,    //密码
+                getName()
         );
+
         return authenticationInfo;
     }
 
+    @PostConstruct
+    public void initCredentialsMatcher() {
+        //重写shiro的密码验证
+        setCredentialsMatcher(new CustomCredentialsMatcher());
+    }
 }
