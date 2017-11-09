@@ -36,13 +36,8 @@
         <div class="shop">
             <select id="shop">
                 <div th:each="shop:${shops}">
-                    <!--<div th:text="${shop.key}"></div>-->
                     <option th:value="${shop.key}" th:text="${shop.value}"></option>
-
                 </div>
-
-                <!--<option value="yfy">鱼非鱼</option>
-                <option value="os">欧尚</option>-->
             </select>
         </div>
     </div>
