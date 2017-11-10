@@ -127,12 +127,21 @@ public class ShopLabelAnalyzeService {
         List<Simple<String, String>> kvs = shopLabelAnalyzeMapper.selectKYByQuery(query);
 
         Map<String, String> provinceMap = Constants.ProvinceMap;
-        Map<String, Integer> province = new LinkedHashMap<>();
-        for (String p : provinceMap.values()) {
-            province.put(p,0);
-        }
-        for (int i = 0;i<kvs.size();i++){
-            province.put(kvs.get(i).getKey(),Integer.parseInt(kvs.get(i).getValue()));
+
+        int size = kvs.size();
+        for (String province : provinceMap.values()) {
+            boolean flag = true;
+            for (int i = 0;i<size;i++){
+                if (province.equals(kvs.get(i).getKey())){
+                    flag = false;
+                }
+            }
+            if (flag){
+                Simple<String, String> simple = new Simple<>();
+                simple.setKey(province);
+                simple.setValue("0");
+                kvs.add(simple);
+            }
         }
 
         ArrayList<NameValue> collect = kvs.stream().map(a -> {
@@ -140,13 +149,6 @@ public class ShopLabelAnalyzeService {
         })
                 .sorted((a1, a2) -> (a2.getValue().compareTo(a1.getValue())))
                 .collect(Collectors.toCollection(ArrayList<NameValue>::new));
-        for (int i = 0;i<collect.size();i++){
-            province.put(collect.get(i).getName(),collect.get(i).getValue());
-        }
-        collect.clear();
-        for (Map.Entry<String, Integer> entry : province.entrySet()) {
-            collect.add(new NameValue(entry.getKey(),entry.getValue()));
-        }
         return collect;
     }
 
@@ -170,12 +172,12 @@ public class ShopLabelAnalyzeService {
                 .setPdate(time);
         List<Simple<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
 
-//        ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
-//            return new Elevation().setCoord(Double.valueOf(a.getKey().split(",")[0]), Double.valueOf(a.getKey().split(",")[1])).setElevation(Integer.parseInt(a.getValue()));
-//        }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
         ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
-            return new Elevation().setCoord(Double.valueOf(a.getKey()), Double.valueOf(a.getValue())).setElevation(1);
+            return new Elevation().setCoord(Double.valueOf(a.getKey().split(",")[0]), Double.valueOf(a.getKey().split(",")[1])).setElevation(Integer.parseInt(a.getValue()));
         }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
+//        ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
+//            return new Elevation().setCoord(Double.valueOf(a.getKey()), Double.valueOf(a.getValue())).setElevation(1);
+//        }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
         map.put("coordinate", collect);
         return map;
     }
