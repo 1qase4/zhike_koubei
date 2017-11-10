@@ -62,7 +62,7 @@ public class Constants {
     // 按月统计消费群
     public static final String CONSUME_LEVLE_MONTH = "按月统计消费群";
 
-    public static Map<String,String> ProvinceMap = new HashMap<String ,String>(36);
+    public static Map<String,String> ProvinceMap = new HashMap<String ,String>(34);
 
     static {
         ProvinceMap.put("上海市","上海");
@@ -79,7 +79,6 @@ public class Constants {
         ProvinceMap.put("山西省","山西");
         ProvinceMap.put("广东省","广东");
         ProvinceMap.put("广西壮族自治区","广西");
-        ProvinceMap.put("山西省","山西");
         ProvinceMap.put("新疆维吾尔自治区","新疆");
         ProvinceMap.put("江苏省","江苏");
         ProvinceMap.put("江西省","江西");

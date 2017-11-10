@@ -46,7 +46,8 @@ public class IndexController {
 
         List<Simple<String, String>> shops = shopService.selectShopsByMerchant(account);
         model.addAttribute("shops", shops);
-        session.setAttribute("today", shopPassengerflowAnalyzeService.selectPdate());
+        String today = shopPassengerflowAnalyzeService.selectPdate();
+        session.setAttribute("today", today);
         return "shouye";
     }
 

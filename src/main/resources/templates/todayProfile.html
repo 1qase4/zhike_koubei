@@ -14,7 +14,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-当日概况 ( <span id="today"></span> ) </div>
+        <div class="common-title lf">客流分析-当日概况 ( <span id="today" th:text="${session.today}" ></span> ) </div>
         <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
     </div>
     <div class="data-wrap common-box">
@@ -84,7 +84,7 @@
     var gShop = parent.document.getElementById("shop").value;
     $(function () {
         //计算今天时间
-        $("#today").html(getDateByNow(0));
+//        $("#today").html(getDateByNow(0));
         // 获取4个客流数据
         getRealData(gShop);
         getCharts();
