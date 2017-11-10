@@ -96,12 +96,12 @@ $(".xsubmit").click(function () {
     if (username.val() == ""){
         errorBox.show();
         username.focus(errorFocus).focus();
-        errorTips.html("请输入用户名!");
+        // errorTips.html("请输入用户名!");
     }
     else if (password.val() == ""){
         errorBox.show();
         password.focus(errorFocus).focus();
-        errorTips.html("请输入密码!");
+        // errorTips.html("请输入密码!");
     }
     // else if(inputCode.val() == "")
     // {
@@ -139,7 +139,7 @@ $(".xsubmit").click(function () {
                     password.val("");
                     inputCode.val("");
                     password.focus(errorFocus).focus();
-                    errorTips.html("用户名和密码不匹配，请重新输入！");
+                    // errorTips.html("用户名和密码不匹配，请重新输入！");
                     $("#"+code).click();
                 }else{
                     window.location.href="/shouye";

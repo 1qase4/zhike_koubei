@@ -50,6 +50,8 @@ public class IndexController {
         return "shouye";
     }
 
+
+
     @RequestMapping("/login")
     public String login(HttpServletRequest request, Map<String, Object> map) throws Exception {
         System.out.println("IndexController.login()");
