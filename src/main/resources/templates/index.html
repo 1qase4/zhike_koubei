@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -65,12 +65,12 @@
                 </ul>
             </div>
             <div class="login-content fr">
-                <form autocomplete="off" id="sqs" class="login-box">
+                <form id="sqs" class="login-box" action="" method="post">
                     <div class="login-logo">登录知客口碑</div>
                     <!--错误提示-->
                     <div class="cwts" style="display: none">
                         <div class="error"></div>
-                        <span class="errorTips"></span>
+                        <span class="errorTips" th:text="${msg}"></span>
                     </div>
                     <!--用户名-->
                     <div class="login-input uname">
@@ -93,7 +93,7 @@
                         <img id="sqsCode" class="code" src="" title="更换验证码">
                     </div>
                     <div class="submitArea">
-                        <button type="button" class="xsubmit">登&nbsp;&nbsp;录</button>
+                        <button type="submit" class="xsubmit">登&nbsp;&nbsp;录</button>
                     </div>
                     <!--<div class="login-method">-->
                         <!--<a href="http://www.chenzhidata.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>-->
@@ -143,7 +143,7 @@
 <script type="text/javascript" src="/js/index1.js"></script>
 <script>
     $(function () {
-        new SecurityCode("sqsCode").init();
+//        new SecurityCode("sqsCode").init();
     });
 </script>
 </body>
