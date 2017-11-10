@@ -3,6 +3,7 @@ package com.czc.bi.service;
 import com.czc.bi.mapper.ShopPassengerflowAnalyzeMapper;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.dto.Result;
+import com.czc.bi.pojo.echarts3.Label;
 import com.czc.bi.pojo.echarts3.Option;
 import com.czc.bi.pojo.echarts3.axis.CategoryAxis;
 import com.czc.bi.pojo.echarts3.axis.ValueAxis;
@@ -13,6 +14,7 @@ import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.BaseQuery;
 import com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery;
 import com.czc.bi.util.BaseUtil;
+import com.czc.bi.util.Constant;
 import com.czc.bi.util.Constants;
 import com.czc.bi.util.ExportData;
 import org.apache.log4j.Logger;
@@ -52,11 +54,11 @@ public class ShopPassengerflowAnalyzeService {
     // 今日概况
     // 获取首页的当前客流信息
     public Map getCurrentFlow(String account) throws Exception {
-        // 取今天的日期
+        // 取当天的日期
 //        String date = BaseUtil.getCurrentDate();
         String date = shopPassengerflowAnalyzeMapper.selectPdate();
         Map<String, Object> map = new HashMap<>(4);
-        // 获取今日客流
+        // 获取当日客流
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
         query.setAccount(account)
                 .setType(Constants.CUSTFLOW_TYPE_DAY)
@@ -80,7 +82,7 @@ public class ShopPassengerflowAnalyzeService {
         }
         map.put("maxFlow", maxFlow);
 
-        // 获取昨天客流
+        // 获取上天客流
 //        Calendar cal = Calendar.getInstance();
 //        cal.add(Calendar.DATE, -1);
 //        Date time = cal.getTime();
@@ -102,6 +104,12 @@ public class ShopPassengerflowAnalyzeService {
 
         map.put("lastWeekFlow", lastWeekFlow);
 
+        //获取上月日均客流
+        String label = BaseUtil.getLastMonth(shopPassengerflowAnalyzeMapper.selectPdate());
+        query.setLabel(label).setType(Constants.CUSTFLOW_TYPE_MONTH).setPdate(null,null);
+        ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
+        Integer dailyFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
+        map.put("dailyFlow", dailyFlow);
         return map;
     }
 
@@ -606,7 +614,7 @@ public class ShopPassengerflowAnalyzeService {
         cell.setCellValue("关键数据");
         row = sheet.createRow(1);
         cell = row.createCell(0);
-        cell.setCellValue("今日客流");
+        cell.setCellValue("当日客流");
 
         cell = row.createCell(1);
         cell.setCellValue("峰值客流");

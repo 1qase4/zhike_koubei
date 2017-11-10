@@ -68,7 +68,7 @@
                 <form id="sqs" class="login-box" action="" method="post">
                     <div class="login-logo">登录知客口碑</div>
                     <!--错误提示-->
-                    <div class="cwts" style="display: none">
+                    <div class="cwts" th:style="${display}">
                         <div class="error"></div>
                         <span class="errorTips" th:text="${msg}"></span>
                     </div>

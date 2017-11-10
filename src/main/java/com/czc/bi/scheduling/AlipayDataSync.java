@@ -58,6 +58,12 @@ public class AlipayDataSync {
     public void syncShopList(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_SHOP_INFO_LIST);
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -86,8 +92,12 @@ public class AlipayDataSync {
     public void syncUsranalysisForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_FORWEEK);
-//        rc.addCondition("shop_id", "=", shopId);
-//        rc.addCondition("day","=",date );
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -135,8 +145,12 @@ public class AlipayDataSync {
     public void syncUsrBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK);  //QK171025k863e26v
-//        rc.addCondition("shop_id", "=", shopId);
-//        rc.addCondition("day","=",date );
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -184,8 +198,12 @@ public class AlipayDataSync {
     public void syncUsrLostBackForweek(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
-//        rc.addCondition("shop_id", "=", shopId);
-//        rc.addCondition("day","=",date );
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -233,8 +251,12 @@ public class AlipayDataSync {
     public void syncShopProperty(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY);  //QK1711019f6d4557
-//        rc.addCondition("shop_id", "=", shopId);
-//        rc.addCondition("day","=",date );
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -285,8 +307,12 @@ public class AlipayDataSync {
     public void syncShopPropertyArea(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
-//        rc.addCondition("shop_id", "=", shopId);
-//        rc.addCondition("month","=",date );
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -339,8 +365,12 @@ public class AlipayDataSync {
     public void syncShopHotDiagram(String shopId, String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_HOT_DIAGRAM);  //QK171101ozq154g7
-//        rc.addCondition("shop_id", "=", "2015052800077000000000121715");
-//        rc.addCondition("month","=","201710" );
+        if (shopId != null){
+            rc.addCondition("shop_id", "=", shopId);
+        }
+        if (shopId != null){
+            rc.addCondition("day","=",date );
+        }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
