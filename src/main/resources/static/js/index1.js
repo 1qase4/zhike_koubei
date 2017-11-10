@@ -121,7 +121,8 @@ $(".xsubmit").click(function () {
     else {
 //            md5加密
         var uname=username.val();
-        var upwd=$.md5(password.val());
+        //var upwd=$.md5(password.val());
+        var upwd=password.val();
         var datas={username:uname,password:upwd};
            // console.log(datas);
         var ajaxTimeoutZhike = $.ajax({
@@ -133,17 +134,7 @@ $(".xsubmit").click(function () {
                 $(_this).html("登录中...").prop("disabled",true);
             },
             success: function (obj) {
-                //alert(msg);
-                if(!obj.result){
-                    errorBox.show();
-                    password.val("");
-                    inputCode.val("");
-                    password.focus(errorFocus).focus();
-                    // errorTips.html("用户名和密码不匹配，请重新输入！");
-                    $("#"+code).click();
-                }else{
-                    window.location.href="/shouye";
-                }
+
             },
             complete:function(XMLHttpRequest,textStatus){
                 $(_this).html(btnTxt).prop("disabled",false);

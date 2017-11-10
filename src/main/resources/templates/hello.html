@@ -1,15 +1,3 @@
-<!--<!DOCTYPE HTML>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head> -->
-    <!--<title>Getting Started: Serving Web Content</title> -->
-    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >-->
-<!--</head>-->
-<!--<body>-->
-    <!--<p th:text="'Hello123, ' + ${name} + '!'" />-->
-<!--<p>1111111111222222222222222111</p>-->
-<!--<p>dddddddddddddd</p>-->
-<!--</body>-->
-<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -19,9 +7,9 @@
     <meta name="renderer" content="webkit">
     <title>辰智 | 知客管理系统</title>
     <script>
-        if(/AppleWebKit.*mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))){
-            window.location.href = "/loginPage";
-        }
+        //        if(/AppleWebKit.*mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))){
+        //            window.location.href = "/loginPage";
+        //        }
         if(window !=top){
             top.location.href=location.href;
         }
@@ -98,12 +86,12 @@
                         <input type="password" class="login-text" name="password" placeholder="密码" autocomplete="off">
                     </div>
                     <!--验证码-->
-                    <div class="login-input mycode clearfix">
-                        <!--小图标-->
-                        <span><i class="iconfont icon-yanzhengma1"></i></span>
-                        <input type="text" class="code-text" name="code" placeholder="验证码">
-                        <img id="sqsCode" class="code" src="" title="更换验证码">
-                    </div>
+                    <!--<div class="login-input mycode clearfix">-->
+                    <!--&lt;!&ndash;小图标&ndash;&gt;-->
+                    <!--<span><i class="iconfont icon-yanzhengma1"></i></span>-->
+                    <!--<input type="text" class="code-text" name="code" placeholder="验证码">-->
+                    <!--<img id="sqsCode" class="code" src="" title="更换验证码">-->
+                    <!--</div>-->
                     <div class="submitArea">
                         <button type="submit" class="xsubmit">登&nbsp;&nbsp;录</button>
                     </div>
