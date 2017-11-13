@@ -117,6 +117,15 @@ public class BaseUtil {
 		return sf.format(calendar.getTime());
 	}
 
+	public static String getLastMonth(String start) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM");
+		Date date = sf.parse(start);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MONTH,-1);
+		return sf.format(calendar.getTime());
+	}
+
 	public static void main(String[] args) throws ParseException {
 		String after7Day = BaseUtil.getAfter7Day("2017-09-04");
 		System.out.println(after7Day);
@@ -124,5 +133,7 @@ public class BaseUtil {
 		System.out.println(begin7Day);
 		String day = BaseUtil.getDay("2017-11-07",-1);
 		System.out.println(day);
+		String month = BaseUtil.getLastMonth("2017-11-07");
+		System.out.println(month);
 	}
 }

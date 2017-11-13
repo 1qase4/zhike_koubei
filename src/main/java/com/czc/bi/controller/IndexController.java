@@ -61,22 +61,25 @@ public class IndexController {
         String exception = (String) request.getAttribute("shiroLoginFailure");
         System.out.println("exception=" + exception);
         String msg = "";
+        String display = "display: none";
         if (exception != null) {
             if (UnknownAccountException.class.getName().equals(exception)) {
                 System.out.println("UnknownAccountException -- > 账号不存在：");
-                msg = "UnknownAccountException -- > 账号不存在：";
+                msg = "账号不存在";
             } else if (IncorrectCredentialsException.class.getName().equals(exception)) {
                 System.out.println("IncorrectCredentialsException -- > 密码不正确：");
-                msg = "IncorrectCredentialsException -- > 密码不正确：";
+                msg = "密码不正确";
             } else if ("kaptchaValidateFailed".equals(exception)) {
                 System.out.println("kaptchaValidateFailed -- > 验证码错误");
-                msg = "kaptchaValidateFailed -- > 验证码错误";
+                msg = "验证码错误";
             } else {
-                msg = "else >> " + exception;
+                msg = "账号不存在";
                 System.out.println("else -- >" + exception);
             }
+            display = "display: display";
         }
         map.put("msg", msg);
+        map.put("display", display);
         // 此方法不处理登录成功,由shiro进行处理
         return "login";
     }

@@ -459,8 +459,8 @@ public class ZhikeKoubeiApplicationTests {
     public void demo5() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY);  //QK1711019f6d4557
-        rc.addCondition("shop_id", "=", "2016042300077000000015402772");
-        rc.addCondition("month","=","2017-05" );
+//        rc.addCondition("shop_id", "=", "2016042300077000000015402772");
+//        rc.addCondition("month","=","2017-05" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
