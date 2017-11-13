@@ -59,63 +59,6 @@ public class ZhikeKoubeiApplicationTests {
     private ShopMapper shopMapper;
 
     @Test
-    public void demo22() throws Exception {
-        // 获取所有的shopid
-        List<String> ids = shopMapper.selectAllShopId();
-        logger.debug("shopid ======>" + ids);
-
-        String[] datas = {"2017-11-01",
-                "2017-11-02",
-                "2017-11-03",
-                "2017-11-04",
-                "2017-11-05",
-                "2017-11-06",
-                "2017-11-07"
-        };
-
-        for (String data : datas) {
-            for (String id : ids) {
-                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
-                custFlowDataSync.syncDayFlow(
-                        id,
-                        data,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
-                Thread.sleep(1000);
-            }
-        }
-
-    }
-
-
-    @Test
-    public void demo23() throws Exception {
-        // 获取所有的shopid
-        List<String> ids = shopMapper.selectAllShopId();
-        logger.debug("shopid ======>" + ids);
-
-        String[] datas = {"2017-11-01",
-                "2017-11-02",
-                "2017-11-03",
-                "2017-11-04",
-                "2017-11-05",
-                "2017-11-06",
-                "2017-11-07"
-        };
-
-        for (String data : datas) {
-            for (String id : ids) {
-                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
-                custFlowDataSync.syncIntervalFlow(
-                        id,
-                        data,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
-                Thread.sleep(1300);
-            }
-        }
-
-    }
-
-    @Test
     public void getClient() {
         System.out.println("获取的client---------------------->" + alipayClient);
     }
@@ -459,8 +402,8 @@ public class ZhikeKoubeiApplicationTests {
     public void demo5() throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY);  //QK1711019f6d4557
-//        rc.addCondition("shop_id", "=", "2016042300077000000015402772");
-//        rc.addCondition("month","=","2017-05" );
+        rc.addCondition("shop_id", "=", "2016042300077000000015402772");
+        rc.addCondition("month","=","2017-05" );
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,"201710BB587b6a2bf52a4795bba5e7eca40c1C55",alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
