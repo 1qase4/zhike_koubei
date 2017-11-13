@@ -509,7 +509,6 @@ public class ZhikeKoubeiApplicationTests {
                     s1.setShop(columnValue.get("shop_name"));
                     list.add(s1);
                 }
-                System.out.println(reportData.size());
                 shopLabelAnalyzeService.saves(list);
             }
         }
