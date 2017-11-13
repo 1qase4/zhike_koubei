@@ -57,9 +57,6 @@ public class ZhikeKoubeiApplicationTests {
     private CustFlowDataSync custFlowDataSync;
 
     @Autowired
-    private AlipayDataSync alipayDataSync;
-
-    @Autowired
     private ShopMapper shopMapper;
 
     @Test
@@ -81,7 +78,6 @@ public class ZhikeKoubeiApplicationTests {
             for (String id : ids) {
                 logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
                 custFlowDataSync.syncDayFlow(
-                        id,
                         data,
                         "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
                 Thread.sleep(1000);
@@ -90,10 +86,6 @@ public class ZhikeKoubeiApplicationTests {
 
     }
 
-    @Test
-    public void demo24() throws Exception {
-        alipayDataSync.syncAlipayData();
-    }
 
     @Test
     public void demo23() throws Exception {
