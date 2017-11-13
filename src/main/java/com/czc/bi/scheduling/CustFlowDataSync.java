@@ -11,6 +11,7 @@ import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.alipay.ReportDataContext;
 import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.BaseUtil;
+import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,12 +44,15 @@ public class CustFlowDataSync {
     @Autowired
     private ShopPassengerflowAnalyzeMapper shopPassengerflowAnalyzeMapper;
 
-    public void syncDayFlow(String shopId, String date, String token) throws AlipayApiException {
+    public void syncDayFlow(String date, String token) throws AlipayApiException {
+        // 判断是否为当月1号 月初需要同步上月日均客流数据
+        boolean isMonthBegin = date.endsWith("-01") ? true : false;
+
         // 获取天客流量
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS);
-        rc.addCondition("shop_id", "=", shopId);
+        //rc.addCondition("shop_id", "=", shopId);
         rc.addCondition("day", "=", date);
 
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
@@ -56,9 +60,9 @@ public class CustFlowDataSync {
         kbrequest.putOtherTextParam("app_auth_token", token);
         KoubeiMarketingDataAlisisReportQueryResponse kbresponse = client.execute(kbrequest);
         if (!kbresponse.isSuccess()) {
-            System.out.println("数据查询调用失败");
-            System.out.println(kbresponse.getSubCode());
-            System.out.println(kbresponse.getSubMsg());
+            logger.warn("数据查询调用失败");
+            logger.warn(kbresponse.getSubCode());
+            logger.warn(kbresponse.getSubMsg());
             return;
         }
 
@@ -66,30 +70,54 @@ public class CustFlowDataSync {
 
         List<AlisisReportRow> reportData = kbresponse.getReportData();
         if (reportData == null) {
-            System.out.println("报表无数据");
+            logger.debug(String.format("报表[%s]在日期[%s]无数据",
+                    UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD,
+                    date)
+            );
             return;
         }
 
-        ShopPassengerflowAnalyze analyze = new ShopPassengerflowAnalyze();
-        analyze.setType("按天统计客流")
-                .setRank(1)
-                .setLabel(date)
-                .setPdate(date);
-        for (AlisisReportRow reportDatum : reportData) {
-            List<AlisisReportColumn> rowData = reportDatum.getRowData();
+        List<ShopPassengerflowAnalyze> list = new ArrayList<>(18);
 
+        // 获取数据
+        for (AlisisReportRow reportDatum : reportData) {
+            // 拆分数据
+            List<AlisisReportColumn> rowData = reportDatum.getRowData();
             Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
                     "shop_id",
                     "traffic",
-                    "shop_name");
+                    "shop_name",
+                    "month_traffic");
+            ShopPassengerflowAnalyze analyze = new ShopPassengerflowAnalyze();
+            analyze.setType(Constants.CUSTFLOW_TYPE_DAY)
+                    .setRank(1)
+                    .setLabel(date)
+                    .setPdate(date);
             analyze.setAccount(columnValue.get("shop_id"));
             analyze.setValue(Integer.valueOf(columnValue.get("traffic")));
             analyze.setShop(columnValue.get("shop_name"));
+            logger.debug(String.format("获取店铺数据[%s]", analyze));
+            list.add(analyze);
 
-            // 执行数据插入
-            shopPassengerflowAnalyzeMapper.replace(analyze);
-            logger.debug(String.format("客户[%s]在日期[%s]时的当日流数据获取完成", shopId, date));
+            // 月均数据
+            if(isMonthBegin){
+                String month = date.substring(0,7);
+                analyze = new ShopPassengerflowAnalyze();
+                analyze.setType(Constants.CUSTFLOW_TYPE_MONTH)
+                        .setRank(1)
+                        .setLabel(month)
+                        .setPdate(date);
+                analyze.setAccount(columnValue.get("shop_id"));
+                analyze.setValue(Integer.valueOf(columnValue.get("month_traffic")));
+                analyze.setShop(columnValue.get("shop_name"));
+                logger.debug(String.format("获取店铺月客流数据[%s]", analyze));
+                list.add(analyze);
+
+            }
         }
+        // 执行数据插入
+        shopPassengerflowAnalyzeMapper.replaces(list);
+        logger.debug(String.format("客户在日期[%s]时的当日流数据获取完成", date));
 
     }
 
@@ -105,16 +133,19 @@ public class CustFlowDataSync {
         KoubeiMarketingDataAlisisReportQueryResponse kbresponse = client.execute(kbrequest);
 
         if (!kbresponse.isSuccess()) {
-            System.out.println("数据查询调用失败");
-            System.out.println(kbresponse.getSubCode());
-            System.out.println(kbresponse.getSubMsg());
+            logger.debug("数据查询调用失败");
+            logger.debug(kbresponse.getSubCode());
+            logger.debug(kbresponse.getSubMsg());
             return;
         }
 
-        System.out.println("数据查询调用成功");
+        logger.debug("数据查询调用成功");
         List<AlisisReportRow> reportData = kbresponse.getReportData();
         if (reportData == null) {
-            System.out.println("报表无数据");
+            logger.debug(String.format("报表[%s]在日期[%s]无数据",
+                    UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD,
+                    date)
+            );
             return;
         }
 
