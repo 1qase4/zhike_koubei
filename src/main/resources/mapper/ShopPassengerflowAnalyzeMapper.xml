@@ -15,7 +15,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_ passengerflow_analyze_copy`
+        `shop_passengerflow_analyze`
         WHERE `id` = #{key}
     </select>
 
@@ -32,7 +32,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_ passengerflow_analyze_copy`
+        `shop_passengerflow_analyze`
         WHERE 1 = 1
         <if test="query.type != null">
             AND `type` ${query.typeOperator} #{query.type}
@@ -69,7 +69,7 @@
     <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery" resultType="Integer">
         SELECT COUNT(1)
         FROM
-        `shop_ passengerflow_analyze_copy`
+        `shop_passengerflow_analyze`
         WHERE 1 = 1
         <if test="query.type != null">
             AND `type` = #{query.type}
@@ -95,7 +95,7 @@
     </select>
 
     <insert id="insert" parameterType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
-        INSERT INTO `shop_ passengerflow_analyze`(
+        INSERT INTO `shop_passengerflow_analyze`(
         `type`,
         `account`,
         `shop`,
@@ -120,7 +120,7 @@
     </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="Integer">
-        DELETE FROM `shop_ passengerflow_analyze_copy`
+        DELETE FROM `shop_passengerflow_analyze`
         WHERE id = #{key}
     </delete>
 
@@ -137,20 +137,20 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_ passengerflow_analyze_copy`
+        `shop_passengerflow_analyze`
         WHERE ${condition}
     </select>
 
     <update id="updataByPdate" >
-        UPDATE `shop_ passengerflow_analyze_copy` SET pdate = #{pdate1,jdbcType=VARCHAR} WHERE pdate = #{pdate2,jdbcType=VARCHAR};
+        UPDATE `shop_passengerflow_analyze` SET pdate = #{pdate1,jdbcType=VARCHAR} WHERE pdate = #{pdate2,jdbcType=VARCHAR};
     </update>
 
     <update id="updataByLabel" >
-        UPDATE `shop_ passengerflow_analyze_copy` SET label = #{label1,jdbcType=VARCHAR} WHERE label = #{label2,jdbcType=VARCHAR};
+        UPDATE `shop_passengerflow_analyze` SET label = #{label1,jdbcType=VARCHAR} WHERE label = #{label2,jdbcType=VARCHAR};
     </update>
 
     <insert id="inserts" parameterType="java.util.List">
-      INSERT INTO `shop_ passengerflow_analyze_copy`(
+      INSERT INTO `shop_passengerflow_analyze`(
         `type`,
         `account`,
         `shop`,
@@ -169,7 +169,7 @@
 
 
     <insert id="replace" parameterType="com.czc.bi.pojo.ShopPassengerflowAnalyze">
-        REPLACE INTO `shop_ passengerflow_analyze_copy`(
+        REPLACE INTO `shop_passengerflow_analyze`(
         `type`,
         `account`,
         `shop`,
@@ -194,7 +194,7 @@
     </insert>
 
     <insert id="replaces" parameterType="java.util.List">
-        REPLACE INTO `shop_ passengerflow_analyze_copy`(
+        REPLACE INTO `shop_passengerflow_analyze`(
         `type`,
         `account`,
         `shop`,
@@ -215,7 +215,7 @@
         SELECT
         `pdate`
         FROM
-        `shop_ passengerflow_analyze_copy`
+        `shop_passengerflow_analyze`
         WHERE `account` = #{account}
         ORDER BY pdate DESC LIMIT 1
     </select>

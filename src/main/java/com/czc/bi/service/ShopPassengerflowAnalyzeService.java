@@ -974,7 +974,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     public int saves(List<ShopPassengerflowAnalyze> list) {
-        return shopPassengerflowAnalyzeMapper.inserts(list);
+        return shopPassengerflowAnalyzeMapper.replaces(list);
     }
 
     public String selectPdate() {

@@ -38,9 +38,9 @@ public class T3_1 {
 //        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
 //        rc.addCondition("day","=","2017-11-01" );
 
-        rc.setReport_uk("QK1711019f6d4557");
+        rc.setReport_uk("QK1711019f6d4557"); //"QK1711019f6d4557"
 //        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-        rc.addCondition("month","=","2017-10" );
+//        rc.addCondition("month","=","2017-10" );
 
         // rc.addCondition("week", ">", "12");
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
@@ -64,7 +64,7 @@ public class T3_1 {
                 }
             }
 
-
+            System.out.println(reportData.size());
         } else {
             System.out.println("数据查询调用失败");
             System.out.println(kbresponse.getSubCode());

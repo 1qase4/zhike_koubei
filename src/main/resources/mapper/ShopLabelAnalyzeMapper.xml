@@ -14,7 +14,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_Label_Analyze_copy`
+        `shop_label_analyze`
         WHERE `id` = #{key}
     </select>
 
@@ -30,7 +30,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_Label_Analyze_copy`
+        `shop_label_analyze`
         WHERE 1 = 1
         <if test="query.type != null">
           AND `type` ${query.typeOperator} #{query.type}
@@ -64,7 +64,7 @@
     <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.ShopLabelAnalyzeQuery" resultType="Integer">
         SELECT COUNT(1)
         FROM
-        `shop_Label_Analyze_copy`
+        `shop_label_analyze`
         WHERE 1 = 1
         <if test="query.type != null">
           AND `type` = #{query.type}
@@ -87,7 +87,7 @@
     </select>
 
     <insert id="insert" parameterType="com.czc.bi.pojo.ShopLabelAnalyze">
-        INSERT INTO `shop_Label_Analyze_copy`(
+        insert INTO `shop_label_analyze`(
              `type`,
              `account`,
              `shop`,
@@ -110,7 +110,7 @@
     </insert>
 
     <insert id="inserts" parameterType="java.util.List">
-        replace INTO `shop_Label_Analyze_copy`
+        insert INTO `shop_label_analyze`
         (
         `type`,
         `account`,
@@ -137,12 +137,12 @@
     </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        DELETE FROM `shop_Label_Analyze_copy`
+        DELETE FROM `shop_label_analyze`
          WHERE id = #{key}
     </delete>
 
     <delete id="deleteByAccountPdate" parameterType="java.lang.String">
-        DELETE FROM `shop_Label_Analyze_copy`
+        DELETE FROM `shop_label_analyze`
          WHERE account = #{account}
            AND pdate= #{pdate}
     </delete>
@@ -159,7 +159,7 @@
         `createdt`,
         `updatedt`
         FROM
-        `shop_Label_Analyze_copy`
+        `shop_label_analyze`
         WHERE ${condition}
     </select>
     <select id="selectKYByQuery" resultType="com.czc.bi.pojo.Simple">
@@ -167,7 +167,7 @@
         `key`,
         `value`
         FROM
-        `shop_Label_Analyze_copy`
+        `shop_label_analyze`
         WHERE 1 = 1
         <if test="query.type != null">
             AND `type` ${query.typeOperator} #{query.type}
@@ -197,5 +197,55 @@
             LIMIT ${query.startRecord}, ${query.pageSize}
         </if>
     </select>
+
+    <insert id="replace" parameterType="com.czc.bi.pojo.ShopLabelAnalyze">
+        replace INTO `shop_label_analyze`(
+        `type`,
+        `account`,
+        `shop`,
+        `key`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES(
+        #{record.type},
+        #{record.account},
+        #{record.shop},
+        #{record.key},
+        #{record.value},
+        #{record.pdate},
+        NOW(),
+        NOW()
+        )
+    </insert>
+
+    <insert id="replaces" parameterType="java.util.List">
+        replace INTO `shop_label_analyze`
+        (
+        `type`,
+        `account`,
+        `shop`,
+        `key`,
+        `value`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+            (
+            #{record.type},
+            #{record.account},
+            #{record.shop},
+            #{record.key},
+            #{record.value},
+            #{record.pdate},
+            NOW(),
+            NOW()
+            )
+        </foreach>
+    </insert>
 
 </mapper>

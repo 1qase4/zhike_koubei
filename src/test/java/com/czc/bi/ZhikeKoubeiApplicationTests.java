@@ -12,6 +12,7 @@ import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.alipay.ReportDataContext;
+import com.czc.bi.scheduling.AlipayDataSync;
 import com.czc.bi.scheduling.CustFlowDataSync;
 import com.czc.bi.service.ShopLabelAnalyzeService;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
@@ -56,6 +57,9 @@ public class ZhikeKoubeiApplicationTests {
     private CustFlowDataSync custFlowDataSync;
 
     @Autowired
+    private AlipayDataSync alipayDataSync;
+
+    @Autowired
     private ShopMapper shopMapper;
 
     @Test
@@ -86,6 +90,10 @@ public class ZhikeKoubeiApplicationTests {
 
     }
 
+    @Test
+    public void demo24() throws Exception {
+        alipayDataSync.syncAlipayData();
+    }
 
     @Test
     public void demo23() throws Exception {
@@ -501,6 +509,7 @@ public class ZhikeKoubeiApplicationTests {
                     s1.setShop(columnValue.get("shop_name"));
                     list.add(s1);
                 }
+                System.out.println(reportData.size());
                 shopLabelAnalyzeService.saves(list);
             }
         }
