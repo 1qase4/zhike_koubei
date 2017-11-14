@@ -6,7 +6,7 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.KoubeiMarketingDataCustomreportBatchqueryRequest;
 import com.alipay.api.response.KoubeiMarketingDataCustomreportBatchqueryResponse;
 
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Created by Administrator on 2017/9/25.

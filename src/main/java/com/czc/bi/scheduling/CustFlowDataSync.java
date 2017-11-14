@@ -14,7 +14,6 @@ import com.czc.bi.util.BaseUtil;
 import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.czc.bi.util.Constant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS;
-import static com.czc.bi.util.Constant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD;
+import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS;
+import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.

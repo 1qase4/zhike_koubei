@@ -12,12 +12,10 @@ import com.czc.bi.pojo.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 
-import static com.alipay.api.AlipayConstants.APP_ID;
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.

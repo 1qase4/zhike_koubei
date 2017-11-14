@@ -32,6 +32,16 @@ function getDateByDate(day,n) {//n可取正负整数
     d = d < 10 ? ('0' + d) : d;
     return y+"-"+m+"-"+d;
 }
+//根据输入的日期计算前后某一天的日期
+function getDateByPreNext(date,n) {//n可取正负整数
+    date.setDate(date.getDate()+n);
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    m = m < 10 ? '0' + m : m;
+    var d=date.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    return y+"-"+m+"-"+d;
+}
 //获取某一日所在周的星期一日期和本周是今年的第几周(参数为日期对象)
 function getWeek(dateobj) {
     // var today = new Date();
@@ -46,7 +56,7 @@ function getWeek(dateobj) {
     var newDate;
     var count = 1;
     while(true){
-        newDate = weekChoose.getDateByPre(_monday,-7);
+        newDate = getDateByPreNext(_monday,-7);
         if(_monday.getFullYear()!=new Date().getFullYear()){
             break;
         }
