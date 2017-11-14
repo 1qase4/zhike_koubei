@@ -44,7 +44,7 @@ public class CustFlowDataSync {
     @Autowired
     private ShopPassengerflowAnalyzeMapper shopPassengerflowAnalyzeMapper;
 
-    public void syncDayFlow(String date, String token) throws AlipayApiException {
+    public boolean syncDayFlow(String date, String token) throws AlipayApiException {
         // 判断是否为当月1号 月初需要同步上月日均客流数据
         boolean isMonthBegin = date.endsWith("-01") ? true : false;
 
@@ -63,7 +63,7 @@ public class CustFlowDataSync {
             logger.warn("数据查询调用失败");
             logger.warn(kbresponse.getSubCode());
             logger.warn(kbresponse.getSubMsg());
-            return;
+            return false;
         }
 
         System.out.println("数据查询调用成功");
@@ -74,7 +74,7 @@ public class CustFlowDataSync {
                     UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD,
                     date)
             );
-            return;
+            return false;
         }
 
         List<ShopPassengerflowAnalyze> list = new ArrayList<>(18);
@@ -119,10 +119,12 @@ public class CustFlowDataSync {
         shopPassengerflowAnalyzeMapper.replaces(list);
         logger.debug(String.format("客户在日期[%s]时的当日流数据获取完成", date));
 
+        return true;
+
     }
 
 
-    public void syncIntervalFlow(String shopId, String date, String token) throws AlipayApiException {
+    public boolean syncIntervalFlow(String shopId, String date, String token) throws AlipayApiException {
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD);
@@ -136,7 +138,7 @@ public class CustFlowDataSync {
             logger.debug("数据查询调用失败");
             logger.debug(kbresponse.getSubCode());
             logger.debug(kbresponse.getSubMsg());
-            return;
+            return false;
         }
 
         logger.debug("数据查询调用成功");
@@ -146,7 +148,7 @@ public class CustFlowDataSync {
                     UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD,
                     date)
             );
-            return;
+            return false;
         }
 
         List<ShopPassengerflowAnalyze> list = new ArrayList<>(24);
@@ -205,6 +207,7 @@ public class CustFlowDataSync {
             shopPassengerflowAnalyzeMapper.replaces(list);
             logger.debug(String.format("客户[%s]在日期[%s]时的分区段客流数据获取完成", shopId, date));
         }
+        return true;
     }
 }
 
