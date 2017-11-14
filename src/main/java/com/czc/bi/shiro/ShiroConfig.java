@@ -35,7 +35,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/zui-1.7.0-dist/dist/**", "anon");
 		filterChainDefinitionMap.put("/loginPage", "anon");
-		filterChainDefinitionMap.put("/login", "anon");
+		filterChainDefinitionMap.put("/user/login", "anon");
 		//filterChainDefinitionMap.put("/show/**", "anon");
 		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		filterChainDefinitionMap.put("/loginOut", "logout");

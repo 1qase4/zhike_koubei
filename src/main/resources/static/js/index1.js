@@ -127,14 +127,19 @@ $(".xsubmit").click(function () {
            // console.log(datas);
         var ajaxTimeoutZhike = $.ajax({
             type: 'POST',
-            url: '',
+            url: 'user/login',
             data: datas,//$("form").serialize(),
             timeout: 30000,
             beforeSend:function(XMLHttpRequest){
                 $(_this).html("登录中...").prop("disabled",true);
             },
             success: function (obj) {
-
+                if(obj.result){
+                    window.location = "/shouye";
+                }else{
+                    errorBox.show();
+                    errorTips.html(obj.message)
+                }
             },
             complete:function(XMLHttpRequest,textStatus){
                 $(_this).html(btnTxt).prop("disabled",false);
