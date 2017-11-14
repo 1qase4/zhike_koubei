@@ -1,19 +1,16 @@
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.domain.AlisisReport;
 import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
-import com.alipay.api.request.KoubeiMarketingDataAlisisReportBatchqueryRequest;
 import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
-import com.alipay.api.response.KoubeiMarketingDataAlisisReportBatchqueryResponse;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
 import com.czc.bi.pojo.alipay.ReportDataContext;
 import com.czc.bi.util.BaseUtil;
 
 import java.util.List;
 
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Created by Administrator on 2017/9/25.

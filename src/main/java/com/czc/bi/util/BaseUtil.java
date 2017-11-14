@@ -126,6 +126,27 @@ public class BaseUtil {
 		return sf.format(calendar.getTime());
 	}
 
+	public static String getWeekOfYear(String start) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sf.parse(start);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int weekYear = calendar.get(Calendar.WEEK_OF_YEAR);
+		int dayWeek = calendar.get(Calendar.DAY_OF_WEEK);
+		if (1 == dayWeek) {
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		// 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+		// 获得当前日期是一个星期的第几天
+		int day = calendar.get(Calendar.DAY_OF_WEEK);
+		// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+		calendar.add(Calendar.DATE, calendar.getFirstDayOfWeek() - day);
+		String monday = sf.format(calendar.getTime());
+		System.out.println(monday);
+		return "第"+weekYear+"周"+monday;
+	}
+
 	public static void main(String[] args) throws ParseException {
 		String after7Day = BaseUtil.getAfter7Day("2017-09-04");
 		System.out.println(after7Day);
@@ -135,5 +156,7 @@ public class BaseUtil {
 		System.out.println(day);
 		String month = BaseUtil.getLastMonth("2017-11-07");
 		System.out.println(month);
+		String weekOfYear = BaseUtil.getWeekOfYear("2017-11-07");
+		System.out.println(weekOfYear);
 	}
 }

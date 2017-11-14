@@ -3,16 +3,13 @@ package com.czc.bi;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.domain.AlisisReport;
 import com.alipay.api.domain.ReportDataItem;
-import com.alipay.api.request.KoubeiMarketingDataAlisisReportBatchqueryRequest;
 import com.alipay.api.request.KoubeiMarketingDataCustomreportQueryRequest;
-import com.alipay.api.response.KoubeiMarketingDataAlisisReportBatchqueryResponse;
 import com.alipay.api.response.KoubeiMarketingDataCustomreportQueryResponse;
 
 import java.util.List;
 
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Created by Administrator on 2017/9/25.
