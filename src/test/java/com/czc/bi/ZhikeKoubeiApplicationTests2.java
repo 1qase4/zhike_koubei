@@ -1,20 +1,7 @@
 package com.czc.bi;
 
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.domain.AlisisReportColumn;
-import com.alipay.api.domain.AlisisReportRow;
 import com.czc.bi.mapper.ShopMapper;
-import com.czc.bi.pojo.Shop;
-import com.czc.bi.pojo.ShopLabelAnalyze;
-import com.czc.bi.pojo.ShopPassengerflowAnalyze;
-import com.czc.bi.pojo.alipay.ReportDataContext;
 import com.czc.bi.scheduling.CustFlowDataSync;
-import com.czc.bi.service.ShopLabelAnalyzeService;
-import com.czc.bi.service.ShopPassengerflowAnalyzeService;
-import com.czc.bi.service.ShopService;
-import com.czc.bi.util.AlipayUtil;
-import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.czc.bi.util.Constant.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

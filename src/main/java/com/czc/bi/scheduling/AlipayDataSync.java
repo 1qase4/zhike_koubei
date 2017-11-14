@@ -23,7 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.

@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2017/9/28.
  */
-public class Constant {
+public class AlipayConstant {
 
     // 支付宝请求配置
     public static final String GATEWAT;
@@ -58,7 +58,7 @@ public class Constant {
     public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS = "QK17110221vjfg3r";
     public static String UK_REPORT_YFY_SHOP_HOT_DIAGRAM = "QK171101ozq154g7";
 
-    private Constant() {
+    private AlipayConstant() {
     }
 
 }

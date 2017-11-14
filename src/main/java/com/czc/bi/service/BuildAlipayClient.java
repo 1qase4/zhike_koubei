@@ -2,15 +2,10 @@ package com.czc.bi.service;
 
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.

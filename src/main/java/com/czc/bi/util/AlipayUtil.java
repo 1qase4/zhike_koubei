@@ -7,17 +7,12 @@ import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
 import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
-import com.czc.bi.pojo.Shop;
-import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.alipay.ReportDataContext;
-import org.apache.poi.ss.formula.functions.T;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.czc.bi.util.Constant.*;
+import static com.czc.bi.util.AlipayConstant.*;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
