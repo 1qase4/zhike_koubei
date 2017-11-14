@@ -16,7 +16,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-数据趋势( <span id="selectedTime"></span>)</div>
+        <div class="common-title lf">客流分析-数据趋势( <span th:text="${session.weekOfYear}" id="selectedTime"></span>)</div>
         <a class="download" id="loadReport" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
     </div>
     <!--图表区-->
@@ -247,13 +247,10 @@
         var val = $("#category").val();
         //changeXAxis(val);//初始化x轴
         loadTime(val);//加载本地存储或默认时间
+        $(".myWeek").weekpicker({});
         //根据店铺获取分组
         getCharts();
     });
-    //    查看图表
-    //    $("#toView").click(function () {
-    //        getChartsBygroup();
-    //    });
     //选择单个查看还是对比查看
     $(".select-box").on("click","[data-checkbox='compare']",function () {
         var state = $(this).children("input").prop("checked");
@@ -377,9 +374,9 @@
         });
     }
     //页面初始化或者重选查看方式时要加载存储的时间或者默认时间
-    function loadTime(val) {
-        $("[data-id='"+val+"']").addClass("nowSelected");
-        var inputBox = $("[data-id='"+val+"']").children(".input-wrap");
+    function loadTime(type) {
+        $("[data-id='"+type+"']").addClass("nowSelected");
+        var inputBox = $("[data-id='"+type+"']").children(".input-wrap");
         var input1 = $(inputBox[0]).children("input");
 //        var input2 = $(inputBox[1]).children("input");
         var today = new Date();
@@ -388,7 +385,7 @@
 //        if(window.localStorage && localStorage.getItem("dataTrends"+val)){
 //            input1.val(localStorage.getItem("dataTrends"+val));
 //        }else{
-        switch(val)
+        switch(type)
         {
             case "year":
                 input1.val(thisYear+"年");
