@@ -40,4 +40,10 @@ public interface BaseMapper<T> {
     String selectPdate();
 
     void updataEtlDate(@Param("pdate") String format);
+
+    // 批量插入数据
+    int replaces(@Param("records") List<T> records);
+
+    // 插入1条记录
+    int replace(@Param("record") T record);
 }

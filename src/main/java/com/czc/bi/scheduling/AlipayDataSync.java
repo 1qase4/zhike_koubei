@@ -55,13 +55,10 @@ public class AlipayDataSync {
     }
 
     //保存商户信息
-    public void syncShopList(String shopId, String date, String token) throws AlipayApiException {
+    public void syncShopList(String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_SHOP_INFO_LIST);
-        if (shopId != null){
-            rc.addCondition("shop_id", "=", shopId);
-        }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
@@ -82,7 +79,6 @@ public class AlipayDataSync {
                 shop.setInshort(columnValue.get("shop_name"));
 
                 list.add(shop);
-                logger.debug(String.format("客户[%s]在日期[%s]时的当日流数据获取完成", shopId, date));
             }
             shopService.saves(list);
         }
@@ -95,7 +91,7 @@ public class AlipayDataSync {
         if (shopId != null){
             rc.addCondition("shop_id", "=", shopId);
         }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -148,7 +144,7 @@ public class AlipayDataSync {
         if (shopId != null){
             rc.addCondition("shop_id", "=", shopId);
         }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -187,7 +183,6 @@ public class AlipayDataSync {
                     if (s1.getType()!=null){
                         list.add(s1);
                     }
-                    logger.debug("--------------------");
                 }
                 shopPassengerflowAnalyzeService.saves(list);
             }
@@ -195,13 +190,10 @@ public class AlipayDataSync {
     }
 
     //保存：按天统计回流情况
-    public void syncUsrLostBackForweek(String shopId, String date, String token) throws AlipayApiException {
+    public void syncUsrLostBackForweek(String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
-        if (shopId != null){
-            rc.addCondition("shop_id", "=", shopId);
-        }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -240,7 +232,6 @@ public class AlipayDataSync {
                     if (s1.getType()!=null){
                         list.add(s1);
                     }
-                    logger.debug("--------------------");
                 }
                 shopPassengerflowAnalyzeService.saves(list);
             }
@@ -254,7 +245,7 @@ public class AlipayDataSync {
         if (shopId != null){
             rc.addCondition("shop_id", "=", shopId);
         }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -295,7 +286,6 @@ public class AlipayDataSync {
                     s1.setKey(columnValue.get("category"));
                     s1.setValue(columnValue.get("usr_cnt"));
                     s1.setShop(columnValue.get("shop_name"));
-                    logger.debug("--------------------");
                     list.add(s1);
                 }
                 shopLabelAnalyzeService.saves(list);
@@ -310,7 +300,7 @@ public class AlipayDataSync {
         if (shopId != null){
             rc.addCondition("shop_id", "=", shopId);
         }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -361,14 +351,11 @@ public class AlipayDataSync {
         }
     }
 
-    //周边分布
-    public void syncShopHotDiagram(String shopId, String date, String token) throws AlipayApiException {
+    //周边分布热力图
+    public void syncShopHotDiagram(String date, String token) throws AlipayApiException {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_HOT_DIAGRAM);  //QK171101ozq154g7
-        if (shopId != null){
-            rc.addCondition("shop_id", "=", shopId);
-        }
-        if (shopId != null){
+        if (date != null){
             rc.addCondition("day","=",date );
         }
         Map<String,Object> map = AlipayUtil.getKoubeiReportData(rc,token,alipayClient);
@@ -432,32 +419,32 @@ public class AlipayDataSync {
         String token = "201710BB587b6a2bf52a4795bba5e7eca40c1C55";
         try {
             logger.info("开始同步支付宝口碑数据");
-            logger.info("开始同步热力图数据");
-            syncShopHotDiagram(null,null,token);
-
-            Thread.sleep(1000);
             logger.info("开始同步商铺信息数据");
-            syncShopList(null,null,token);
+            syncShopList(null,token);
+            Thread.sleep(1300);
 
-            Thread.sleep(1000);
-            logger.info("开始同步客户特征数据");
-            syncShopProperty(null,null,token);
+            logger.info("开始同步热力图数据");
+            syncShopHotDiagram(null,token);
+            Thread.sleep(1300);
 
-            Thread.sleep(1000);
-            logger.info("开始同步客户区域特征数据");
-            syncShopPropertyArea(null,null,token);
-
-            Thread.sleep(1000);
-            logger.info("开始同步每周新老客户数据");
-            syncUsranalysisForweek(null,null,token);
-
-            Thread.sleep(1000);
-            logger.info("开始同步回头客数据");
-            syncUsrBackForweek(null,null,token);
-
-            Thread.sleep(1000);
             logger.info("开始同步回流情况数据");
-            syncUsrLostBackForweek(null,null,token);
+            syncUsrLostBackForweek(null,token);
+            List<String> shopIds = shopService.selectAllShopId();
+            for (String shopId : shopIds) {
+                Thread.sleep(1300);
+                logger.debug(String.format("开始处理shop[%s]",shopId));
+                logger.info("开始同步客户特征数据");
+                syncShopProperty(shopId,null,token);
+                Thread.sleep(1300);
+                logger.info("开始同步客户区域特征数据");
+                syncShopPropertyArea(shopId,null,token);
+                Thread.sleep(1300);
+                logger.info("开始同步每周新老客户数据");
+                syncUsranalysisForweek(shopId,null,token);
+                Thread.sleep(1300);
+                logger.info("开始同步回头客数据");
+                syncUsrBackForweek(shopId,null,token);
+            }
 
         } catch (AlipayApiException e) {
             e.printStackTrace();

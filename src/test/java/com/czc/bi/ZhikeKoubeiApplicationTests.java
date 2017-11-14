@@ -12,6 +12,7 @@ import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.alipay.ReportDataContext;
+import com.czc.bi.scheduling.AlipayDataSync;
 import com.czc.bi.scheduling.CustFlowDataSync;
 import com.czc.bi.service.ShopLabelAnalyzeService;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
@@ -77,7 +78,6 @@ public class ZhikeKoubeiApplicationTests {
             for (String id : ids) {
                 logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
                 custFlowDataSync.syncDayFlow(
-                        id,
                         data,
                         "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
                 Thread.sleep(1000);

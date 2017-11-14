@@ -3,7 +3,7 @@
 <mapper namespace="com.czc.bi.mapper.ShopMapper">
 
 	<insert id="insert" parameterType="com.czc.bi.pojo.Shop">
-		INSERT INTO `shop_copy` (
+		INSERT INTO `shop` (
 		`name`,
 		`account`,
 		`inshort`,
@@ -69,17 +69,65 @@
 		`shoptime`,
 		`introduce`
 		FROM
-		`shop_copy` where `account` = #{0}
+		`shop` where `account` = #{0}
 	</select>
 	<select id="selectAllShopId" resultType="java.lang.String">
-		SELECT account FROM `shop_copy`
+		SELECT account FROM `shop`
 	</select>
 
 	<select id="selectShopsByMerchant" resultType="com.czc.bi.pojo.Simple">
 		SELECT `account` as `key`
 		     ,`name` as `value`
- 		FROM `shop_copy`
+ 		FROM `shop`
 		WHERE merchant = #{merchant}
 	</select>
+
+	<insert id="replaces" parameterType="java.util.List">
+		REPLACE INTO `shop`(
+		`name`,
+		`account`,
+		`inshort`,
+		`merchant`,
+		`agent`,
+		`province`,
+		`city`,
+		`area`,
+		`address`,
+		`type`,
+		`subtype`,
+		`longitude`,
+		`latitude`,
+		`link`,
+		`phone`,
+		`shoptime`,
+		`introduce`,
+		`createdt`,
+		`updatedt`
+		)
+		VALUES
+		<foreach collection="records" item="item" index="index" separator="," >
+			(
+			#{item.name,jdbcType=VARCHAR},
+			#{item.account,jdbcType=VARCHAR},
+			#{item.inshort,jdbcType=VARCHAR},
+			#{item.merchant,jdbcType=VARCHAR},
+			#{item.agent,jdbcType=VARCHAR},
+			#{item.province,jdbcType=VARCHAR},
+			#{item.city,jdbcType=VARCHAR},
+			#{item.area,jdbcType=VARCHAR},
+			#{item.address,jdbcType=VARCHAR},
+			#{item.type,jdbcType=VARCHAR},
+			#{item.subtype,jdbcType=VARCHAR},
+			#{item.longitude,jdbcType=VARCHAR},
+			#{item.latitude,jdbcType=VARCHAR},
+			#{item.link,jdbcType=VARCHAR},
+			#{item.phone,jdbcType=VARCHAR},
+			#{item.shoptime,jdbcType=VARCHAR},
+			#{item.introduce,jdbcType=VARCHAR},
+			NOW(),
+			NOW()
+			)
+		</foreach>
+	</insert>
 
 </mapper>

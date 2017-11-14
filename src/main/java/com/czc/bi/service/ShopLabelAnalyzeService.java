@@ -8,7 +8,6 @@ import com.czc.bi.pojo.Simple;
 import com.czc.bi.pojo.dto.NameValue;
 import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.ShopLabelAnalyzeQuery;
-import com.czc.bi.util.Constant;
 import com.czc.bi.util.Constants;
 import com.czc.bi.util.ExportData;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -173,12 +173,9 @@ public class ShopLabelAnalyzeService {
         List<Simple<String, String>> simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
 
         ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
-            return new Elevation().setCoord(Double.valueOf(a.getKey().split(",")[0]), Double.valueOf(a.getKey().split(",")[1])).setElevation(Integer.parseInt(a.getValue()));
+            return new Elevation().setLng(Double.parseDouble(a.getKey().split(",")[0])).setLat(Double.parseDouble(a.getKey().split(",")[1])).setCount(Integer.parseInt(a.getValue()));
         }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
-//        ArrayList<Elevation> collect = simpleKVS.stream().map(a -> {
-//            return new Elevation().setCoord(Double.valueOf(a.getKey()), Double.valueOf(a.getValue())).setElevation(1);
-//        }).collect(Collectors.toCollection(ArrayList<Elevation>::new));
-        map.put("coordinate", collect);
+        map.put("points", collect);
         return map;
     }
 
@@ -219,33 +216,38 @@ public class ShopLabelAnalyzeService {
     }
 
     public int saves(List<ShopLabelAnalyze> list) {
-        return shopLabelAnalyzeMapper.inserts(list);
+        return shopLabelAnalyzeMapper.replaces(list);
     }
 
     class Elevation {
-        private Double[] coord;
-        private Number elevation;
+        private Number lng;
+        private Number lat;
+        private Number count;
 
-        public Elevation() {
-            this.coord = new Double[2];
+        public Number getLng() {
+            return lng;
         }
 
-        public Double[] getCoord() {
-            return coord;
-        }
-
-        public Elevation setCoord(Double arg0, Double arg1) {
-            this.coord[0] = arg0;
-            this.coord[1] = arg1;
+        public Elevation setLng(Number lng) {
+            this.lng = lng;
             return this;
         }
 
-        public Number getElevation() {
-            return elevation;
+        public Number getLat() {
+            return lat;
         }
 
-        public Elevation setElevation(Number elevation) {
-            this.elevation = elevation;
+        public Elevation setLat(Number lat) {
+            this.lat = lat;
+            return this;
+        }
+
+        public Number getCount() {
+            return count;
+        }
+
+        public Elevation setCount(Number count) {
+            this.count = count;
             return this;
         }
     }
