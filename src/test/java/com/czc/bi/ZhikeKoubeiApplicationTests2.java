@@ -1,6 +1,7 @@
 package com.czc.bi;
 
 import com.czc.bi.mapper.ShopMapper;
+import com.czc.bi.scheduling.AlipayDataSync;
 import com.czc.bi.scheduling.CustFlowDataSync;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -17,13 +18,19 @@ public class ZhikeKoubeiApplicationTests2 {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-
+    @Autowired
+    private AlipayDataSync alipayDataSync;
 
     @Autowired
     private CustFlowDataSync custFlowDataSync;
 
     @Autowired
     private ShopMapper shopMapper;
+
+    @Test
+    public void test1() throws Exception{
+        alipayDataSync.getAllToken();
+    }
 
     @Test
     public void demo22() throws Exception {

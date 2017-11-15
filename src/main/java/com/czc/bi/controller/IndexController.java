@@ -4,6 +4,7 @@ import com.czc.bi.pojo.Simple;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
 import com.czc.bi.service.UserService;
+import com.czc.bi.util.BaseUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public class IndexController {
     private ShopService shopService;
 
     @RequestMapping("/shouye")
-    public String shouye(HttpSession session, Model model) {
+    public String shouye(HttpSession session, Model model) throws ParseException {
         String account = (String) SecurityUtils.getSubject().getPrincipal();
         session.setAttribute("account", account);
 

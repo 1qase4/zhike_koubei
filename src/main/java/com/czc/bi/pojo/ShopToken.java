@@ -35,7 +35,7 @@ public class ShopToken implements Serializable {
     // 授权商户的AppId
     private String auth_app_id;
 
-    //令牌有效期
+    // 令牌有效期
     private Integer expires_in;
 
     // 刷新令牌有效期
@@ -171,4 +171,23 @@ public class ShopToken implements Serializable {
         return this;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ShopToken{");
+        sb.append("id=").append(id);
+        sb.append(", account='").append(account).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", app_auth_code='").append(app_auth_code).append('\'');
+        sb.append(", app_auth_token='").append(app_auth_token).append('\'');
+        sb.append(", user_id='").append(user_id).append('\'');
+        sb.append(", auth_app_id='").append(auth_app_id).append('\'');
+        sb.append(", expires_in=").append(expires_in);
+        sb.append(", re_expires_in=").append(re_expires_in);
+        sb.append(", app_refresh_token='").append(app_refresh_token).append('\'');
+        sb.append(", stat='").append(stat).append('\'');
+        sb.append(", createdt=").append(createdt);
+        sb.append(", updatedt=").append(updatedt);
+        sb.append('}');
+        return sb.toString();
+    }
 }

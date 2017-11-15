@@ -4,10 +4,13 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
+import com.czc.bi.mapper.ShopTokenMapper;
 import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
+import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.alipay.ReportDataContext;
+import com.czc.bi.pojo.query.ShopTokenQuery;
 import com.czc.bi.service.ShopLabelAnalyzeService;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.czc.bi.util.AlipayConstant.*;
 
@@ -49,10 +53,30 @@ public class AlipayDataSync {
     @Autowired
     private ShopLabelAnalyzeService shopLabelAnalyzeService;
 
+    @Autowired
+    private ShopTokenMapper shopTokenMapper;
+
 //    @Scheduled(cron = "0/10 * * * * ?") // 每10秒执行一次
     public void scheduler() {
         logger.info(">>>>>>>>>>>>> scheduled ... ");
     }
+
+    // 获取现存的所有token数据
+    public void getAllToken(){
+        List<ShopToken> shopTokens = shopTokenMapper.selectByCondition("1=1");
+
+        // 循环token 同步更数据
+        for (ShopToken shopToken : shopTokens) {
+            String account = shopToken.getAccount();
+            String appAuthToken = shopToken.getApp_auth_token();
+            // 根据账号 获取账号的当前数据时间
+
+        }
+
+        System.out.println(shopTokens);
+    }
+
+
 
     //保存商户信息
     public void syncShopList(String date, String token) throws AlipayApiException {
