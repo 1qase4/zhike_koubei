@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class IndexController {
         List<Simple<String, String>> shops = shopService.selectShopsByMerchant(account);
         model.addAttribute("shops", shops);
         String today = shopPassengerflowAnalyzeService.selectPdate();
-        session.setAttribute("today", today);
+        session.setAttribute("today", new SimpleDateFormat("yyyy年MM月dd日").format(new SimpleDateFormat("yyyy-MM-dd").parse(today)));
         String weekOfYear = BaseUtil.getWeekOfYear(today);
         session.setAttribute("weekOfYear", weekOfYear);
         return "shouye";

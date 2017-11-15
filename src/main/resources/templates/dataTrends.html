@@ -16,7 +16,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-数据趋势( <span th:text="${session.weekOfYear}" id="selectedTime"></span>)</div>
+        <div class="common-title lf">客流分析-数据趋势( 数据截止时间：<span th:text="${session.today}" id="selectedTime"></span>)</div>
         <a class="download" id="loadReport" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
     </div>
     <!--图表区-->
@@ -32,7 +32,7 @@
             <div class="select-group" data-id="year">
                 <label class="time-label lf">选择时间</label>
                 <div class="input-wrap lf">
-                    <input type="text" class="form-control form-date-yeay lf" readonly="readonly" data-type="begin" placeholder="选择年份">
+                    <input type="text" class="form-control form-date-yeay lf time_input" readonly="readonly" data-type="begin" placeholder="选择年份">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
                 <label for="year-checkbox" class="mylabel lf" data-checkbox="compare">
@@ -40,7 +40,7 @@
                     <i class="my-checkbox iconfont icon-duigoufangkuang"></i>对比
                 </label>
                 <div class="input-wrap hide lf">
-                    <input type="text" class="form-control form-date-yeay lf" readonly="readonly" data-type="end" placeholder="选择年份">
+                    <input type="text" class="form-control form-date-yeay lf time_input time_input" readonly="readonly" data-type="end" placeholder="选择年份">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
             </div>
@@ -48,7 +48,7 @@
             <div class="select-group" data-id="month">
                 <label class="time-label lf">选择时间</label>
                 <div class="input-wrap lf">
-                    <input type="text" class="form-control form-date-month lf" readonly="readonly" data-type="begin" placeholder="选择月份">
+                    <input type="text" class="form-control form-date-month lf time_input" readonly="readonly" data-type="begin" placeholder="选择月份">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
                 <label for="month-checkbox" class="mylabel lf" data-checkbox="compare">
@@ -56,7 +56,7 @@
                     <i class="my-checkbox iconfont icon-duigoufangkuang"></i>对比
                 </label>
                 <div class="input-wrap hide lf">
-                    <input type="text" class="form-control form-date-month lf" readonly="readonly" data-type="end" placeholder="选择月份">
+                    <input type="text" class="form-control form-date-month lf time_input" readonly="readonly" data-type="end" placeholder="选择月份">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
             </div>
@@ -64,7 +64,7 @@
             <div class="select-group" data-id="week">
                 <label class="time-label lf">选择时间</label>
                 <div class="input-wrap lf">
-                    <input type="text" readonly class="common-select myWeek mr10" data-type="begin" placeholder="请选择周"/>
+                    <input type="text" readonly class="common-select myWeek mr10 time_input" data-type="begin" placeholder="请选择周"/>
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
                 <label for="week-checkbox" class="mylabel lf" data-checkbox="compare">
@@ -72,7 +72,7 @@
                     <i class="my-checkbox iconfont icon-duigoufangkuang"></i>对比
                 </label>
                 <div class="input-wrap hide lf">
-                    <input type="text" readonly class="common-select myWeek mr10" data-type="end" placeholder="请选择周"/>
+                    <input type="text" readonly class="common-select myWeek mr10 time_input" data-type="end" placeholder="请选择周"/>
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
             </div>
@@ -80,7 +80,7 @@
             <div class="select-group" data-id="day">
                 <label class="time-label lf">选择时间</label>
                 <div class="input-wrap lf">
-                    <input type="text" class="form-control form-date-date lf" readonly="readonly" data-type="begin" placeholder="选择日期">
+                    <input type="text" class="form-control form-date-date lf time_input" readonly="readonly" data-type="begin" placeholder="选择日期">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
                 <label for="date-checkbox" class="mylabel lf" data-checkbox="compare">
@@ -88,7 +88,7 @@
                     <i class="my-checkbox iconfont icon-duigoufangkuang"></i>对比
                 </label>
                 <div class="input-wrap hide lf">
-                    <input type="text" class="form-control form-date-date lf" readonly="readonly" data-type="end" placeholder="选择日期">
+                    <input type="text" class="form-control form-date-date lf time_input" readonly="readonly" data-type="end" placeholder="选择日期">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
             </div>
@@ -246,7 +246,7 @@
         //获取当前选中的 年/月/周/日选择器
         var val = $("#category").val();
         //changeXAxis(val);//初始化x轴
-        loadTime(val);//加载本地存储或默认时间
+        loadTime1(val,$("#selectedTime").html());//加载本地存储或默认时间
         $(".myWeek").weekpicker({});
         //根据店铺获取分组
         getCharts();
@@ -269,7 +269,7 @@
         $("[data-id='"+val+"']").addClass("nowSelected");
         //changeXAxis(val);//选择对应的x轴
         //加载时间
-        loadTime(val);
+        loadTime1(val,$("#selectedTime").html());
         getCharts();
     });
     //    切换时间
@@ -287,7 +287,7 @@
         var inputs = timeBox.children(".input-wrap:not(.hide)");
         var timeValue1 = $(inputs[0]).children("input").val();
         var timeValue2 = $(inputs[1]).children("input").val();
-        $("#selectedTime").html(timeValue1);
+//        $("#selectedTime").html(timeValue1);
         if(check){//对比查看
             if (!(timeValue1 && timeValue2)){
                 new $.zui.Messager('请选择时间', {
@@ -298,7 +298,7 @@
                 return false;
             }
             //获取时间
-            $("#selectedTime").html(timeValue1 + " & " + timeValue2);
+//            $("#selectedTime").html(timeValue1 + " & " + timeValue2);
             $("#tableTitle").html("对比报表("+timeValue1+"客流量对比"+timeValue2+"客流量)");
             var begin = state === "week" ? (timeValue1.slice(4)+timeValue1.slice(1,3)) : timeValue1.replace(/\D/g,"-").slice(0,timeValue1.length-1);
             var end = state === "week" ? (timeValue2.slice(4)+timeValue2.slice(1,3)) : timeValue2.replace(/\D/g,"-").slice(0,timeValue2.length-1);
@@ -315,7 +315,7 @@
                 }).show();
                 return false;
             }
-            $("#selectedTime").html(timeValue1);
+//            $("#selectedTime").html(timeValue1);
             $("#tableTitle").html("客流量报表("+timeValue1+"客流量)");
             var time = state === "week" ? (timeValue1.slice(4)+timeValue1.slice(1,3)) : timeValue1.replace(/\D/g,"-").slice(0,timeValue1.length-1);
             data.time = time;
@@ -412,6 +412,33 @@
         }
 //        }
     }
+//
+//    function loadTime1(type,value) {
+//        $("[data-id='"+type+"']").addClass("nowSelected");
+//        var inputBox = $("[data-id='"+type+"']").children(".input-wrap");
+//        var input1 = $(inputBox[0]).children("input");
+//        var today = new Date(value);
+//        var thisYear = today.getFullYear();//当年
+//        var thisMonth = today.getMonth()+1;//当月
+//        thisMonth = thisMonth < 10 ? "0" + thisMonth : "" + thisMonth;
+////       根据类型加载默认时间
+//        switch(type)
+//        {
+//            case "year":
+//                input1.val() == "" && input1.val(thisYear+"年");
+//                break;
+//            case "month":
+//                input1.val() == "" && input1.val(thisYear + "年" + thisMonth + "月");
+//                break;
+//            case "week":
+//                var obj1 = getWeek(today);
+//                input1.val() == "" && input1.val("第"+obj1.order+"周"+obj1.monDate);
+//                break;
+//            case "day":
+//                input1.val() == "" && input1.val(value);
+//                break;
+//        }
+//    }
     //切换查看方式时变为对应的x轴
     function changeXAxis(val) {//输入一个状态
         var xAxis;
