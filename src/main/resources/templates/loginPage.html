@@ -65,12 +65,12 @@
                 </ul>
             </div>
             <div class="login-content fr">
-                <form id="sqs" class="login-box" action="login" method="post">
+                <form id="sqs" class="login-box" method="post">
                     <div class="login-logo">登录知客口碑</div>
                     <!--错误提示-->
-                    <div class="cwts" th:style="${display}">
+                    <div class="cwts" style="display: none">
                         <div class="error"></div>
-                        <span class="errorTips" th:text="${msg}"></span>
+                        <span class="errorTips"></span>
                     </div>
                     <!--用户名-->
                     <div class="login-input uname">
@@ -140,6 +140,7 @@
 <script type="text/javascript" src="/js/responsiveslides.min.js"></script>
 <script type="text/javascript" src="/js/jquery.md5.min.js"></script>
 <script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>
+<script type="text/javascript" src="/js/index1.js"></script>
 <script>
     $(function () {
 //        new SecurityCode("sqsCode").init();

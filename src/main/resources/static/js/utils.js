@@ -21,6 +21,38 @@ function getMonthByNow(n) {//n可取正负整数(上个月或下个月)
     m = m < 10 ? '0' + m : m;
     return y+"年"+m+"月";
 }
+//根据时间类型加载时间
+function loadTime1(type,value) {
+    var inputBox = $("[data-id='"+type+"']").addClass("nowSelected").find(".time_input");
+    var input1 = $(inputBox[0]);
+    var reg = /\d{4}-\d{2}-\d{2}/;
+    var calVal = value;//计算用的时间见格式
+    if(!reg.test(value)){
+        calVal= value.substring(0,10).replace(/[\u4e00-\u9fa5]/g,"-");
+    }
+    var today = new Date(calVal);
+    var thisYear = today.getFullYear();//当年
+    var thisMonth = today.getMonth()+1;//当月
+    thisMonth = thisMonth < 10 ? "0" + thisMonth : "" + thisMonth;
+//       根据类型加载默认时间
+    switch(type)
+    {
+        case "year":
+            input1.val() == "" && input1.val(thisYear+"年");
+            break;
+        case "month":
+            input1.val() == "" && input1.val(thisYear + "年" + thisMonth + "月");
+            break;
+        case "week":
+            var obj1 = getWeek(today);
+            input1.val() == "" && input1.val("第"+obj1.order+"周"+obj1.monDate);
+            console.log("第"+obj1.order+"周"+obj1.monDate)
+            break;
+        case "day":
+            input1.val() == "" && input1.val(value);
+            break;
+    }
+}
 //根据输入的日期计算前后某一天的日期
 function getDateByDate(day,n) {//n可取正负整数
     var date=new Date(day);
@@ -50,7 +82,7 @@ function getWeek(dateobj) {
     //今天星期几
     var day = dateobj.getDay();
     //这个星期一的日期(毫秒数)
-    var monday = day == 0 ? today.setDate(date - 6) : dateobj.setDate(date - (day - 1));
+    var monday = day == 0 ? dateobj.setDate(date - 6) : dateobj.setDate(date - (day - 1));
     //这个星期一的日期
     var _monday = new Date(monday);
     var newDate;

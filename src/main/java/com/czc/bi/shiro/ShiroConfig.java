@@ -35,7 +35,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/zui-1.7.0-dist/dist/**", "anon");
 		filterChainDefinitionMap.put("/loginPage", "anon");
-		filterChainDefinitionMap.put("/login", "anon");
+		filterChainDefinitionMap.put("/user/login", "anon");
 		//filterChainDefinitionMap.put("/show/**", "anon");
 		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		filterChainDefinitionMap.put("/loginOut", "logout");
@@ -43,7 +43,7 @@ public class ShiroConfig {
 		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
 		filterChainDefinitionMap.put("/**", "authc");
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-//		shiroFilterFactoryBean.setLoginUrl("/login");
+		shiroFilterFactoryBean.setLoginUrl("/loginPage");
 		// 登录成功后要跳转的链接
 //		shiroFilterFactoryBean.setSuccessUrl("/");
 

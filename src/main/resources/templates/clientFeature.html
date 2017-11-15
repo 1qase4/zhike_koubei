@@ -14,7 +14,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-客户特征 ( <span id="selectedTime"></span> ) </div>
+        <div class="common-title lf">客流分析-客户特征 ( 数据截止时间：<span id="selectedTime" th:text="${session.today}"></span> ) </div>
         <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
     </div>
     <!--图表区-->
@@ -24,7 +24,7 @@
             <div class="select-group">
                 <label class="mylabel lf">选择时间</label>
                 <div class="input-wrap lf">
-                    <input type="text" id="month" class="form-control form-date-month" readonly="readonly" placeholder="选择月份">
+                    <input type="text" id="month" class="form-control form-date-month time_input" readonly="readonly" placeholder="选择月份">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
             </div>
@@ -101,12 +101,7 @@
     //    从父页面获取店名
     var gShop = parent.document.getElementById("shop").value;
     $(function () {
-        //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
-//        if(window.localStorage && localStorage.getItem("cust-month")){
-//            $("#month").val(localStorage.getItem("cust-month"));
-//        }else{
-        $("#month").val(getMonthByNow(0));
-//        }
+        $("#month").val($("#selectedTime").html().substring(0,8));
         getCharts();
     });
     //选择时间时获取图
@@ -124,11 +119,11 @@
             },
             success:function(obj){
                 //本地存储时间
-                if(window.localStorage){
-                    localStorage.setItem("cust-month",time);
-                }
+//                if(window.localStorage){
+//                    localStorage.setItem("cust-month",time);
+//                }
                 //获取时间
-                $("#selectedTime").html(time);
+//                $("#selectedTime").html(time);
                 //绘图
                 //******************性别比例*********************
                 var genderList = obj.data.gender.subdata;

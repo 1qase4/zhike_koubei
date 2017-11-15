@@ -14,7 +14,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-回流流失 ( <span id="selectedTime" th:text="${session.weekOfYear}"></span> ) </div>
+        <div class="common-title lf">客流分析-回流流失 ( 数据截止时间：<span id="selectedTime" th:text="${session.today}"></span> ) </div>
         <a class="download" href="javascript:;" onclick="loadReport()"><i class="iconfont icon-xiazai"></i>下载报告</a>
     </div>
     <!--图表区-->
@@ -26,12 +26,12 @@
             </div>
             <div class="select-group" id="inputBox">
                 <label class="mylabel lf">选择时间</label>
-                <div class="input-wrap lf">
-                    <input type="text" id="week" readonly class="common-select myWeek current mr10" placeholder="请选择周"/>
+                <div class="input-wrap lf" data-id="week">
+                    <input type="text" id="week" readonly class="common-select myWeek current mr10 time_input" placeholder="请选择周"/>
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
-                <div class="input-wrap lf" style="display: none">
-                    <input type="text" id="month" class="form-control form-date-month" readonly="readonly" placeholder="选择月份">
+                <div class="input-wrap lf" style="display: none" data-id="month">
+                    <input type="text" id="month" class="form-control form-date-month time_input" readonly="readonly" placeholder="选择月份">
                     <i class="icon icon-caret-down my-caret-down"></i>
                 </div>
             </div>
@@ -143,7 +143,9 @@
 <script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
 <script>
     $(function () {
-        loadTime();
+        var type = $("#switchWay span.selected").data("time");
+        var value = $("#selectedTime").html();
+        loadTime1(type,value);
         //页面加载完成时渲染图表
         getCharts();
     });
@@ -153,9 +155,9 @@
     $("#switchWay").on("click","span",function () {
         var state = $(this).data("time");
         $(this).addClass("selected").siblings().removeClass("selected");
-        $("#"+state).parent().show().addClass("current").siblings(".input-wrap").hide().removeClass("current");
+        $("#"+state).parent().show().addClass("nowSelected").siblings(".input-wrap").hide().removeClass("nowSelected");
         //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
-        loadTime();
+        loadTime1(state,$("#selectedTime").html());
         getCharts();
     });
     //选择时间时获取图表
@@ -233,7 +235,7 @@
 //                    }
 //                };
                 var time1 = input.val();
-                window.localStorage && localStorage.setItem("return"+state,time1);//查询的时间存到本地
+                //window.localStorage && localStorage.setItem("return"+state,time1);//查询的时间存到本地
 //                var time2 = input.attr("title");
                 //如果是周就把日期加到x轴上
                 if (state === "week"){
@@ -250,7 +252,7 @@
                     xAxis = ["1日","2日","3日","4日","5日","6日","7日","8日","9日","10日","11日","12日","13日","14日","15日","16日","17日","18日","19日","20日","21日","22日","23日","24日","25日","26日","27日","28日","29日","30日","31日"];
                 }
                 //获取时间
-                $("#selectedTime").html(time1);
+//                $("#selectedTime").html(time1);
                 $("#tableTitle").html(time1);
                 //获取右侧数据求和
                 for (var i = 0,lostClient = 0;i < obj.data["lost"].subdata.length;i ++){

@@ -13,7 +13,7 @@
 <body>
 <div class="child-container">
     <div class="title-box clearfix">
-        <div class="common-title lf">客流分析-周边分布( <span id="currentTime"></span>)</div>
+        <div class="common-title lf">客流分析-周边分布( 数据截止时间：<span id="selectedTime" th:text="${session.today}"></span>)</div>
     </div>
     <!--图表区-->
     <div class="common-box">
@@ -41,8 +41,8 @@
 <script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
 <script type="text/javascript" src="/js/bmap.min.js"></script>
 <!--引入百度地图-->
-<script src="http://api.map.baidu.com/api?v=2.0&ak=fwnkIfYEYf2QCGtTtqrqriqX8VszvUSK"></script>
-<script src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+<script src="https://api.map.baidu.com/api?v=2.0&ak=fwnkIfYEYf2QCGtTtqrqriqX8VszvUSK"></script>
+<script src="https://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
 <script>
     $(".form-date-month").datetimepicker({
         language:  "zh-CN",
@@ -64,11 +64,7 @@
     $("#month").change(getCharts);
     //初始化
     $(function () {
-//        if(window.localStorage && localStorage.getItem("peri-month")){
-//            $("#month").val(localStorage.getItem("peri-month"));
-//        }else{
-        $("#month").val(getMonthByNow(0));
-//        }
+        $("#month").val($("#selectedTime").html().substring(0,8));
         getCharts();
     });
     function getCharts() {
@@ -83,11 +79,10 @@
                 $(".loadingDiv").css('display','');
             },
             success:function(obj){
-                $("#currentTime").html(time);
                 //本地存储时间
-                if(window.localStorage){
-                    localStorage.setItem("peri-month",time);
-                }
+//                if(window.localStorage){
+//                    localStorage.setItem("peri-month",time);
+//                }
                 //百度地图
 //                var points =[
 //                    {"lng":116.418261,"lat":39.921984,"count":50},
@@ -186,7 +181,7 @@
 //                var point = new BMap.Point(116.418261, 39.921984);
                 var point = new BMap.Point(obj.data.local[0], obj.data.local[1]);
                 map.centerAndZoom(point,15);//初始化地图，设置中心点坐标和地图级别
-                map.enableScrollWheelZoom(); // 允许滚轮缩放
+//                map.enableScrollWheelZoom(); // 允许滚轮缩放
 
                 var marker = new BMap.Marker(point);//创建点
                 var circle1 = new BMap.Circle(point,500,{fillColor : "transparent",fillOpacity : 0,strokeColor:"red",strokeWeight:2, strokeOpacity:0.5});
