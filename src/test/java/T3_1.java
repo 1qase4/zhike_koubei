@@ -30,14 +30,13 @@ public class T3_1 {
 
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk("QK17110221vjfg3r"); //"QK1711019f6d4557"
 
-//        rc.setReport_uk("QK171024vnw9va74");
-//        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-//        rc.addCondition("day","=","2017-11-01" );
+        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+      //  rc.addCondition("day","=","2017-11-01" );
 
-        rc.setReport_uk("QK1711019f6d4557"); //"QK1711019f6d4557"
-//        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-//        rc.addCondition("month","=","2017-10" );
+     //   rc.addCondition("day", "=", "2017-11-07");
+        rc.addCondition("month","=","2017-10" );
 
         // rc.addCondition("week", ">", "12");
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));

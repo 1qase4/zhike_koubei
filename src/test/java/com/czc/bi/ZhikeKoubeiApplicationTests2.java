@@ -29,7 +29,9 @@ public class ZhikeKoubeiApplicationTests2 {
 
     @Test
     public void test1() throws Exception{
-        alipayDataSync.syncAlipayData();
+        for (int i = 0; i < 1; i++) {
+            alipayDataSync.syncAlipayData();
+        }
     }
 
     @Test

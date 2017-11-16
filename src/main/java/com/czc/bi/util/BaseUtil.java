@@ -67,21 +67,6 @@ public class BaseUtil {
 		return null;
 	}
 
-	public static String StringToHex(String s) throws UnsupportedEncodingException {
-		byte[] b = s.getBytes("gbk");
-		String a = "";
-		for (int i = 0; i < b.length; i++) {
-			String hex = Integer.toHexString(b[i] & 0xFF);
-			if (hex.length() == 1) {
-				hex = '0' + hex;
-			}
-
-			a = a + hex;
-		}
-
-		return a;
-	}
-
 	public static String getUUID(){
 		UUID uuid = UUID.randomUUID();
 		return uuid.toString().replace("-","").toUpperCase();

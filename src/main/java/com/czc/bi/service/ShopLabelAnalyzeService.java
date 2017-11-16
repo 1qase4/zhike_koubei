@@ -129,6 +129,9 @@ public class ShopLabelAnalyzeService {
         Map<String, String> provinceMap = Constants.ProvinceMap;
 
         int size = kvs.size();
+        if(size == 0){
+            return new ArrayList<>(0);
+        }
         for (String province : provinceMap.values()) {
             boolean flag = true;
             for (int i = 0;i<size;i++){

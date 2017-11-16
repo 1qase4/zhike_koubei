@@ -17,16 +17,17 @@ import com.czc.bi.service.ShopService;
 import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.BaseUtil;
 import com.czc.bi.util.Constants;
+import com.czc.bi.util.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.czc.bi.util.AlipayConstant.*;
 
@@ -263,7 +264,13 @@ public class AlipayDataSync {
     }
 
     //客户特征
-    public void syncShopProperty(String shopId, String month, String token) throws AlipayApiException {
+    public void syncShopProperty(String shopId, String pdate, String token) throws Exception {
+        String month = checkMonthFirst(pdate);
+        if ("0".equals(month)) {
+            logger.info("日期[" + pdate + "]不是月初,不执行按月取数程序");
+            return;
+        }
+
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY);  //QK1711019f6d4557
         if (shopId != null) {
@@ -318,7 +325,14 @@ public class AlipayDataSync {
     }
 
     //客户区域特征
-    public void syncShopPropertyArea(String shopId, String month, String token) throws AlipayApiException {
+    public void syncShopPropertyArea(String shopId, String pdate, String token) throws Exception {
+
+        String month = checkMonthFirst(pdate);
+        if ("0".equals(month)) {
+            logger.info("日期[" + pdate + "]不是月初,不执行按月取数程序");
+            return;
+        }
+
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS);  //QK17110221vjfg3r
         if (shopId != null) {
@@ -353,6 +367,8 @@ public class AlipayDataSync {
                     s1.setType(Constants.PROVINCE_TYPE_MONTH);
                     if (Constants.ProvinceMap.containsKey(columnValue.get("province"))) {
                         s1.setKey(Constants.ProvinceMap.get(columnValue.get("province")));
+                    } else {
+                        continue;
                     }
                     s1.setShop(columnValue.get("shop_name"));
                     String province = columnValue.get("province");
@@ -375,13 +391,37 @@ public class AlipayDataSync {
         }
     }
 
+    /**
+     * 检查日期是否是月初,如果是月初,返回上月的月份String,如果不是,返回0
+     *
+     * @param pdate 日期
+     * @return
+     */
+    private String checkMonthFirst(String pdate) throws ParseException {
+        // 如果不是1号 返回0
+        if (!pdate.endsWith("-01")) {
+            return "0";
+        }
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sf.parse(pdate);
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+        return BaseUtil.getDateString(calendar.getTime(), "yyyy-MM");
+    }
+
     //周边分布热力图
-    public void syncShopHotDiagram(String date, String token) throws AlipayApiException {
+    public void syncShopHotDiagram(String pdate, String token) throws Exception {
+        String month = checkMonthFirst(pdate);
+        if ("0".equals(month)) {
+            logger.info("日期[" + pdate + "]不是月初,不执行按月取数程序");
+            return;
+        }
+
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_HOT_DIAGRAM);  //QK171101ozq154g7
-        if (date != null) {
-            rc.addCondition("day", "=", date);
-        }
+        // 尔华那边month处理不规范,先使用in转换处理
+        rc.addCondition("month", "in", String.format("%s,%s", month, month.replace("-", "")));
         Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -447,6 +487,7 @@ public class AlipayDataSync {
             etlDateQuery.setAccount(account);
             String pdate = etlDateMapper.selectByQuery(etlDateQuery).get(0).getPdate();
             pdate = BaseUtil.getNextDateString(pdate);
+            logger.info(String.format("开始同步账号[%s]在日期[%s]的数据",account,pdate));
             // 同步商户信息
             syncShopList(account, token);
             // 同步当日客流
@@ -454,6 +495,11 @@ public class AlipayDataSync {
             boolean b = custFlowDataSync.syncDayFlow(pdate, token);
             if (!b) {
                 msgs.add("同步当日客流同步失败");
+                String format = String.format("账号[%s]在日期[%s]的无法取得客流数据,退出同步,请检查!", account, pdate);
+                logger.info(format);
+                // 发送短信提醒同步失败
+                MessageUtil.sendMessageAdmin(format);
+                continue;
             }
             Thread.sleep(1000);
 
@@ -476,10 +522,10 @@ public class AlipayDataSync {
 
                 logger.debug(String.format("开始处理shop[%s]", shop));
                 logger.info("开始同步客户特征数据");
-                syncShopProperty(shop, pdate.substring(0,7), token);
+                syncShopProperty(shop, pdate, token);
                 Thread.sleep(1000);
                 logger.info("开始同步客户区域特征数据");
-                syncShopPropertyArea(shop, pdate.substring(0,7), token);
+                syncShopPropertyArea(shop, pdate, token);
                 Thread.sleep(1000);
                 logger.info("开始同步每周新老客户数据");
                 syncUsranalysisForweek(shop, pdate, token);

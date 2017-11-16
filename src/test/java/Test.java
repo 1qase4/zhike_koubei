@@ -60,18 +60,8 @@ public class Test {
 
 
     public static void main(String[] args) {
-        // create random object
-        Random randomno = new Random();
-
-        // check next Gaussian value
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
-        System.out.println("Next Gaussian value: " + randomno.nextGaussian() + 100);
+        String p = "2017-01-01";
+        System.out.println(p.substring(0,7));
 
     }
 }
