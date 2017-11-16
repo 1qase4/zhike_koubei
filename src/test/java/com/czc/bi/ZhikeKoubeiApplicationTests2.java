@@ -29,7 +29,7 @@ public class ZhikeKoubeiApplicationTests2 {
 
     @Test
     public void test1() throws Exception{
-        alipayDataSync.getAllToken();
+        alipayDataSync.syncAlipayData();
     }
 
     @Test

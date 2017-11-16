@@ -18,7 +18,9 @@ public class Result<T> {
     private String message;
     private T data;
 
-    public Result(){}
+    public Result(){
+        this.result = true;
+    }
 
     // 构建正常的返回对象
     public Result(T data){

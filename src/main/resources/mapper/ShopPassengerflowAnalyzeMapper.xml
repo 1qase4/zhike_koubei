@@ -119,7 +119,7 @@
         )
     </insert>
 
-    <delete id="deleteByPrimaryKey" parameterType="Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         DELETE FROM `shop_passengerflow_analyze`
         WHERE id = #{key}
     </delete>

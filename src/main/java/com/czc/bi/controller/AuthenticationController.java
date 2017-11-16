@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
+
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -31,11 +33,12 @@ public class AuthenticationController {
 
     // 今日客流走势
     @RequestMapping(value = "mainDayFlow")
-    public Result mainDayFlow(@RequestParam("account") String account) throws Exception {
+    public Result mainDayFlow(@RequestParam("account") String account, HttpSession session) throws Exception {
         if (account == null) {
             return null;
         }
-        Result res = shopPassengerflowAnalyzeService.getMainDayFlow(account);
+        String date = (String) session.getAttribute("today");
+        Result res = shopPassengerflowAnalyzeService.getMainDayFlow(account,date);
         return res;
     }
 

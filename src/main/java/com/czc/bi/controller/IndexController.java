@@ -1,6 +1,9 @@
 package com.czc.bi.controller;
 
+import com.czc.bi.mapper.BaseMapper;
+import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.pojo.Simple;
+import com.czc.bi.pojo.query.EtlDateQuery;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
 import com.czc.bi.service.UserService;
@@ -33,6 +36,9 @@ public class IndexController {
     @Autowired
     private ShopPassengerflowAnalyzeService shopPassengerflowAnalyzeService;
 
+    @Autowired
+    private EtlDateMapper etlDateMapper;
+
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
         model.addAttribute("name", name);
@@ -49,7 +55,12 @@ public class IndexController {
 
         List<Simple<String, String>> shops = shopService.selectShopsByMerchant(account);
         model.addAttribute("shops", shops);
-        String today = shopPassengerflowAnalyzeService.selectPdate();
+
+        // 根据账号 获取账号的当前数据时间
+        EtlDateQuery etlDateQuery = new EtlDateQuery();
+        etlDateQuery.setAccount(account);
+        String today = etlDateMapper.selectByQuery(etlDateQuery).get(0).getPdate();
+
         session.setAttribute("today", new SimpleDateFormat("yyyy年MM月dd日").format(new SimpleDateFormat("yyyy-MM-dd").parse(today)));
         String weekOfYear = BaseUtil.getWeekOfYear(today);
         session.setAttribute("weekOfYear", weekOfYear);
