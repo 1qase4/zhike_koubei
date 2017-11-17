@@ -1,8 +1,7 @@
 package com.czc.bi.controller;
 
-import com.czc.bi.mapper.BaseMapper;
 import com.czc.bi.mapper.EtlDateMapper;
-import com.czc.bi.pojo.Simple;
+import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.query.EtlDateQuery;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
@@ -10,8 +9,6 @@ import com.czc.bi.service.UserService;
 import com.czc.bi.util.BaseUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 
 @Controller

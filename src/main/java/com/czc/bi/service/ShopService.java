@@ -2,7 +2,7 @@ package com.czc.bi.service;
 
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.pojo.Shop;
-import com.czc.bi.pojo.Simple;
+import com.czc.bi.pojo.dto.Simple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

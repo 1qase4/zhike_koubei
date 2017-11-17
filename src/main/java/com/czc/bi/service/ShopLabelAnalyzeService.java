@@ -4,7 +4,7 @@ import com.czc.bi.mapper.ShopLabelAnalyzeMapper;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
-import com.czc.bi.pojo.Simple;
+import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.dto.NameValue;
 import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.ShopLabelAnalyzeQuery;
@@ -62,15 +62,35 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         total = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
-        List<Map<String,Float>> list = new ArrayList<>(13);
+        Map<String, Float> mapAge = new LinkedHashMap<>(12);
+        mapAge.put("18岁以下", 0f);
+        mapAge.put("18-20岁", 0f);
+        mapAge.put("21-25岁", 0f);
+        mapAge.put("26-30岁", 0f);
+        mapAge.put("31-35岁", 0f);
+        mapAge.put("36-40岁", 0f);
+        mapAge.put("41-45岁", 0f);
+        mapAge.put("46-50岁", 0f);
+        mapAge.put("51-55岁", 0f);
+        mapAge.put("56-60岁", 0f);
+        mapAge.put("60以上", 0f);
+        mapAge.put("未知", 0f);
+
         for (Simple<String, String> simple : simpleKVS) {
-            Map<String,Float> m = new HashMap<>(1);
-            m.put(simple.getKey(),
-                    new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
-                            .setScale(2, BigDecimal.ROUND_HALF_UP)
-                            .floatValue());
-            list.add(m);
+            String k = simple.getKey();
+            float v = new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
+                    .setScale(2, BigDecimal.ROUND_HALF_UP)
+                    .floatValue();
+            if (mapAge.containsKey(k)) {
+                mapAge.put(k, v);
+            }
         }
+
+        List<Simple<String, Float>> list = new ArrayList<>(12);
+        mapAge.forEach((a, b) -> {
+            list.add(new Simple<String, Float>().setKey(a).setValue(b));
+        });
+
         submap = new HashMap<>(2);
         submap.put("name", "年龄分布");
         submap.put("subdata", list);
@@ -115,7 +135,10 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         submap = new HashMap<>(2);
         submap.put("name", "星座");
-        submap.put("subdata", formartConstellations(simpleKVS));
+
+        Collections.sort(simpleKVS, (t0, t1) -> Integer.valueOf(t1.getValue()).compareTo(Integer.valueOf(t0.getValue())));
+
+        submap.put("subdata", simpleKVS);
         maps.put("constellation", submap);
 
         return maps;
@@ -132,17 +155,17 @@ public class ShopLabelAnalyzeService {
         Map<String, String> provinceMap = Constants.ProvinceMap;
 
         int size = kvs.size();
-        if(size == 0){
+        if (size == 0) {
             return new ArrayList<>(0);
         }
         for (String province : provinceMap.values()) {
             boolean flag = true;
-            for (int i = 0;i<size;i++){
-                if (province.equals(kvs.get(i).getKey())){
+            for (int i = 0; i < size; i++) {
+                if (province.equals(kvs.get(i).getKey())) {
                     flag = false;
                 }
             }
-            if (flag){
+            if (flag) {
                 Simple<String, String> simple = new Simple<>();
                 simple.setKey(province);
                 simple.setValue("0");
@@ -258,28 +281,28 @@ public class ShopLabelAnalyzeService {
         }
     }
 
-    // 格式化星座数据
-    private Map<String, Float> formartConstellations(List<Simple<String, String>> kvs) {
-        // 初始化12星座数据
-        Map<String, Float> map = new LinkedHashMap<>(12);
-        map.put("白羊座", 0f);
-        map.put("金牛座", 0f);
-        map.put("双子座", 0f);
-        map.put("巨蟹座", 0f);
-        map.put("狮子座", 0f);
-        map.put("处女座", 0f);
-        map.put("天秤座", 0f);
-        map.put("天蝎座", 0f);
-        map.put("射手座", 0f);
-        map.put("摩羯座", 0f);
-        map.put("水瓶座", 0f);
-        map.put("双鱼座", 0f);
-
-        int total = kvs.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
-
-        for (Simple<String, String> kv : kvs) {
-            map.put(kv.getKey(), new BigDecimal(Float.parseFloat(kv.getValue())/total*100).setScale(2,BigDecimal.ROUND_HALF_UP).floatValue());
-        }
-        return map;
-    }
+//    // 格式化星座数据
+//    private Map<String, Float> formartConstellations(List<Simple<String, String>> kvs) {
+//        // 初始化12星座数据
+//        Map<String, Float> map = new LinkedHashMap<>(12);
+//        map.put("白羊座", 0f);
+//        map.put("金牛座", 0f);
+//        map.put("双子座", 0f);
+//        map.put("巨蟹座", 0f);
+//        map.put("狮子座", 0f);
+//        map.put("处女座", 0f);
+//        map.put("天秤座", 0f);
+//        map.put("天蝎座", 0f);
+//        map.put("射手座", 0f);
+//        map.put("摩羯座", 0f);
+//        map.put("水瓶座", 0f);
+//        map.put("双鱼座", 0f);
+//
+//        int total = kvs.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
+//
+//        for (Simple<String, String> kv : kvs) {
+//            map.put(kv.getKey(), new BigDecimal(Float.parseFloat(kv.getValue()) / total * 100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
+//        }
+//        return map;
+//    }
 }
