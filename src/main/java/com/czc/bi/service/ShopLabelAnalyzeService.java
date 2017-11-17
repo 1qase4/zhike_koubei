@@ -135,7 +135,10 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         submap = new HashMap<>(2);
         submap.put("name", "星座");
-        submap.put("subdata", formartConstellations(simpleKVS));
+
+        Collections.sort(simpleKVS, (t0, t1) -> Integer.valueOf(t1.getValue()).compareTo(Integer.valueOf(t0.getValue())));
+
+        submap.put("subdata", simpleKVS);
         maps.put("constellation", submap);
 
         return maps;
@@ -278,28 +281,28 @@ public class ShopLabelAnalyzeService {
         }
     }
 
-    // 格式化星座数据
-    private Map<String, Float> formartConstellations(List<Simple<String, String>> kvs) {
-        // 初始化12星座数据
-        Map<String, Float> map = new LinkedHashMap<>(12);
-        map.put("白羊座", 0f);
-        map.put("金牛座", 0f);
-        map.put("双子座", 0f);
-        map.put("巨蟹座", 0f);
-        map.put("狮子座", 0f);
-        map.put("处女座", 0f);
-        map.put("天秤座", 0f);
-        map.put("天蝎座", 0f);
-        map.put("射手座", 0f);
-        map.put("摩羯座", 0f);
-        map.put("水瓶座", 0f);
-        map.put("双鱼座", 0f);
-
-        int total = kvs.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
-
-        for (Simple<String, String> kv : kvs) {
-            map.put(kv.getKey(), new BigDecimal(Float.parseFloat(kv.getValue()) / total * 100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
-        }
-        return map;
-    }
+//    // 格式化星座数据
+//    private Map<String, Float> formartConstellations(List<Simple<String, String>> kvs) {
+//        // 初始化12星座数据
+//        Map<String, Float> map = new LinkedHashMap<>(12);
+//        map.put("白羊座", 0f);
+//        map.put("金牛座", 0f);
+//        map.put("双子座", 0f);
+//        map.put("巨蟹座", 0f);
+//        map.put("狮子座", 0f);
+//        map.put("处女座", 0f);
+//        map.put("天秤座", 0f);
+//        map.put("天蝎座", 0f);
+//        map.put("射手座", 0f);
+//        map.put("摩羯座", 0f);
+//        map.put("水瓶座", 0f);
+//        map.put("双鱼座", 0f);
+//
+//        int total = kvs.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
+//
+//        for (Simple<String, String> kv : kvs) {
+//            map.put(kv.getKey(), new BigDecimal(Float.parseFloat(kv.getValue()) / total * 100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
+//        }
+//        return map;
+//    }
 }
