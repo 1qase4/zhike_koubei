@@ -62,15 +62,18 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         total = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 
+        List<Map<String,Float>> list = new ArrayList<>(13);
         for (Simple<String, String> simple : simpleKVS) {
-            map.put(simple.getKey(),
+            Map<String,Float> m = new HashMap<>(1);
+            m.put(simple.getKey(),
                     new BigDecimal(Float.valueOf(simple.getValue()) * 100 / total)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
                             .floatValue());
+            list.add(m);
         }
         submap = new HashMap<>(2);
         submap.put("name", "年龄分布");
-        submap.put("subdata", map);
+        submap.put("subdata", list);
         maps.put("age", submap);
 
         // 获取职业情况
