@@ -21,6 +21,15 @@ function getMonthByNow(n) {//n可取正负整数(上个月或下个月)
     m = m < 10 ? '0' + m : m;
     return y+"年"+m+"月";
 }
+//根据输入的时间计算前后某个月
+function getMonthPre(d,n) {//n可取正负整数(上个月或下个月)
+    var date=new Date(d);
+    date.setMonth(date.getMonth()+n);
+    var y=date.getFullYear();
+    var m=date.getMonth()+1;
+    m = m < 10 ? '0' + m : m;
+    return y+"年"+m+"月";
+}
 //根据时间类型加载时间
 function loadTime1(type,value) {
     var inputBox = $("[data-id='"+type+"']").addClass("nowSelected").find(".time_input");
