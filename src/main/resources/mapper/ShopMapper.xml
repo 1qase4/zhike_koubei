@@ -74,7 +74,7 @@
 		SELECT account FROM `shop`
 	</select>
 
-	<select id="selectShopsByMerchant" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectShopsByMerchant" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT `account` as `key`
 		      ,`name` as `value`
  		FROM `shop`

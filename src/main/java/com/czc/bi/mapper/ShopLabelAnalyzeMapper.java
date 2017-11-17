@@ -1,9 +1,8 @@
 package com.czc.bi.mapper;
 
 import com.czc.bi.pojo.ShopLabelAnalyze;
-import com.czc.bi.pojo.Simple;
+import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.query.BaseQuery;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

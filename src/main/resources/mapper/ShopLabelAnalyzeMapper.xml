@@ -162,7 +162,7 @@
         `shop_label_analyze`
         WHERE ${condition}
     </select>
-    <select id="selectKYByQuery" resultType="com.czc.bi.pojo.Simple">
+    <select id="selectKYByQuery" resultType="com.czc.bi.pojo.dto.Simple">
         SELECT
         `key`,
         `value`

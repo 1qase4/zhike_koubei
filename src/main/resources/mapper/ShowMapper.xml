@@ -2,28 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.czc.bi.mapper.ShowMapper">
 
-	<select id="selectCity" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectCity" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT cityID AS `key`,city
 		AS `value`
 		FROM city
 		WHERE fatherID = #{0}
 	</select>
 
-	<select id="selectArea" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectArea" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT areaID AS `key`,area
 		AS `value`
 		FROM area
 		WHERE fatherID = #{0}
 	</select>
 
-	<select id="selectSubtype" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectSubtype" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT subtypeid AS
 		`key`,subtype AS `value`
 		FROM subtype
 		WHERE fatherID = #{0}
 	</select>
 
-	<select id="selectShop" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectShop" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT `account` AS `key`
 		,`name` AS `value`
 		FROM `shop`
@@ -33,13 +33,13 @@
 		</if>
 	</select>
 
-	<select id="selectAgent" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectAgent" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT `name` AS `key`
 		,`name` AS `value`
 		FROM `agents`
 	</select>
 
-	<select id="selectMerchant" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectMerchant" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT `name` AS `key`
 		,`name` AS `value`
 		FROM `merchant`
@@ -74,7 +74,7 @@
      GROUP BY a.`code`,`group`
 	</select>
 
-	<select id="selectDeviceLastTime" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectDeviceLastTime" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT
 		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(MAX(`last_arrival`)) `key`
 		,MAX(`last_arrival`)
@@ -83,14 +83,14 @@
 		where `code`=#{code}
 	</select>
 
-	<select id="selectFirstTag" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectFirstTag" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT id AS `key`,tag AS
 		`value`
 		FROM tag
 		WHERE fatherID = 0
 	</select>
 
-	<select id="selectSecondTag" resultType="com.czc.bi.pojo.Simple">
+	<select id="selectSecondTag" resultType="com.czc.bi.pojo.dto.Simple">
 		SELECT id AS `key`,tag
 		AS `value`
 		FROM tag
@@ -118,7 +118,7 @@
 	   GROUP BY `group`
 	</select>
 
-        <select id="selectHistGroup" resultType="com.czc.bi.pojo.Simple">
+        <select id="selectHistGroup" resultType="com.czc.bi.pojo.dto.Simple">
             select `group` `key`,DATE_FORMAT(`createdt`,'%Y-%m-%d %H:%i') `value`  from
             `device_group`
             WHERE `shop` =#{shop} and `updatedt`='1970-01-01 00:00:00'
@@ -130,7 +130,7 @@
             WHERE `shop` =#{shop} AND `group`=#{group} and `deviceCode`is not NULL  group by `deviceCode`
         </select>
 
-        <select id="selectShop2" resultType="com.czc.bi.pojo.Simple">
+        <select id="selectShop2" resultType="com.czc.bi.pojo.dto.Simple">
             SELECT `account` AS `key`
             ,`name` AS `value`
             FROM `shop`

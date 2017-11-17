@@ -1,8 +1,7 @@
 package com.czc.bi.mapper;
 
 import com.czc.bi.pojo.Shop;
-import com.czc.bi.pojo.Simple;
-import org.apache.ibatis.annotations.Mapper;
+import com.czc.bi.pojo.dto.Simple;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.czc.bi.pojo;
+package com.czc.bi.pojo.dto;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -16,16 +16,18 @@ public class Simple<T1,T2> {
         return key;
     }
 
-    public void setKey(T1 key) {
+    public Simple<T1, T2> setKey(T1 key) {
         this.key = key;
+        return this;
     }
 
     public T2 getValue() {
         return value;
     }
 
-    public void setValue(T2 value) {
+    public Simple<T1, T2> setValue(T2 value) {
         this.value = value;
+        return this;
     }
 
     @Override
