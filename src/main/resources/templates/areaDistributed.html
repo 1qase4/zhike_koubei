@@ -36,7 +36,7 @@
     <!--客流列表-->
     <div class="mt20">
         <div class="title-box clearfix">
-            <div class="common-title lf">地区分布数据表( <span class="selectedTime"></span>)</div>
+            <div class="common-title lf">地区分布数据表( <span id="tableTitle"></span>)</div>
         </div>
         <div class="common-box">
             <table id="tableData" class="data-common-table">
@@ -211,7 +211,8 @@
 //        if(window.localStorage && localStorage.getItem("area-month")){
 //            $("#month").val(localStorage.getItem("area-month"));
 //        }else{
-        $("#month").val($("#selectedTime").html().substring(0,8));
+        var formatterDate = $("#selectedTime").html().substring(0,10).replace(/[\u4e00-\u9fa5]/g,"-");
+        $("#month").val(getMonthPre(formatterDate,-1));
 //        }
         getCharts();
     });
@@ -245,7 +246,7 @@
 //                    localStorage.setItem("area-month",time);
 //                }
                 //获取时间
-//                $(".selectedTime").html(time);
+                $("#tableTitle").html(time);
                 //绘图
                 //************中国地图**********************
                 var chinaMap = document.getElementById("chinaMap");
@@ -295,7 +296,7 @@
                     sum += gMapDataList[i].value;
                 }
                 for (var i = 0;i < gMapDataList.length;i ++){
-                    gMapDataList[i].percent = (100 * gMapDataList[i].value/sum).toFixed(2) + "%";
+                    gMapDataList[i].percent = gMapDataList[i].value == 0 ? "0%" : ((100 * gMapDataList[i].value/sum).toFixed(2) + "%");
                 }
                 //初始化分页条
                 myPage.init(gMapDataList,10);

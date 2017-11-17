@@ -64,7 +64,8 @@
     $("#month").change(getCharts);
     //初始化
     $(function () {
-        $("#month").val($("#selectedTime").html().substring(0,8));
+        var formatterDate = $("#selectedTime").html().substring(0,10).replace(/[\u4e00-\u9fa5]/g,"-");
+        $("#month").val(getMonthPre(formatterDate,-1));
         getCharts();
     });
     function getCharts() {

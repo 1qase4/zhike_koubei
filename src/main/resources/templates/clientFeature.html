@@ -101,7 +101,8 @@
     //    从父页面获取店名
     var gShop = parent.document.getElementById("shop").value;
     $(function () {
-        $("#month").val($("#selectedTime").html().substring(0,8));
+        var formatterDate = $("#selectedTime").html().substring(0,10).replace(/[\u4e00-\u9fa5]/g,"-");
+        $("#month").val(getMonthPre(formatterDate,-1));
         getCharts();
     });
     //选择时间时获取图
@@ -228,9 +229,13 @@
                 }
                 break;
             case "bar":
-                for (var key in list){
-                    option.xAxis.data.push(key);
-                    option.series[0].data.push(list[key]);
+//                for (var key in list){
+//                    option.xAxis.data.push(key.ckey);
+//                    option.series[0].data.push(list[key]);
+//                }
+                for(var i = 0;i < list.length;i ++){
+                    option.xAxis.data.push(list[i].key);
+                    option.series[0].data.push(list[i].value);
                 }
                 break;
         }
@@ -329,7 +334,7 @@
             trigger: 'item',
             formatter: "{b}占比{c}%"
         },
-        color:["#6C96E0","#A7A7A7"],
+//        color:["#6C96E0","#A7A7A7",'#E06563','#50CDCA','#913CA7','#E9C562'],
         series : [ {
             name : '',
             type : 'pie',
