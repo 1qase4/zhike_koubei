@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.czc.bi.mapper.EtlDateMapper">
+    <insert id="updataEtlDate">
+      INSERT INTO `etl_date` (
+          `account`,
+          `pdate`,
+          `createdt`,
+          `updatedt`
+        )
+        VALUES
+          (
+            #{account},
+            #{pdate},
+            NOW(),
+            NOW()
+          ) ON DUPLICATE KEY
+        UPDATE `account`  = #{account}
+              ,`pdate`    = #{pdate}
+              ,`updatedt` = NOW()
+    </insert>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer">
+        SELECT
+        `id`,
+        `account`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `etl_date`
+        WHERE `id` = #{key}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.czc.bi.pojo.query.EtlDateQuery" resultType="com.czc.bi.pojo.EtlDate">
+        SELECT
+        `id`,
+        `account`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `etl_date`
+        WHERE 1 = 1
+        <if test="query.account != null">
+          AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.pdate != null">
+          AND `pdate` ${query.pdateOperator} #{query.pdate}
+        </if>
+        <if test="query.orderBy!=null">
+            ORDER BY ${query.orderBy}
+            <if test="!query.asc">
+            DESC
+        </if>
+        </if>
+        <if test="query.startRecord != null and query.pageSize != null">
+            LIMIT ${query.startRecord}, ${query.pageSize}
+        </if>
+    </select>
+
+    <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.EtlDateQuery" resultType="Integer">
+        SELECT COUNT(1)
+        FROM
+        `etl_date`
+        WHERE 1 = 1
+        <if test="query.account != null">
+          AND `account` ${query.accountOperator} #{query.account}
+        </if>
+        <if test="query.pdate != null">
+          AND `pdate` ${query.pdateOperator} #{query.pdate}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.czc.bi.pojo.EtlDate">
+        INSERT INTO `etl_date`
+        (
+             `account`,
+             `pdate`,
+             `createdt`,
+             `updatedt`
+        )
+        VALUES(
+             #{record.account},
+             #{record.pdate},
+             NOW(),
+             NOW()
+        )
+    </insert>
+
+    <insert id="inserts" parameterType="java.util.List">
+        INSERT INTO `etl_date`
+        (
+             `account`,
+             `pdate`,
+             `createdt`,
+             `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+        (
+             #{record.account},
+             #{record.pdate},
+             NOW(),
+             NOW()
+        )
+        </foreach>
+        </insert>
+
+    <select id="selectByCondition" resultType="com.czc.bi.pojo.EtlDate">
+        SELECT
+        `id`,
+        `account`,
+        `pdate`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `etl_date`
+        WHERE ${condition}
+    </select>
+
+</mapper>

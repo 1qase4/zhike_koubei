@@ -1,18 +1,16 @@
 package com.czc.bi.controller;
 
-import com.czc.bi.pojo.Return;
+import com.czc.bi.pojo.dto.Result;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -30,7 +28,7 @@ public class UserController {
     // 用户登陆
     @ResponseBody
     @RequestMapping("/login")
-    public Return login(HttpServletRequest request, HttpSession session, String username, String password) throws Exception {
+    public Result login(HttpServletRequest request, HttpSession session, String username, String password) throws Exception {
         // 将用户名和密码打包成token
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
         // 获取shiro验证器
@@ -41,9 +39,9 @@ public class UserController {
             String account = (String) subject.getPrincipal();
             logger.debug(String.format("用户[%s]通过验证,准备跳转主页", account));
             session.setAttribute("account", account);
-            return new Return();
+            return new Result();
         } catch (Exception e) {
-            return new Return(e.getMessage());
+            return new Result<>().setResult(false).setMessage(e.getMessage());
         }
     }
 }

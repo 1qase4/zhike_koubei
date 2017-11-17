@@ -67,21 +67,6 @@ public class BaseUtil {
 		return null;
 	}
 
-	public static String StringToHex(String s) throws UnsupportedEncodingException {
-		byte[] b = s.getBytes("gbk");
-		String a = "";
-		for (int i = 0; i < b.length; i++) {
-			String hex = Integer.toHexString(b[i] & 0xFF);
-			if (hex.length() == 1) {
-				hex = '0' + hex;
-			}
-
-			a = a + hex;
-		}
-
-		return a;
-	}
-
 	public static String getUUID(){
 		UUID uuid = UUID.randomUUID();
 		return uuid.toString().replace("-","").toUpperCase();
@@ -148,15 +133,16 @@ public class BaseUtil {
 	}
 
 	public static void main(String[] args) throws ParseException {
-		String after7Day = BaseUtil.getAfter7Day("2017-09-04");
-		System.out.println(after7Day);
-		String begin7Day = BaseUtil.getBegin7Day("2017-09-04");
-		System.out.println(begin7Day);
-		String day = BaseUtil.getDay("2017-11-07",-1);
-		System.out.println(day);
-		String month = BaseUtil.getLastMonth("2017-11-07");
-		System.out.println(month);
-		String weekOfYear = BaseUtil.getWeekOfYear("2017-11-07");
-		System.out.println(weekOfYear);
+		String nextDateString = getNextDateString("2017-01-31");
+		System.out.println(nextDateString);
 	}
+
+    public static String getNextDateString(String date) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Date d = sf.parse(date);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(d);
+		calendar.add(Calendar.DATE,1);
+		return getDateString(calendar.getTime());
+    }
 }

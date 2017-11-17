@@ -46,7 +46,6 @@
 		NOW(),
 		NOW()
 		)
-
 	</insert>
 
 	<select id="selectByAccount" resultType="com.czc.bi.pojo.Shop">
@@ -77,7 +76,7 @@
 
 	<select id="selectShopsByMerchant" resultType="com.czc.bi.pojo.Simple">
 		SELECT `account` as `key`
-		     ,`name` as `value`
+		      ,`name` as `value`
  		FROM `shop`
 		WHERE merchant = #{merchant}
 	</select>
@@ -129,5 +128,29 @@
 			)
 		</foreach>
 	</insert>
+
+	<update id="updateAliPay" parameterType="com.czc.bi.pojo.Shop">
+		INSERT INTO shop(
+			  `name`,
+			  `account`,
+			  `inshort`,
+			  `merchant`,
+			  `createdt`,
+			  `updatedt`
+			)
+		VALUES
+		  (
+			#{shop.name,jdbcType=VARCHAR},
+			#{shop.account,jdbcType=VARCHAR},
+			#{shop.inshort,jdbcType=VARCHAR},
+			#{shop.merchant,jdbcType=VARCHAR},
+			NOW(),
+			NOW()
+		  )
+		ON DUPLICATE KEY
+		UPDATE `name`     = #{shop.name,jdbcType=VARCHAR},
+			   `inshort`  = #{shop.inshort,jdbcType=VARCHAR},
+			   `updatedt` = NOW()
+	</update>
 
 </mapper>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
@@ -41,22 +42,24 @@ public class FlowDataController {
 
     // 当前客流情况
     @RequestMapping(value = "current")
-    public Result current(@RequestParam("account") String account) throws Exception {
+    public Result current(@RequestParam("account") String account, HttpSession session) throws Exception {
         if (account == null) {
             return null;
         }
-        Map map = shopPassengerflowAnalyzeService.getCurrentFlow(account);
+        String date = (String)session.getAttribute("today");
+        Map map = shopPassengerflowAnalyzeService.getCurrentFlow(account,date);
         return new Result(map);
     }
 
 
     // 今日客流走势
     @RequestMapping(value = "mainDayFlow")
-    public Result mainDayFlow(@RequestParam("account") String account) throws Exception {
+    public Result mainDayFlow(@RequestParam("account") String account,HttpSession session) throws Exception {
         if (account == null) {
             return null;
         }
-        Result res = shopPassengerflowAnalyzeService.getMainDayFlow(account);
+        String date = (String)session.getAttribute("today");
+        Result res = shopPassengerflowAnalyzeService.getMainDayFlow(account,date);
         return res;
     }
 
@@ -154,15 +157,18 @@ public class FlowDataController {
     // 今日概况下载页面
     @RequestMapping("currentDownload")
     public ResponseEntity<byte[]> currentDownload(
-            @RequestParam("account") String account
+            @RequestParam("account") String account,
+            HttpSession session
             ) throws Exception {
         logger.debug("今日概况下载！！！");
         if (account == null) {
             return null;
         }
 
+        String date = (String)session.getAttribute("today");
+
         // 今日客流 峰值客流 昨日客流 上周同期
-        byte[] bytes = shopPassengerflowAnalyzeService.currentDownload(account);
+        byte[] bytes = shopPassengerflowAnalyzeService.currentDownload(account,date);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", new String("客流分析-今日概况.xls".getBytes("UTF-8"), "iso-8859-1"));

@@ -1,6 +1,8 @@
 package com.czc.bi.service;
 
+import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.mapper.ShopPassengerflowAnalyzeMapper;
+import com.czc.bi.pojo.EtlDate;
 import com.czc.bi.pojo.ShopPassengerflowAnalyze;
 import com.czc.bi.pojo.dto.Result;
 import com.czc.bi.pojo.echarts3.Option;
@@ -11,6 +13,7 @@ import com.czc.bi.pojo.echarts3.json.GsonOption;
 import com.czc.bi.pojo.echarts3.series.Line;
 import com.czc.bi.pojo.excel.DataRow;
 import com.czc.bi.pojo.query.BaseQuery;
+import com.czc.bi.pojo.query.EtlDateQuery;
 import com.czc.bi.pojo.query.ShopPassengerflowAnalyzeQuery;
 import com.czc.bi.util.BaseUtil;
 import com.czc.bi.util.Constants;
@@ -25,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,12 +52,18 @@ public class ShopPassengerflowAnalyzeService {
     @Autowired
     private ShopPassengerflowAnalyzeMapper shopPassengerflowAnalyzeMapper;
 
+    @Autowired
+    private EtlDateMapper etlDateMapper;
+
+    private String convertDateFormat(String date){
+        return date.replace("年","-").replace("月","-").replace("日","");
+    }
+
     // 今日概况
     // 获取首页的当前客流信息
-    public Map getCurrentFlow(String account) throws Exception {
-        // 取当天的日期
-//        String date = BaseUtil.getCurrentDate();
-        String date = shopPassengerflowAnalyzeMapper.selectPdate();
+    public Map getCurrentFlow(String account, String date) throws Exception {
+        // 获取账号的当前数据时间
+        date = convertDateFormat(date);
         Map<String, Object> map = new HashMap<>(4);
         // 获取当日客流
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
@@ -102,7 +112,8 @@ public class ShopPassengerflowAnalyzeService {
         map.put("lastWeekFlow", lastWeekFlow);
 
         //获取上月日均客流
-        String label = BaseUtil.getLastMonth(shopPassengerflowAnalyzeMapper.selectPdate());
+
+        String label = BaseUtil.getLastMonth(date);
         query.setLabel(label).setType(Constants.CUSTFLOW_TYPE_MONTH).setPdate(null,null);
         ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         Integer dailyFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
@@ -111,10 +122,9 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 获取首页上面的今日客流走势
-    public Result getMainDayFlow(String account) throws Exception {
-        // 取今天的日期
-//        String date = BaseUtil.getCurrentDate();
-        String date = shopPassengerflowAnalyzeMapper.selectPdate();
+    public Result getMainDayFlow(String account,String date) throws Exception {
+        // 获取账号的当前数据时间
+        date = convertDateFormat(date);
         logger.debug("获取当日[" + date + "]的客流信息");
         // 获取今日客流
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
@@ -572,7 +582,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 当前页面的数据下载
-    public byte[] currentDownload(String account) throws Exception {
+    public byte[] currentDownload(String account,String date) throws Exception {
 
         String callValue = null;
         // 初始化Excel环境
@@ -625,7 +635,7 @@ public class ShopPassengerflowAnalyzeService {
 
         row = sheet.createRow(2);
         // 今日客流 峰值客流 昨日客流 上周同期
-        Map map = getCurrentFlow(account);
+        Map map = getCurrentFlow(account,date);
         callValue = map.get("currentFlow").toString();
         cell = row.createCell(0);
         cell.setCellValue(callValue);
@@ -974,11 +984,4 @@ public class ShopPassengerflowAnalyzeService {
         return shopPassengerflowAnalyzeMapper.replaces(list);
     }
 
-    public String selectPdate() {
-        return shopPassengerflowAnalyzeMapper.selectPdate();
-    }
-
-    public void updataEtlDate(String format) {
-        shopPassengerflowAnalyzeMapper.updataEtlDate(format);
-    }
 }
