@@ -95,9 +95,10 @@
                     <div class="submitArea">
                         <button type="submit" class="xsubmit">登&nbsp;&nbsp;录</button>
                     </div>
-                    <!--<div class="login-method">-->
-                    <!--<a href="http://www.chenzhidata.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>-->
-                    <!--</div>-->
+                    <div class="login-method">
+                        <a href="http://www.chenzhidata.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>
+                        <a href="http://www.shangquanshow.com/signup.jsp" class="rt" id="signup">免费注册</a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -143,7 +144,10 @@
 <script type="text/javascript" src="/js/index1.js"></script>
 <script>
     $(function () {
-//        new SecurityCode("sqsCode").init();
+//        new SecurityCode("sqsCode").init()
+        var url = encodeURIComponent(location.href);
+        var href = $("#signup").attr("href");
+        $("#signup").attr("href",href+ "?redirectURL="+url);
     });
 </script>
 </body>
