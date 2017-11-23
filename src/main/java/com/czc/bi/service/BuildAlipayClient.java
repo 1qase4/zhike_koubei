@@ -22,7 +22,7 @@ public class BuildAlipayClient implements FactoryBean<AlipayClient> {
     public AlipayClient getObject() throws Exception {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 GATEWAT,
-                PPID,
+                APPID,
                 PRIVATE_KEY,
                 FORMAT,
                 CHARSET,
