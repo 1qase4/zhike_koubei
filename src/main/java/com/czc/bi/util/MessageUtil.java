@@ -23,6 +23,13 @@ public class MessageUtil {
 
     public static void sendMessage(String phones, String message) throws Exception {
         message = "【知客|口碑】"+message;
+
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("windows")){
+            System.out.println("Window环境不发送短信,提示消息为=======>[" + message + "]");
+            return;
+        }
+
         // 检查失败调用短信程序发送短信
         String urlName = "http://222.73.44.38:8080/mt?un=" + STAR
                 + "&pw=" + PW

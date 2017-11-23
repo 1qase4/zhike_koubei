@@ -49,7 +49,7 @@ public class AlipayUtil {
     public static Map getKoubeiReport(ReportDataContext rc) throws AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 GATEWAT,
-                PPID,
+                APPID,
                 PRIVATE_KEY,
                 FORMAT,
                 CHARSET,

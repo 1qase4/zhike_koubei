@@ -1,6 +1,7 @@
 package com.czc.bi.controller;
 
 import com.czc.bi.mapper.EtlDateMapper;
+import com.czc.bi.mapper.ShopTokenMapper;
 import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.query.EtlDateQuery;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
@@ -16,11 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static com.czc.bi.util.AlipayConstant.APPID;
+import static com.czc.bi.util.AlipayConstant.REDIRECT_URI;
 
 @Controller
 public class IndexController {
@@ -33,6 +38,9 @@ public class IndexController {
     @Autowired
     private EtlDateMapper etlDateMapper;
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
         model.addAttribute("name", name);
@@ -43,9 +51,24 @@ public class IndexController {
     private ShopService shopService;
 
     @RequestMapping("/shouye")
-    public String shouye(HttpSession session, Model model) throws ParseException {
+    public String shouye(HttpSession session, Model model, HttpServletResponse response) throws Exception {
         String account = (String) SecurityUtils.getSubject().getPrincipal();
         session.setAttribute("account", account);
+
+        // 检查用户Token
+        boolean ok = userService.authUserToken(account);
+        // 验证不通过, 指导用户去验证
+        if (!ok) {
+            logger.debug(String.format("用户[%s]token信息验证不通过,指导用户前往验证", account));
+            String url =
+                    String.format("https://openauth.alipay.com/oauth2/appToAppAuth.htm?app_id=%s&account=%s&redirect_uri=%s",
+                            APPID,
+                            account,
+                            REDIRECT_URI
+                    );
+            response.sendRedirect(url);
+            return null;
+        }
 
         List<Simple<String, String>> shops = shopService.selectShopsByMerchant(account);
         model.addAttribute("shops", shops);
@@ -61,12 +84,13 @@ public class IndexController {
         return "shouye";
     }
 
+    @Autowired
+    private ShopTokenMapper shopTokenMapper;
+
     @RequestMapping("/loginPage")
-    public String loginPage(){
+    public String loginPage() {
         return "loginPage";
     }
-
-
 
 
     @RequestMapping("/403")
@@ -116,12 +140,8 @@ public class IndexController {
     }
 
 
-    @Autowired
-    private UserService userService;
-
     // 支付宝回调url
     @RequestMapping(value = "/sqs_ret", produces = "text/plain;charset=UTF-8")
-    @ResponseBody
     public String ret(
             @RequestParam("app_id") String app_id,
             @RequestParam(value = "account", required = false) String account,
@@ -130,7 +150,12 @@ public class IndexController {
         if (account == null) {
             account = "";
         }
-        return userService.authAlipay(app_id, account, app_auth_code);
+        boolean ok =userService.authAlipay(app_id, account, app_auth_code);
+        if(!ok){
+            return "404";
+        }else
+        {
+            return "redirect:/shouye";
+        }
     }
-
 }
