@@ -2,10 +2,13 @@ package com.czc.bi.scheduling;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
 import com.alipay.api.request.AlipayOpenAuthTokenAppQueryRequest;
+import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
 import com.alipay.api.response.AlipayOpenAuthTokenAppQueryResponse;
+import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
 import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
@@ -83,6 +86,14 @@ public class AlipayDataSync {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_SHOP_INFO_LIST);
 
+        // if account equals 15527771627 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if ("15527771627".equals(account)) {
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         Map map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
 
@@ -116,6 +127,15 @@ public class AlipayDataSync {
 
     // 验证令牌是否有效
     public boolean isTokenValid(String account, String token) throws AlipayApiException {
+
+        // if account equals 15527771627 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if ("15527771627".equals(account)) {
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         AlipayOpenAuthTokenAppQueryRequest request = new AlipayOpenAuthTokenAppQueryRequest();
         ReportDataContext rc = new ReportDataContext();
         request.setBizContent("{" +
@@ -153,74 +173,169 @@ public class AlipayDataSync {
 
         List<String> msgs = new ArrayList<>();
         logger.info("开始同步支付宝口碑数据");
-        // 循环token 同步更数据
+        // loop get token 同步更数据
         for (ShopToken shopToken : shopTokens) {
             String account = shopToken.getAccount();
             String token = shopToken.getApp_auth_token();
 
             // 验证token有效性
-            if (isTokenValid(account, token)) {
-                logger.warn(String.format("账号[%s]令牌[%s]有效性查询失败,跳过", account, token));
-            }
-
-            // 根据账号 获取账号的当前数据时间
-            EtlDateQuery etlDateQuery = new EtlDateQuery();
-            etlDateQuery.setAccount(account);
-            String pdate = etlDateMapper.selectByQuery(etlDateQuery).get(0).getPdate();
-            pdate = BaseUtil.getNextDateString(pdate);
-            logger.info(String.format("开始同步账号[%s]在日期[%s]的数据", account, pdate));
-            // 同步商户信息
-            syncShopList(account, token);
-            // 同步当日客流
-            logger.info("开始同步当日客流");
-            boolean b = custFlowDataSync.syncDayFlow(pdate, token);
-            if (!b) {
-                msgs.add("同步当日客流同步失败");
-                String format = String.format("账号[%s]在日期[%s]的无法取得客流数据,退出同步,请检查!", account, pdate);
-                logger.info(format);
-                // 发送短信提醒同步失败
-                MessageUtil.sendMessageAdmin(format);
+            if (!isTokenValid(account, token)) {
+                logger.warn(String.format("账号[%s]令牌[%s]有效性查询失败,跳过数据拉取", account, token));
                 continue;
             }
-            Thread.sleep(1000);
+            delay();
+            // get account local etl date
+            EtlDateQuery etlDateQuery = new EtlDateQuery();
+            etlDateQuery.setAccount(account);
+            String localdate = etlDateMapper.selectByQuery(etlDateQuery).get(0).getPdate();
 
-            logger.info("开始同步热力图数据");
-            custLabelDataSync.syncShopHotDiagram(pdate, token);
-            Thread.sleep(1000);
-
-            logger.info("开始同步回流情况数据");
-            custFlowDataSync.syncUsrLostBackForweek(pdate, token);
-            Thread.sleep(1000);
-
-            // 按店铺同步部分
-            // 同步区间客流
-            for (String shop : this.shops) {
-                b = custFlowDataSync.syncIntervalFlow(shop, pdate, token);
-                if (b) {
-                    msgs.add(String.format("店铺[%s]同步区间客流失败", shop));
-                }
-                Thread.sleep(1000);
-
-                logger.debug(String.format("开始处理shop[%s]", shop));
-                logger.info("开始同步客户特征数据");
-                custLabelDataSync.syncShopProperty(shop, pdate, token);
-                Thread.sleep(1000);
-                logger.info("开始同步客户区域特征数据");
-                custLabelDataSync.syncShopPropertyArea(shop, pdate, token);
-                Thread.sleep(1000);
-                logger.info("开始同步每周新老客户数据");
-                custFlowDataSync.syncUsranalysisForweek(shop, pdate, token);
-                Thread.sleep(1000);
-                logger.info("开始同步回头客数据");
-                custFlowDataSync.syncUsrBackForweek(shop, pdate, token);
-                Thread.sleep(1000);
+            // get account alipay etl date
+            String alipayDate = getAlipayEtlDate(token);
+            if (alipayDate == null) {
+                logger.warn(String.format("account[%s]get token error continue loop", account));
+                continue;
             }
-            logger.info("同步支付宝口碑数据结束");
-            // 更新etl时间
-            etlDateMapper.updataEtlDate(account, pdate);
+            delay();
+            List<String> datesBetween = getDatesBetween(localdate, alipayDate);
+            for (String pdate : datesBetween) {
+
+                logger.info(String.format("开始同步账号[%s]在日期[%s]的数据", account, pdate));
+                // 同步商户信息
+                syncShopList(account, token);
+                // 同步当日客流
+                logger.info("开始同步当日客流");
+                boolean b = custFlowDataSync.syncDayFlow(pdate, token);
+                if (!b) {
+                    msgs.add("同步当日客流同步失败");
+                    String format = String.format("账号[%s]在日期[%s]的无法取得客流数据,退出同步,请检查!", account, pdate);
+                    logger.info(format);
+                    // 发送短信提醒同步失败
+                    MessageUtil.sendMessageAdmin(format);
+                    continue;
+                }
+                delay();
+
+                logger.info("开始同步回流情况数据");
+                custFlowDataSync.syncUsrLostBackForweek(pdate, token);
+                delay();
+
+                // 按店铺同步部分
+                // 同步区间客流
+                for (String shop : this.shops) {
+                    b = custFlowDataSync.syncIntervalFlow(shop, pdate, token);
+                    if (b) {
+                        msgs.add(String.format("店铺[%s]同步区间客流失败", shop));
+                    }
+                    delay();
+                    logger.info("开始同步热力图数据");
+                    custLabelDataSync.syncShopHotDiagram(shop, pdate, token);
+                    delay();
+                    logger.debug(String.format("开始处理shop[%s]", shop));
+                    logger.info("开始同步客户特征数据");
+                    custLabelDataSync.syncShopProperty(shop, pdate, token);
+                    delay();
+                    logger.info("开始同步客户区域特征数据");
+                    custLabelDataSync.syncShopPropertyArea(shop, pdate, token);
+                    delay();
+                    logger.info("开始同步每周新老客户数据");
+                    custFlowDataSync.syncUsranalysisForweek(shop, pdate, token);
+                    delay();
+                    logger.info("开始同步回头客数据");
+                    custFlowDataSync.syncUsrBackForweek(shop, pdate, token);
+                    delay();
+                }
+                logger.info("同步支付宝口碑数据结束");
+                // 更新etl时间
+                etlDateMapper.updataEtlDate(account, pdate);
+            }
         }
 
         logger.debug("更新数据日志------------>" + msgs);
 
     }
+
+    /**
+     * get alipay etl date
+     *
+     * @param token
+     * @return date
+     */
+    private String getAlipayEtlDate(String token) throws AlipayApiException {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if ("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)) {
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
+        KoubeiMarketingDataAlisisReportQueryRequest request = new KoubeiMarketingDataAlisisReportQueryRequest();
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk(UK_REPORT_SHOP_PDATELIST);
+        request.setBizContent(BaseUtil.jsonToString(rc));
+        request.putOtherTextParam("app_auth_token", token);
+        KoubeiMarketingDataAlisisReportQueryResponse response = alipayClient.execute(request);
+        if (!response.isSuccess()) {
+            logger.warn(String.format("token[%s]get etl date fail, errorCode[%s], errorMessage[%s]",
+                    token,
+                    response.getSubCode(),
+                    response.getSubMsg()));
+            return null;
+        }
+        List<AlisisReportRow> reportData = response.getReportData();
+        if (reportData == null) {
+            logger.warn(String.format("token[%s] has no etl date",
+                    token));
+            return null;
+        }
+        // parse response's etl date,   only one recode
+        List<AlisisReportColumn> alisisReportRow = reportData.get(0).getRowData();
+        Map<String, String> columnValue = AlipayUtil.getColumnValue(alisisReportRow, "pdate");
+        String pdate = columnValue.get("pdate");
+        return pdate;
+    }
+
+    /**
+     * get dates between local_pdate and alipay_pdate
+     *
+     * @param local
+     * @param alipay
+     * @return list of dateString
+     * @throws ParseException
+     */
+    List<String> getDatesBetween(String local, String alipay) throws ParseException {
+        // convert string to date
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date localDate = sf.parse(local);
+        Date alipayDate = sf.parse(alipay);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(localDate);
+
+        List<String> res = new ArrayList<>(2);
+        // to prevent dead loop, set max loop time=4
+        for (int i = 0; i < 3; i++) {
+            calendar.add(Calendar.DATE, 1);
+            Date time = calendar.getTime();
+            // if time after alipay time break loop
+            if (time.after(alipayDate)) {
+                break;
+            }
+            res.add(BaseUtil.getDateString(time));
+        }
+        return res;
+    }
+
+    /**
+     * delay 1s
+     * because alipay limit request time
+     */
+    private void delay() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

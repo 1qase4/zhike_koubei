@@ -69,6 +69,14 @@ public class CustLabelDataSync {
 
     //客户特征
     public void syncShopProperty(String shopId, String pdate, String token) throws Exception {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if ("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)) {
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         String month = checkMonthFirst(pdate);
         if ("0".equals(month)) {
             logger.info("日期[" + pdate + "]不是月初,不执行按月取数程序");
@@ -130,6 +138,13 @@ public class CustLabelDataSync {
 
     //客户区域特征
     public void syncShopPropertyArea(String shopId, String pdate, String token) throws Exception {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if ("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)) {
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
 
         String month = checkMonthFirst(pdate);
         if ("0".equals(month)) {
@@ -215,7 +230,15 @@ public class CustLabelDataSync {
     }
 
     //周边分布热力图
-    public void syncShopHotDiagram(String pdate, String token) throws Exception {
+    public void syncShopHotDiagram(String account, String pdate, String token) throws Exception {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if ("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)) {
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         String month = checkMonthFirst(pdate);
         if ("0".equals(month)) {
             logger.info("日期[" + pdate + "]不是月初,不执行按月取数程序");
@@ -226,6 +249,7 @@ public class CustLabelDataSync {
         rc.setReport_uk(UK_REPORT_YFY_SHOP_HOT_DIAGRAM);  //QK171101ozq154g7
         // 尔华那边month处理不规范,先使用in转换处理
         rc.addCondition("month", "in", String.format("%s,%s", month, month.replace("-", "")));
+        rc.addCondition("shop_id", "=", account);
         Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
@@ -250,7 +274,10 @@ public class CustLabelDataSync {
                             "user_cnt",
                             "shop_name");
                     s1.setAccount(columnValue.get("shop_id"));
-                    s1.setPdate(columnValue.get("month"));
+                    String _month = columnValue.get("month");
+                    // if month format "201701" convert to "2017-01"
+                    _month = _month.length() == 6?_month.substring(0,4) + "-" + _month.substring(4):_month;
+                    s1.setPdate(_month);
                     s1.setType(Constants.ELEVATION_TYPE);
                     String key = columnValue.get("lng") + "," + columnValue.get("lat");
                     s1.setKey(key);

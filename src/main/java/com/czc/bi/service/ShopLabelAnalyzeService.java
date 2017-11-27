@@ -135,10 +135,20 @@ public class ShopLabelAnalyzeService {
         simpleKVS = shopLabelAnalyzeMapper.selectKYByQuery(query);
         submap = new HashMap<>(2);
         submap.put("name", "星座");
+        int sum = simpleKVS.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
+        ArrayList<Simple<String, Float>> collect =
+                simpleKVS
+                        .stream()
+                        .map(a -> new Simple<String, Float>()
+                                .setKey(a.getKey())
+                                .setValue(
+                                        new BigDecimal(Float.valueOf(a.getValue()) * 100 / sum)
+                                                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                                                .floatValue()
+                                )).collect(Collectors.toCollection(ArrayList<Simple<String, Float>>::new));
 
-        Collections.sort(simpleKVS, (t0, t1) -> Integer.valueOf(t1.getValue()).compareTo(Integer.valueOf(t0.getValue())));
-
-        submap.put("subdata", simpleKVS);
+        Collections.sort(collect, (t0, t1) -> t1.getValue().compareTo(t0.getValue()));
+        submap.put("subdata", collect);
         maps.put("constellation", submap);
 
         return maps;

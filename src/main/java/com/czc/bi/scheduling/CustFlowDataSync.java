@@ -39,7 +39,7 @@ public class CustFlowDataSync {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Autowired
-    private AlipayClient client;
+    private AlipayClient alipayClient;
 
     @Autowired
     private ShopPassengerflowAnalyzeMapper shopPassengerflowAnalyzeMapper;
@@ -48,6 +48,14 @@ public class CustFlowDataSync {
     private ShopPassengerflowAnalyzeService shopPassengerflowAnalyzeService;
 
     public boolean syncDayFlow(String date, String token) throws AlipayApiException {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)){
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         // 判断是否为当月1号 月初需要同步上月日均客流数据
         boolean isMonthBegin = date.endsWith("-01") ? true : false;
 
@@ -61,7 +69,7 @@ public class CustFlowDataSync {
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
 //        kbrequest.putOtherTextParam("app_auth_token", "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
         kbrequest.putOtherTextParam("app_auth_token", token);
-        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = client.execute(kbrequest);
+        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);
         if (!kbresponse.isSuccess()) {
             logger.warn("数据查询调用失败");
             logger.warn(kbresponse.getSubCode());
@@ -127,7 +135,23 @@ public class CustFlowDataSync {
     }
 
 
+    /**
+     * sync interval cust flow
+     * @param shopId
+     * @param date
+     * @param token
+     * @return success or fail
+     * @throws AlipayApiException
+     */
     public boolean syncIntervalFlow(String shopId, String date, String token) throws AlipayApiException {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)){
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD);
@@ -135,7 +159,7 @@ public class CustFlowDataSync {
         rc.addCondition("day", "=", date);
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));
         kbrequest.putOtherTextParam("app_auth_token", token);
-        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = client.execute(kbrequest);
+        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);
 
         if (!kbresponse.isSuccess()) {
             logger.debug("数据查询调用失败");
@@ -217,6 +241,14 @@ public class CustFlowDataSync {
 
     //保存每周新老客户
     public void syncUsranalysisForweek(String shopId, String date, String token) throws AlipayApiException {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)){
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_FORWEEK);
         if (shopId != null) {
@@ -225,7 +257,7 @@ public class CustFlowDataSync {
         if (date != null) {
             rc.addCondition("day", "=", date);
         }
-        Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, client);
+        Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
         if (status == 0) {
@@ -270,6 +302,14 @@ public class CustFlowDataSync {
 
     //保存：按天统计回头客
     public void syncUsrBackForweek(String shopId, String date, String token) throws AlipayApiException {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)){
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRBACK_FORWEEK);  //QK171025k863e26v
         if (shopId != null) {
@@ -278,7 +318,7 @@ public class CustFlowDataSync {
         if (date != null) {
             rc.addCondition("day", "=", date);
         }
-        Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, client);
+        Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
         if (status == 0) {
@@ -322,12 +362,20 @@ public class CustFlowDataSync {
 
     //保存：按天统计回流情况
     public void syncUsrLostBackForweek(String date, String token) throws AlipayApiException {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)){
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK);  //QK171106873ffwly
         if (date != null) {
             rc.addCondition("day", "=", date);
         }
-        Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, client);
+        Map<String, Object> map = AlipayUtil.getKoubeiReportData(rc, token, alipayClient);
         Integer status = (Integer) map.get("status");
         System.out.println(map.get("msg"));
         if (status == 0) {
@@ -368,9 +416,6 @@ public class CustFlowDataSync {
             }
         }
     }
-
-
-
 }
 
 
