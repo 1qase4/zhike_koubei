@@ -19,7 +19,7 @@ public class T4 {
     public static void main(String[] args) throws AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 GATEWAT,
-                PPID,
+                APPID,
                 PRIVATE_KEY,
                 FORMAT,
                 CHARSET,

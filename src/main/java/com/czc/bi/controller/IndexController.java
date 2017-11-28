@@ -47,6 +47,11 @@ public class IndexController {
         return "hello";
     }
 
+    @RequestMapping("/aaa")
+    public String a() {
+        return "1";
+    }
+
     @Autowired
     private ShopService shopService;
 

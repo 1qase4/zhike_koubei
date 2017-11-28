@@ -21,7 +21,7 @@ public class Test2 {
     public static void main(String[] args) throws AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 GATEWAT,
-                PPID,
+                APPID,
                 PRIVATE_KEY,
                 FORMAT,
                 CHARSET,
