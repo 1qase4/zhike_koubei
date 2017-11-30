@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class CutPicture {
     private static final int HIGHT = 30;
 
     // 准备常用汉字集
-    private  static final String base = "\u7684\u4e00\u4e86\u662f\u6211\u4e0d\u5728\u4eba\u4eec\u6709\u6765\u4ed6\u8fd9"
+    private static final String base = "\u7684\u4e00\u4e86\u662f\u6211\u4e0d\u5728\u4eba\u4eec\u6709\u6765\u4ed6\u8fd9"
             + "\u4e0a\u7740\u4e2a\u5730\u5230\u5927\u91cc\u8bf4\u5c31\u53bb\u5b50\u5f97\u4e5f\u548c"
             + "\u90a3\u8981\u4e0b\u770b\u5929\u65f6\u8fc7\u51fa\u5c0f\u4e48\u8d77\u4f60\u90fd\u628a"
             + "\u597d\u8fd8\u591a\u6ca1\u4e3a\u53c8\u53ef\u5bb6\u5b66\u53ea\u4ee5\u4e3b\u4f1a\u6837"
@@ -69,7 +70,6 @@ public class CutPicture {
             + "\u606f\u53e5\u533a\u8863\u822c\u62a5\u53f6\u538b\u6162\u53d4\u80cc\u7ec6";
 
 
-
     /**
      * 获取图片的验证码小图片
      *
@@ -78,12 +78,12 @@ public class CutPicture {
      * @return
      */
     @RequestMapping("/code3")
-    public void getVerificationCodeCH(HttpServletRequest request, HttpServletResponse response) {
-// http://localhost:8080/gtop/img/149679.jpg
-        String url = "D:\\workspace\\zhike_koubei\\src\\main\\resources\\static\\image\\slider_mall.jpg";
-//        System.out.println(request.getSession().getServletContext().getRealPath("image")); // 路径
-//        url = request.getSession().getServletContext().getRealPath("") + url;
-        readUsingImageReaderBigcH(url, 20, 20, request, response);
+    public void getVerificationCodeCH(HttpServletRequest request, HttpServletResponse response) throws MalformedURLException {
+        // http://localhost:8080/gtop/img/149679.jpg
+        int v = (int) (Math.random()*10)+1;
+        String url = "static/codeimage/"+v+".jpg";
+        url = getClass().getClassLoader().getResource("") + url;
+        readUsingImageReaderBigcH(url.substring(6), 20, 20, request, response);
     }
 
 
@@ -96,26 +96,26 @@ public class CutPicture {
             image = ImageIO.read(source);
             int hight = image.getHeight();
             Graphics graphics = image.getGraphics();
-// 写入汉字
-// 设置颜色
+            // 写入汉字
+            // 设置颜色
             graphics.setColor(Color.green);
             graphics.setFont(new Font("宋体", Font.BOLD, 30));
 
             StringBuilder sb = new StringBuilder();
-//获取随机位子
-            List <Integer> intList = new ArrayList<Integer>();   //汉字随机放入的位子
+            //获取随机位子
+            List<Integer> intList = new ArrayList<Integer>();   //汉字随机放入的位子
             Random random = new Random();
             for (int i = 0; i < 1000; i++) {
-                int number = random.nextInt(4)  + 1;
+                int number = random.nextInt(4) + 1;
                 if (!intList.contains(number)) {
                     intList.add(number);
                 }
-                if(intList != null && intList.size() >= 4){
+                if (intList != null && intList.size() >= 4) {
                     continue;
                 }
             }
 
-//list参数坐标参数 用于校验是否验证通过
+            //list参数坐标参数 用于校验是否验证通过
             List<String> codeList = new ArrayList<String>();
 
 
@@ -142,39 +142,44 @@ public class CutPicture {
                 System.out.println("x:" + x + ",y:" + y + "，hight:" + hight);
                 graphics.drawString(ch, x, y);
                 codeList.add(x + "_" + y); // jsp页面坐标原点在左下
-// ，drawString方法坐标原点在左上
+                // ，drawString方法坐标原点在左上
             }
 
-//放入session
-//将产生的随机汉字验证码存进session中进行保存
+            //放入session
+            //将产生的随机汉字验证码存进session中进行保存
             String sessionid = request.getSession().getId();
             request.getSession().setAttribute(sessionid + key, codeList);
 
 
-///////////////////////////////////
+            ///////////////////////////////////
 
-// 可以将图片合并传入前段  也可以直接传数据汉字给前端
+            // 可以将图片合并传入前段  也可以直接传数据汉字给前端
 
-// 创建图片缓存
+            // 创建图片缓存
             BufferedImage bi = new BufferedImage(image.getWidth(), 25, BufferedImage.TYPE_INT_RGB);
             Graphics gra = bi.getGraphics();
 
-// 设置背景颜色
+            // 设置背景颜色
             gra.setColor(Color.WHITE);
-// 填充区域
+            // 填充区域
+//            gra.fillRect(0, 0, bi.getWidth(), bi.getHeight());
+            int height = bi.getHeight();
             gra.fillRect(0, 0, bi.getWidth(), bi.getHeight());
 
-// 设置边框颜色
-            gra.setColor(Color.BLUE);
-// 设置边框区域
+            // 设置边框颜色
+            gra.setColor(Color.LIGHT_GRAY);
+            // 设置边框区域
             gra.drawRect(1, 1, bi.getWidth() - 2, bi.getHeight() - 2);
 
-// 设置文字背景颜色
+            // 设置文字背景颜色
             Font font = new Font("宋体", Font.BOLD, 16);
             gra.setFont(font);
+            gra.setColor(new Color(51,51,51,255));
+//            gra.drawString("按顺序点击：" + sb.toString(), (bi.getWidth() - 10 * font.getSize()) / 2
+//                    , bi.getHeight() / 2 + font.getSize() / 2);//设置文字字体 与位子  居中
+            gra.drawString("按顺序点击：", font.getSize()*2, bi.getHeight() / 2 + font.getSize() / 2);
             gra.setColor(Color.red);
-            gra.drawString("按顺序点击：" + sb.toString(), (bi.getWidth() - 10*font.getSize())/2
-                    , bi.getHeight()/2 + font.getSize()/2);//设置文字字体 与位子  居中
+            gra.drawString(sb.toString(), font.getSize()*8, bi.getHeight() / 2 + font.getSize() / 2);
 
 
             BufferedImage combined = new BufferedImage(image.getWidth(), image.getHeight() + bi.getHeight(),
@@ -216,12 +221,12 @@ public class CutPicture {
         String value = request.getParameter("code");
         String sessionid = session.getId();
         List<String> sValue = (List<String>) request.getSession().getAttribute(sessionid + key);
-        System.out.println("*****"+value);
-        System.out.println("*&&&**"+sValue.toString());
+        System.out.println("*****" + value);
+        System.out.println("*&&&**" + sValue.toString());
 
 
         boolean flag = false;
-//为null 或者"" 或者 " "
+        //为null 或者"" 或者 " "
 //        if (StringUtils.isBlank(value) || sValue == null || sValue.size() < 1) {
 //            map.put("result", flag);
 //            return map;
@@ -230,13 +235,13 @@ public class CutPicture {
             map.put("result", flag);
             return map;
         }
-        String [] valueStr = value.split(",");
-        if(valueStr.length != sValue.size() || valueStr.length != 4){
+        String[] valueStr = value.split(",");
+        if (valueStr.length != sValue.size() || valueStr.length != 4) {
             map.put("result", flag);
             return map;
         }
 
-/*判断坐标参数是否正确*/
+        /*判断坐标参数是否正确*/
         String str = "";
         for (int i = 0; i < valueStr.length; i++) {
             str = valueStr[i].toString();
@@ -244,24 +249,25 @@ public class CutPicture {
 //                map.put("result", flag);
 //                return map;
 //            }
-            if (str == null || str == "" || str == " " || sValue.get(i).toString() == null && sValue.get(i).toString() == "" ){
+            if (str == null || str == "" || str == " " || sValue.get(i).toString() == null && sValue.get(i).toString() == "") {
                 map.put("result", flag);
                 return map;
             }
-            String [] vL = valueStr[i].toString().split("_");
-            String [] svL = sValue.get(i).toString().split("_");
-            if(vL.length != svL.length || svL.length != 2){
+            String[] vL = valueStr[i].toString().split("_");
+            String[] svL = sValue.get(i).toString().split("_");
+            if (vL.length != svL.length || svL.length != 2) {
                 map.put("result", flag);
                 return map;
             }
-//x轴  y轴判断    坐标点在左上角 ，图片宽度30px  点击范围扩大15px，  范围在      x-15 < x <x+30+15  ;
-            if(!(Integer.parseInt(svL[0])-15 < Integer.parseInt(vL[0])
+            //x轴  y轴判断    坐标点在左上角 ，图片宽度30px  点击范围扩大15px，  范围在      x-15 < x <x+30+15  ;
+            if (!(Integer.parseInt(svL[0]) - 15 < Integer.parseInt(vL[0])
                     && Integer.parseInt(vL[0]) < Integer.parseInt(svL[0]) + 45)
-                    || !(Integer.parseInt(svL[1])-15 < Integer.parseInt(vL[1])
-                    && Integer.parseInt(vL[1]) < Integer.parseInt(svL[1]) + 45)){
+                    || !(Integer.parseInt(svL[1]) - 15 < Integer.parseInt(vL[1])
+                    && Integer.parseInt(vL[1]) < Integer.parseInt(svL[1]) + 45)) {
                 map.put("result", flag);
                 return map;
-            };
+            }
+            ;
 
         }
         flag = true;
