@@ -75,16 +75,27 @@
                     <!--用户名-->
                     <div class="login-input uname">
                         <!--小图标-->
-                        <span><i class="iconfont icon-denglu"></i></span>
+                        <!--<span><i class="iconfont icon-denglu"></i></span>-->
+                        <div class="label">用户名</div>
                         <input type="text" class="login-text" name="username" placeholder="商圈秀账号" autocomplete="off">
                     </div>
                     <!--密码-->
                     <div class="login-input upwd">
                         <label class="abs"></label>
                         <!--小图标-->
-                        <span><i class="iconfont icon-denglumima"></i></span>
+                        <!--<span><i class="iconfont icon-denglumima"></i></span>-->
+                        <div class="label">密码</div>
                         <input type="password" class="login-text" name="password" placeholder="密码" autocomplete="off">
                     </div>
+                    <!--验证码-->
+                    <div class="login-input">
+                        <div class="label">验证码</div>
+                        <div class="code-wrap">
+                            <div class="refresh" title="刷新" onclick="refresh()"></div>
+                            <img src="/image/codeImg/u116048765,1099520667.jpg" alt="">
+                        </div>
+                    </div>
+
                     <!--验证码-->
                     <!--<div class="login-input mycode clearfix">-->
                     <!--&lt;!&ndash;小图标&ndash;&gt;-->
@@ -143,6 +154,9 @@
 <script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>
 <script type="text/javascript" src="/js/index1.js"></script>
 <script>
+    function refresh() {
+        
+    }
     $(function () {
 //        new SecurityCode("sqsCode").init()
         var url = encodeURIComponent(location.href);

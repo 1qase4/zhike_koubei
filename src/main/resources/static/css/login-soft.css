@@ -19,7 +19,7 @@
   color: #e5383c;
 }
 .error{
-  background: url(../image/cwts.png)no-repeat;
+  background: url(../image/cwts.png) no-repeat;
   width: 20px;
   height: 20px;
   float: left;
@@ -30,13 +30,16 @@
 .login-method{
   overflow: hidden;
   padding: 18px 0;
+  padding-left: 56px;
   text-align: right;
 }
 .login-method a{
   color: #477CD8;
   text-decoration: none;
 }
-
+.submitArea{
+  padding-left: 56px;
+}
 /*按钮*/
 .xsubmit{
   height: 40px;
@@ -89,7 +92,7 @@
   margin-bottom: 34px;
 }
   .heade{
-    padding: 20px 0;
+    padding: 15px 0;
     background: #ffffff;
     /*border-bottom: 1px solid #ddd;*/
   }
@@ -108,14 +111,14 @@
     overflow: hidden;
     position: relative;
     /*height: 485px;*/
-    padding: 48px 0;
+    padding: 30px 0 48px;
     z-index: 999;
   }
   .login-content{
     position: relative;
     /*width: 300px;*/
     /*padding: 25px 25px 23px;*/
-    padding: 0 73px 60px;
+    padding: 0 34px 30px;
     color: #6c6c6c;
     background: #fff;
     margin: 0 auto;
@@ -140,12 +143,13 @@
   }
   /*input样式*/
   .login-text{
-    /*width: 240px;*/
-    width: 197px;
+    /*width: 197px;*/
+    width: 292px;
     font-size: 14px;
     line-height: 18px;
     height: 18px;
-    padding: 11px 8px 11px 45px;
+    /*padding: 11px 8px 11px 45px;*/
+    padding: 11px 8px;
     border: 1px solid #ddd;
   }
   /*验证码输入框*/
@@ -169,6 +173,9 @@
     left: 51px;
     display: none;
   }
+  .login-input{
+    overflow: hidden;
+  }
   .login-input span{
     display: block;
     width: 40px;
@@ -182,6 +189,15 @@
     top: 1px;
     outline: 0;
   }
+  .login-input .label{
+    float: left;
+    width: 56px;
+    padding: 11px 0;
+  }
+  .login-input .login-text{
+    float: left;
+  }
+
   .logl-footer{
     position: relative;
     margin: 0 auto 0;
@@ -322,4 +338,26 @@
 }
 .login-box{
   position: relative;
+}
+
+.code-wrap{
+  float: left;
+  position: relative;
+  width: 310px;
+  height: 174px;
+  /*margin: 20px 0;*/
+  border: 1px solid #dddddd;
+}
+.code-wrap img{
+  width: 100%;
+  height: 100%;
+}
+.refresh{
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  right: 0;
+  top: 0;
+  background: url(../image/icon_light.png) no-repeat 0 -400px;
+  cursor: pointer;
 }

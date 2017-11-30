@@ -3,16 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .img-box{
+            position: relative;
+            width: 380px;
+            height: 266px;
+            margin: 100px auto;
+        }
+        .img-box img{
+            width: 100%;
+            height: 100%;
+        }
+        .refresh{
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 34px;
+            height: 34px;
+            background: url(/image/icon_light.png) no-repeat 0 -400px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" charset="UTF-8"></script>
 <body>
 <div>
     <h2>这是点击的验证码</h2>
     <!-- 这是点击的验证码 -->
-    <img id="codeT3" src="../cut/code3?flag=" +Math.random()/>
-    <input type="button" value="获取" onclick="getCodeTree();" /> <input
-        type="button" value="校验" onclick="cheakOutTree();" /> <select
-        id="codeSelect" style="display: none;"></select>
+    <div class="img-box">
+        <img id="codeT3" src="../cut/code3?flag=" +Math.round(Math.random()*10)/>
+        <div class="refresh" onclick="getCodeTree();" title="刷新"></div>
+    </div>
+
+    <!--<input type="button" value="获取" onclick="getCodeTree();" />-->
+    <input type="button" value="校验" onclick="cheakOutTree();" />
+    <select id="codeSelect" style="display: none;"></select>
 </div>
 
 
@@ -23,12 +48,10 @@
 
     //获取验证码3
     function getCodeTree() {
-        $("#codeT3").attr("src","../cut/code3?flag="+Math.random());
+        $("#codeT3").attr("src","../cut/code3?flag="+Math.round(Math.random()*10));
     }
     $(function() {
-        $("#codeT3").bind(
-            "click",
-            function(ev) {
+        $("#codeT3").bind("click", function(ev) {
                 var oEvent = ev || event;
                 var number = $("#codeSelect option").length;
                 var x = oEvent.pageX;
