@@ -6,8 +6,8 @@
     <style>
         .img-box{
             position: relative;
-            width: 380px;
-            height: 266px;
+            width: 310px;
+            height: 174px;
             margin: 100px auto;
         }
         .img-box img{
@@ -31,7 +31,7 @@
     <h2>这是点击的验证码</h2>
     <!-- 这是点击的验证码 -->
     <div class="img-box">
-        <img id="codeT3" src="../cut/code3?flag=" +Math.round(Math.random()*10)/>
+        <img id="codeT3" src="../cut/code3?flag=" +Math.round(Math.random()*9)/>
         <div class="refresh" onclick="getCodeTree();" title="刷新"></div>
     </div>
 
@@ -48,7 +48,7 @@
 
     //获取验证码3
     function getCodeTree() {
-        $("#codeT3").attr("src","../cut/code3?flag="+Math.round(Math.random()*10));
+        $("#codeT3").attr("src","../cut/code3?flag="+Math.round(Math.random()*9));
     }
     $(function() {
         $("#codeT3").bind("click", function(ev) {
