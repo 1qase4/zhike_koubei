@@ -2,6 +2,7 @@ package com.czc.bi.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
@@ -78,10 +79,12 @@ public class CutPicture {
      * @return
      */
     @RequestMapping("/code3")
-    public void getVerificationCodeCH(HttpServletRequest request, HttpServletResponse response) throws MalformedURLException {
+    public void getVerificationCodeCH(HttpServletRequest request, HttpServletResponse response, @RequestParam("flag") Integer flag) throws MalformedURLException {
         // http://localhost:8080/gtop/img/149679.jpg
-        int v = (int) (Math.random()*10)+1;
-        String url = "static/codeimage/"+v+".jpg";
+        if (flag == null){
+            flag = (int) (Math.random()*10);
+        }
+        String url = "static/codeimage/"+flag+".jpg";
         url = getClass().getClassLoader().getResource("") + url;
         readUsingImageReaderBigcH(url.substring(6), 20, 20, request, response);
     }
@@ -156,11 +159,11 @@ public class CutPicture {
             // 可以将图片合并传入前段  也可以直接传数据汉字给前端
 
             // 创建图片缓存
-            BufferedImage bi = new BufferedImage(image.getWidth(), 25, BufferedImage.TYPE_INT_RGB);
+            BufferedImage bi = new BufferedImage(image.getWidth(), 36, BufferedImage.TYPE_INT_RGB);
             Graphics gra = bi.getGraphics();
 
             // 设置背景颜色
-            gra.setColor(Color.WHITE);
+            gra.setColor(new Color(247,249,250,255));
             // 填充区域
 //            gra.fillRect(0, 0, bi.getWidth(), bi.getHeight());
             int height = bi.getHeight();
@@ -195,7 +198,7 @@ public class CutPicture {
             ImageIO.write(combined, "jpg", tmp);
             tmp.close();
             Integer contentLength = tmp.size();
-            response.setHeader("content-length", contentLength * 2 + "");
+            response.setHeader("content-length", contentLength  + "");
             response.getOutputStream().write(tmp.toByteArray());// 将内存中的图片通过流动形式输出到客户端
 
 
