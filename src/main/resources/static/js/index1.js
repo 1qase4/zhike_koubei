@@ -91,12 +91,13 @@ $(".xsubmit").click(function () {
     var inputCode=$(this).parent().siblings(".mycode").children("input[name='code']");
     var code = inputCode.next(".code").attr("id");
     var options = $("#codeSelect option");
-    if (options == 0){
+    var optionLen = options.length;
+    if (optionLen < 4){
         errorBox.show();
         errorTips.html("请点击验证码");
         return false;
     }
-    for(var i = 0,coordHtml = "";i < options.length;i ++){
+    for(var i = 0,coordHtml = "";i < optionLen;i ++){
         coordHtml += (options[i].innerHTML + ",");
     }
     coordHtml = coordHtml.slice(0,-1);
@@ -148,7 +149,8 @@ $(".xsubmit").click(function () {
                     window.location = "/shouye";
                 }else{
                     errorBox.show();
-                    errorTips.html(obj.message)
+                    errorTips.html(obj.message);
+                    $("#refresh_btn").click();
                 }
             },
             complete:function(XMLHttpRequest,textStatus){
