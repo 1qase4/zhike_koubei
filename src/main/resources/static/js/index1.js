@@ -90,7 +90,16 @@ $(".xsubmit").click(function () {
     var password=$(this).parent().siblings(".upwd").children("input[name='password']");
     var inputCode=$(this).parent().siblings(".mycode").children("input[name='code']");
     var code = inputCode.next(".code").attr("id");
-
+    var options = $("#codeSelect option");
+    if (options == 0){
+        errorBox.show();
+        errorTips.html("请点击验证码");
+        return false;
+    }
+    for(var i = 0,coordHtml = "";i < options.length;i ++){
+        coordHtml += (options[i].innerHTML + ",");
+    }
+    coordHtml = coordHtml.slice(0,-1);
     //重置输入框状态
     errorBox.hide();
     if (username.val() == ""){
@@ -118,12 +127,13 @@ $(".xsubmit").click(function () {
     //     inputCode.val("");
     //     $("#"+code).click();
     // }
+
     else {
 //            md5加密
         var uname=username.val();
         //var upwd=$.md5(password.val());
         var upwd=password.val();
-        var datas={username:uname,password:upwd};
+        var datas={username:uname,password:upwd,code:coordHtml};
            // console.log(datas);
         var ajaxTimeoutZhike = $.ajax({
             type: 'POST',

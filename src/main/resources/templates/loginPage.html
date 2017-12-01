@@ -91,8 +91,9 @@
                     <div class="login-input">
                         <div class="label">验证码</div>
                         <div class="code-wrap">
-                            <div class="refresh" title="刷新" onclick="refresh()"></div>
-                            <img src="/image/codeImg/u116048765,1099520667.jpg" alt="">
+                            <div class="refresh" title="刷新" id="refresh_btn"></div>
+                            <img src="" id="code_img" alt="">
+                            <select id="codeSelect" style="display: none;"></select>
                         </div>
                     </div>
 
@@ -149,14 +150,95 @@
     </div>
 </div>
 <!--轮播图-->
+
 <script type="text/javascript" src="/js/responsiveslides.min.js"></script>
 <script type="text/javascript" src="/js/jquery.md5.min.js"></script>
 <script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>
 <script type="text/javascript" src="/js/index1.js"></script>
 <script>
-    function refresh() {
-        
+
+    var gSecurityCode = {
+        imgId: "code_img",//图片id
+        refreshId: "refresh_btn",//刷新按钮
+        selectId: "codeSelect",//存放字的选择框
+        index: 0,//第几次点击
+        init: function () {//初始化
+            var _this = this;
+            $("#"+this.imgId).attr("src","/cut/code3?flag="+Math.round(Math.random()*9));
+            //图片绑定点击事件
+            $("#"+_this.imgId).bind("click", function(ev) {
+                if(_this.index > 3){
+                    return false
+                }
+                var oEvent = ev || event;
+                var number = $("#"+_this.selectId+ " option").length;
+                var x = oEvent.pageX;
+                var y = oEvent.pageY;
+//                console.log(x,y);
+                var img = document.getElementById(_this.imgId);    //获取图片的原点
+                var nodex = _this.getNodePosition(img)[0];//原点x 与原点y
+                var nodey = _this.getNodePosition(img)[1];
+
+                var xserver = parseInt(x) - parseInt(nodex);
+                var yserver = parseInt(y) - parseInt(nodey);
+
+//                if (number >= 4) {
+//                    return;
+//                }
+                $("#"+_this.selectId).append(
+                    "<option value='"+ (parseInt(number)+1) +"'>" + xserver + "_" + yserver
+                    + "</option>");
+                var oDiv = document.createElement('div');
+                oDiv.className = "sel-img";
+                oDiv.style.left = (parseInt(x) - 15) + 'px'; // 指定创建的DIV在文档中距离左侧的位置    图片大小30 左右移动15
+                oDiv.style.top = (parseInt(y) - 15) + 'px'; // 指定创建的DIV在文档中距离顶部的位置
+                oDiv.style.position = 'absolute'; // 为新创建的DIV指定绝对定位
+                oDiv.style.width = '30px'; // 指定宽度
+                oDiv.style.height = '30px'; // 指定高度
+                oDiv.style.background = 'url(/image/icon_light.png) no-repeat 0 -365px';//背景图
+                switch (_this.index){
+                    case 1:
+                        oDiv.style.backgroundPositionY = '-221px';
+                        break;
+                    case 2:
+                        oDiv.style.backgroundPositionY = '-328px';
+                        break;
+                    case 3:
+                        oDiv.style.backgroundPositionY = '-293px';
+                        break;
+                }
+//                oDiv.style.opacity = '0.5'; //透明度
+                oDiv.style.zIndex = '999';
+                $(document.body).append(oDiv);
+//                console.log(_this.index)
+                _this.index ++;
+
+            });
+            $("#"+_this.refreshId).click(function () {
+                var divs = $(document.body).children(".sel-img");
+                for(var i = 0;i < divs.length;i++){
+                    document.body.removeChild(divs[i]);
+                }
+                _this.index = 0;
+                $("#"+_this.imgId).attr("src","../cut/code3?flag="+Math.round(Math.random()*9));
+            })
+        },
+        getNodePosition: function (node) {
+            var top = left = 0;
+            while (node) {
+                if (node.tagName) {
+                    top = top + node.offsetTop;
+                    left = left + node.offsetLeft;
+                    node = node.offsetParent;
+                }
+                else {
+                    node = node.parentNode;
+                }
+            }
+            return [left, top];
+        }
     }
+    gSecurityCode.init();
     $(function () {
 //        new SecurityCode("sqsCode").init()
         var url = encodeURIComponent(location.href);
