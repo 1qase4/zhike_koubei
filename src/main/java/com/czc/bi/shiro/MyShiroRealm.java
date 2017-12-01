@@ -119,8 +119,9 @@ public class MyShiroRealm extends AuthorizingRealm {
                     logger.warn(String.format("用户[%s]信息同步数据库失败",user));
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new IncorrectCredentialsException("登陆遇到问题,请重试");
         }
 
         System.out.println(token.getCredentials());
@@ -129,7 +130,6 @@ public class MyShiroRealm extends AuthorizingRealm {
                 null,    //密码
                 getName()
         );
-
         return authenticationInfo;
     }
 
