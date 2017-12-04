@@ -33,9 +33,9 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/login")
     public Result login(HttpServletRequest request, HttpSession session, String username, String password ,String code) throws Exception {
-        if (!verifyCode(request,session,code)){
-            return new Result<>().setResult(false).setMessage("验证码错误！");
-        }
+//        if (!verifyCode(request,session,code)){
+//            return new Result<>().setResult(false).setMessage("验证码错误！");
+//        }
         // 将用户名和密码打包成token
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
         // 获取shiro验证器
@@ -52,7 +52,7 @@ public class UserController {
         }
     }
 
-    public Boolean verifyCode(HttpServletRequest request, HttpSession session, String code) {
+    private Boolean verifyCode(HttpServletRequest request, HttpSession session, String code) {
         String value = code;
         String sessionid = session.getId();
         List<String> sValue = (List<String>) request.getSession().getAttribute(sessionid + "randomCode3");

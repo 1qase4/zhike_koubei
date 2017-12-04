@@ -47,9 +47,9 @@ public class IndexController {
         return "hello";
     }
 
-    @RequestMapping("/aaa")
-    public String a() {
-        return "1";
+    @RequestMapping("/")
+    public String welcomePage(){
+        return "loginPage";
     }
 
     @Autowired

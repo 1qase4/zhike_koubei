@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  * @version: V1.0
  */
 @RestController
-@RequestMapping("manage")
+@RequestMapping("/manage")
 public class ManageController {
 
     @Autowired
@@ -32,6 +32,5 @@ public class ManageController {
         }else {
             return new Result().setResult(false);
         }
-
     }
 }
