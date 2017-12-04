@@ -89,18 +89,21 @@ $(".xsubmit").click(function () {
     var username=$(this).parent().siblings(".uname").children("input[name='username']");
     var password=$(this).parent().siblings(".upwd").children("input[name='password']");
     var inputCode=$(this).parent().siblings(".mycode").children("input[name='code']");
-    var code = inputCode.next(".code").attr("id");
-    var options = $("#codeSelect option");
-    var optionLen = options.length;
-    if (optionLen < 4){
-        errorBox.show();
-        errorTips.html("请点击验证码");
-        return false;
-    }
-    for(var i = 0,coordHtml = "";i < optionLen;i ++){
-        coordHtml += (options[i].innerHTML + ",");
-    }
-    coordHtml = coordHtml.slice(0,-1);
+    // 验证码
+    // var code = inputCode.next(".code").attr("id");
+    // var options = $("#codeSelect option");
+    // var optionLen = options.length;
+    // if (optionLen < 4){
+    //     errorBox.show();
+    //     errorTips.html("请点击验证码");
+    //     return false;
+    // }
+    // for(var i = 0,coordHtml = "";i < optionLen;i ++){
+    //     coordHtml += (options[i].innerHTML + ",");
+    // }
+    // coordHtml = coordHtml.slice(0,-1);
+    //验证码结束
+
     //重置输入框状态
     errorBox.hide();
     if (username.val() == ""){
@@ -134,7 +137,8 @@ $(".xsubmit").click(function () {
         var uname=username.val();
         //var upwd=$.md5(password.val());
         var upwd=password.val();
-        var datas={username:uname,password:upwd,code:coordHtml};
+        // var datas={username:uname,password:upwd,code:coordHtml};
+        var datas={username:uname,password:upwd};
            // console.log(datas);
         var ajaxTimeoutZhike = $.ajax({
             type: 'POST',
@@ -150,7 +154,7 @@ $(".xsubmit").click(function () {
                 }else{
                     errorBox.show();
                     errorTips.html(obj.message);
-                    $("#refresh_btn").click();
+                    // $("#refresh_btn").click();
                 }
             },
             complete:function(XMLHttpRequest,textStatus){
