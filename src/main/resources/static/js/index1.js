@@ -155,12 +155,16 @@ $(".xsubmit").click(function () {
                     errorBox.show();
                     errorTips.html(obj.message);
                     // $("#refresh_btn").click();
+                    $(_this).html(btnTxt).prop("disabled",false);
                 }
             },
-            complete:function(XMLHttpRequest,textStatus){
+            fail:function () {
                 $(_this).html(btnTxt).prop("disabled",false);
+            },
+            complete:function(XMLHttpRequest,textStatus){
                 if(textStatus=='timeout'){//超时,status还有success,error等值的情况
                     ajaxTimeoutZhike.abort();
+                    $(_this).html(btnTxt).prop("disabled",false);
                     alert("超时");
                 }
             }
