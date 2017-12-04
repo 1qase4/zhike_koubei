@@ -30,7 +30,7 @@
 .login-method{
   overflow: hidden;
   padding: 18px 0;
-  padding-left: 56px;
+  /*padding-left: 56px;*/
   text-align: right;
 }
 .login-method a{
@@ -38,7 +38,7 @@
   text-decoration: none;
 }
 .submitArea{
-  padding-left: 56px;
+  /*padding-left: 56px;*/
 }
 /*按钮*/
 .xsubmit{
@@ -63,6 +63,10 @@
 }
 .xsubmit:hover{
   background: #0a67fb;
+}
+.xsubmit:disabled:hover{
+  background: #477CD8;
+  cursor: not-allowed;
 }
 .top_right{
   /*margin-top: 45px;*/
@@ -143,13 +147,13 @@
   }
   /*input样式*/
   .login-text{
-    /*width: 197px;*/
-    width: 292px;
+    width: 250px;
+    /*width: 292px;*/
     font-size: 14px;
     line-height: 18px;
     height: 18px;
-    /*padding: 11px 8px 11px 45px;*/
-    padding: 11px 8px;
+    padding: 11px 8px 11px 45px;
+    /*padding: 11px 8px;*/
     border: 1px solid #ddd;
   }
   /*验证码输入框*/
