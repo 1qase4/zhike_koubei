@@ -65,7 +65,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         String account = token.getUsername();
         char[] password = token.getPassword();
         // 那用户信息去商圈秀验证
-        logger.debug(String.format("用户[%s]请求商圈秀系统验证",account));
+        logger.debug(String.format("用户[%s]请求商圈秀系统验证", account));
         String tokenUrl = String.format("%s/co/gettoken?key=%s", SQS_URL, KEY);
         String res = HttpUtil.sendGet(tokenUrl);
         ObjectMapper mapper = new ObjectMapper();
@@ -77,7 +77,7 @@ public class MyShiroRealm extends AuthorizingRealm {
             }
 
             String loginToken = (String) resMap.get("token");
-            logger.debug(String.format("获取的token[%s]",loginToken));
+            logger.debug(String.format("获取的token[%s]", loginToken));
             Map<String, Object> map = new HashMap<>(5);
             map.put("token", loginToken);
             map.put("user", EncryptUtils.encrypt3DES(account, loginToken));
@@ -90,22 +90,22 @@ public class MyShiroRealm extends AuthorizingRealm {
             // 验证不通过
             if (!"OK".equals(status1)) {
                 String message = (String) resMap.get("message");
-                logger.debug(String.format("验证不通过,提示信息为[%s]",message));
+                logger.debug(String.format("验证不通过,提示信息为[%s]", message));
                 throw new IncorrectCredentialsException(message);
             }
             Map userInfo = (Map) resMap.get("text");
-            String name =(String) userInfo.get("name");
-            if(name.equals("")){
+            String name = (String) userInfo.get("name");
+            if (name.equals("")) {
                 name = account;
             }
-            logger.debug(String.format("用户账号[%s],名称[%s]验证通过",account,name));
+            logger.debug(String.format("用户账号[%s],名称[%s]验证通过", account, name));
             // 检查用户信息表
             UserQuery query = new UserQuery();
             query.setSqsAccount(account);
 
             int i = userMapper.selectRowsByQuery(query);
             // 如果用户不存在  插入用户信息
-            if(i==0){
+            if (i == 0) {
                 User user = new User();
                 user.setAccount("None");
                 user.setSqsAccount(account);
@@ -113,12 +113,14 @@ public class MyShiroRealm extends AuthorizingRealm {
                 user.setRole("商户");
                 // 插入用户信息
                 i = userMapper.insert(user);
-                if(i==1){
-                    logger.debug(String.format("用户[%s]信息同步数据库完成",user));
+                if (i == 1) {
+                    logger.debug(String.format("用户[%s]信息同步数据库完成", user));
                 } else {
-                    logger.warn(String.format("用户[%s]信息同步数据库失败",user));
+                    logger.warn(String.format("用户[%s]信息同步数据库失败", user));
                 }
             }
+        } catch (IncorrectCredentialsException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             throw new IncorrectCredentialsException("登陆遇到问题,请重试");

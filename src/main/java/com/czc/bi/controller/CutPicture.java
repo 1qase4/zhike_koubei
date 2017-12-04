@@ -84,9 +84,9 @@ public class CutPicture {
         if (flag == null){
             flag = (int) (Math.random()*10);
         }
-        String url = "static/codeimage/"+flag+".jpg";
-        url = getClass().getClassLoader().getResource("") + url;
-        readUsingImageReaderBigcH(url.substring(6), 20, 20, request, response);
+        String url = "/home/zchong/koubei/image/"+flag+".jpg";
+        //url = getClass().getClassLoader().getResource("") + url;
+        readUsingImageReaderBigcH(url, 20, 20, request, response);
     }
 
 
@@ -102,7 +102,7 @@ public class CutPicture {
             // 写入汉字
             // 设置颜色
             graphics.setColor(Color.green);
-            graphics.setFont(new Font("宋体", Font.BOLD, 30));
+            graphics.setFont(new Font("黑体", Font.BOLD, 35));
 
             StringBuilder sb = new StringBuilder();
             //获取随机位子
@@ -131,11 +131,11 @@ public class CutPicture {
                     y = new Random().nextInt(20) + 50; // i=1的时候，y的值
                 }
                 if (place == 2) {
-                    x = new Random().nextInt(70) + 100; // 自己定义的位子坐标
+                    x = new Random().nextInt(170) + 100; // 自己定义的位子坐标
                     y = new Random().nextInt(20) + 50; // i=2的时候，y的值
                 }
                 if (place == 3) {
-                    x = new Random().nextInt(70) + 100; // 自己定义的位子坐标
+                    x = new Random().nextInt(170) + 100; // 自己定义的位子坐标
                     y = new Random().nextInt(70) + 100; // i=3的时候，y的值
                 }
                 if (place == 4) {
