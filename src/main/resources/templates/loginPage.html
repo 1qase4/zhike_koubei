@@ -168,7 +168,8 @@
         index: 0,//第几次点击
         init: function () {//初始化
             var _this = this;
-            $("#"+this.imgId).attr("src","../cut/code3?flag="+Math.round(Math.random()*9));
+            _this.refresh();
+//            $("#"+this.imgId).attr("src","../cut/code3?flag="+Math.round(Math.random()*9));
             //图片绑定点击事件
             $("#"+_this.imgId).bind("click", function(ev) {
                 if(_this.index > 3){
@@ -231,6 +232,14 @@
                     $("#load_box").hide();
                 }
             })
+        },
+        refresh: function () {
+            //加载动画
+            $("#load_box").show();
+            $("#"+this.imgId).attr("src","../cut/code3?flag="+Math.round(Math.random()*9));
+            document.getElementById(this.imgId).onload = function () {
+                $("#load_box").hide();
+            }
         },
         getNodePosition: function (node) {//获取图片在文档中的位置
             var top = left = 0;
