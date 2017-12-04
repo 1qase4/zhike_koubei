@@ -4,7 +4,7 @@
 
     <update id="updataTokenStat">
     UPDATE
-      `koubei`.`shop_token`
+      `shop_token`
     SET
       `stat`      = #{stat},
       `updatedt`  = NOW()
