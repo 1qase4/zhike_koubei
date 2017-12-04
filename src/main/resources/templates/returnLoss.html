@@ -41,11 +41,17 @@
             <div id="chartLine" class="lf-chart"></div>
             <div class="rt-txt">
                 <dl class="dl-box">
-                    <dt> <i class="lost-color"></i>流失客户</dt>
+                    <dt>
+                        <i class="lost-color"></i>流失客户
+                        <i class="icon icon-question-sign" data-toggle="tooltip" data-placement="top" title="近90天无来访"></i>
+                    </dt>
                     <dd> <span id="lostClient">845</span>人</dd>
                 </dl>
                 <dl class="dl-box">
-                    <dt> <i class="back_flow-color"></i>回流客户</dt>
+                    <dt> <i class="back_flow-color"></i>
+                        回流客户
+                        <i class="icon icon-question-sign" data-toggle="tooltip" data-placement="top" title="90天外拜访"></i>
+                    </dt>
                     <dd> <span id="back_flowClient">845</span>人</dd>
                 </dl>
             </div>
@@ -54,11 +60,17 @@
             <div id="chartBar" class="lf-chart"></div>
             <div class="rt-txt">
                 <dl class="dl-box">
-                    <dt> <i class="return-color"></i>回头客</dt>
+                    <dt>
+                        <i class="return-color"></i>回头客
+                        <i class="icon icon-question-sign" data-toggle="tooltip" data-placement="top" title="30天内有拜访"></i>
+                    </dt>
                     <dd> <span id="returnClient">845</span>人</dd>
                 </dl>
                 <dl class="dl-box">
-                    <dt> <i class="frequent-color"></i>常客</dt>
+                    <dt>
+                        <i class="frequent-color"></i>常客
+                        <i class="icon icon-question-sign" data-toggle="tooltip" data-placement="top" title="30天内拜访4次以上"></i>
+                    </dt>
                     <dd> <span id="frequentClient">845</span>人</dd>
                 </dl>
             </div>
@@ -145,6 +157,7 @@
 <script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
 <script>
     $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
         var type = $("#switchWay span.selected").data("time");
         var value = $("#selectedTime").html();
         loadTime1(type,value);

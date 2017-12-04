@@ -55,7 +55,7 @@ function loadTime1(type,value) {
         case "week":
             var obj1 = getWeek(today);
             input1.val() == "" && input1.val("第"+obj1.order+"周"+obj1.monDate);
-            console.log("第"+obj1.order+"周"+obj1.monDate)
+            // console.log("第"+obj1.order+"周"+obj1.monDate)
             break;
         case "day":
             input1.val() == "" && input1.val(value);
