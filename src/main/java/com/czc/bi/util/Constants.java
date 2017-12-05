@@ -13,6 +13,9 @@ public class Constants {
     // 按小时统计客流
     public static final String CUSTFLOW_TYPE_HOUR = "按小时统计客流";
 
+    // 按月统计月均客流
+    public static final String CUSTFLOW_AVG_TYPE_MONTH = "按月统计客流";
+
     // 按月统计客流
     public static final String CUSTFLOW_TYPE_MONTH = "按月统计客流";
 

@@ -231,8 +231,8 @@ public class CutPicture {
         boolean flag = false;
         //为null 或者"" 或者 " "
 //        if (StringUtils.isBlank(value) || sValue == null || sValue.size() < 1) {
-//            map.put("result", flag);
-//            return map;
+//            mapping.put("result", flag);
+//            return mapping;
 //        }
         if (value == null || value == "" || value == " " || sValue == null || sValue.size() < 1) {
             map.put("result", flag);
@@ -249,8 +249,8 @@ public class CutPicture {
         for (int i = 0; i < valueStr.length; i++) {
             str = valueStr[i].toString();
 //            if(StringUtils.isBlank(str) || StringUtils.isBlank(sValue.get(i).toString())){
-//                map.put("result", flag);
-//                return map;
+//                mapping.put("result", flag);
+//                return mapping;
 //            }
             if (str == null || str == "" || str == " " || sValue.get(i).toString() == null && sValue.get(i).toString() == "") {
                 map.put("result", flag);

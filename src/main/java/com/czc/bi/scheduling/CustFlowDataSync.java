@@ -17,10 +17,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.czc.bi.util.AlipayConstant.*;
 import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_USRANALYSIS_USRLOSTBACK_FORWEEK;
@@ -46,6 +45,79 @@ public class CustFlowDataSync {
 
     @Autowired
     private ShopPassengerflowAnalyzeService shopPassengerflowAnalyzeService;
+
+    public boolean syncMonthFlow(String pdate, String token) throws Exception {
+        // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
+        AlipayClient alipayClient = this.alipayClient;
+
+        if("201710BB587b6a2bf52a4795bba5e7eca40c1C55".equals(token)){
+            alipayClient = AlipayUtil.getYFYClient();
+        }
+        // end
+
+        // 判断是否为当月1号 月初需要同步上月日均客流数据
+        // 如果不是1号 返回0
+        if (!pdate.endsWith("-01")) {
+            logger.debug(pdate + " is not month begin, return");
+            return true;
+        }
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sf.parse(pdate);
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+        pdate = BaseUtil.getDateString(calendar.getTime(), "yyyy-MM");
+
+        KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
+        ReportDataContext rc = new ReportDataContext();
+        rc.setReport_uk(UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORYEAR);
+        rc.addCondition("month", "=", pdate);
+
+        KoubeiMarketingDataAlisisReportQueryResponse kbresponse = alipayClient.execute(kbrequest);
+        if (!kbresponse.isSuccess()) {
+            logger.warn("数据查询调用失败");
+            logger.warn(kbresponse.getSubCode());
+            logger.warn(kbresponse.getSubMsg());
+            return false;
+        }
+
+        List<AlisisReportRow> reportData = kbresponse.getReportData();
+        if (reportData == null) {
+            logger.debug(String.format("报表[%s]在日期[%s]无数据",
+                    UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORTIMEPERIOD,
+                    date)
+            );
+            return false;
+        }
+
+        List<ShopPassengerflowAnalyze> list = new ArrayList<>(18);
+
+        // 获取数据
+        for (AlisisReportRow reportDatum : reportData) {
+            // 拆分数据
+            List<AlisisReportColumn> rowData = reportDatum.getRowData();
+            Map<String, String> columnValue = AlipayUtil.getColumnValue(rowData,
+                    "shop_id",
+                    "shop_name",
+                    "month_traffic");
+            ShopPassengerflowAnalyze analyze = new ShopPassengerflowAnalyze();
+            analyze.setType(Constants.CUSTFLOW_TYPE_DAY)
+                    .setRank(1)
+                    .setLabel(pdate)
+                    .setPdate(pdate);
+            analyze.setAccount(columnValue.get("shop_id"));
+            analyze.setValue(Integer.valueOf(columnValue.get("month_traffic")));
+            analyze.setShop(columnValue.get("shop_name"));
+            logger.debug(String.format("获取店铺数据[%s]", analyze));
+            list.add(analyze);
+
+        }
+        // 执行数据插入
+        shopPassengerflowAnalyzeMapper.replaces(list);
+        logger.debug(String.format("客户在日期[%s]时的当日流数据获取完成", date));
+        return true;
+    }
+
 
     public boolean syncDayFlow(String date, String token) throws AlipayApiException {
         // if token equals 201710BB587b6a2bf52a4795bba5e7eca40c1C55 then set alipayclient is special clinet
@@ -114,7 +186,7 @@ public class CustFlowDataSync {
             if(isMonthBegin){
                 String month = date.substring(0,7);
                 analyze = new ShopPassengerflowAnalyze();
-                analyze.setType(Constants.CUSTFLOW_TYPE_MONTH)
+                analyze.setType(Constants.CUSTFLOW_AVG_TYPE_MONTH)
                         .setRank(1)
                         .setLabel(month)
                         .setPdate(date);

@@ -294,25 +294,25 @@ public class ShopLabelAnalyzeService {
 //    // 格式化星座数据
 //    private Map<String, Float> formartConstellations(List<Simple<String, String>> kvs) {
 //        // 初始化12星座数据
-//        Map<String, Float> map = new LinkedHashMap<>(12);
-//        map.put("白羊座", 0f);
-//        map.put("金牛座", 0f);
-//        map.put("双子座", 0f);
-//        map.put("巨蟹座", 0f);
-//        map.put("狮子座", 0f);
-//        map.put("处女座", 0f);
-//        map.put("天秤座", 0f);
-//        map.put("天蝎座", 0f);
-//        map.put("射手座", 0f);
-//        map.put("摩羯座", 0f);
-//        map.put("水瓶座", 0f);
-//        map.put("双鱼座", 0f);
+//        Map<String, Float> mapping = new LinkedHashMap<>(12);
+//        mapping.put("白羊座", 0f);
+//        mapping.put("金牛座", 0f);
+//        mapping.put("双子座", 0f);
+//        mapping.put("巨蟹座", 0f);
+//        mapping.put("狮子座", 0f);
+//        mapping.put("处女座", 0f);
+//        mapping.put("天秤座", 0f);
+//        mapping.put("天蝎座", 0f);
+//        mapping.put("射手座", 0f);
+//        mapping.put("摩羯座", 0f);
+//        mapping.put("水瓶座", 0f);
+//        mapping.put("双鱼座", 0f);
 //
 //        int total = kvs.stream().mapToInt(a -> Integer.valueOf(a.getValue())).sum();
 //
 //        for (Simple<String, String> kv : kvs) {
-//            map.put(kv.getKey(), new BigDecimal(Float.parseFloat(kv.getValue()) / total * 100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
+//            mapping.put(kv.getKey(), new BigDecimal(Float.parseFloat(kv.getValue()) / total * 100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
 //        }
-//        return map;
+//        return mapping;
 //    }
 }

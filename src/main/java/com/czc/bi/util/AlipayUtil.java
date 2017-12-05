@@ -8,7 +8,9 @@ import com.alipay.api.domain.AlisisReportRow;
 import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
 import com.czc.bi.pojo.alipay.ReportDataContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,6 +73,17 @@ public class AlipayUtil {
         return map;
     }
 
+    public static Map<String, String> convertReprot2Map(List<AlisisReportColumn> rowData) {
+        Map<String, String> map = new HashMap<>();
+
+        for (AlisisReportColumn rowDatum : rowData) {
+            String alias = rowDatum.getAlias();
+            String data = rowDatum.getData();
+            map.put(alias,data);
+        }
+        return map;
+    }
+
     public static Map getKoubeiReport(ReportDataContext rc) throws AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 GATEWAT,
@@ -106,6 +119,8 @@ public class AlipayUtil {
         map.put("end", "2017-06-10");
         System.out.println(buildBiz(map));
     }
+
+
 
     public static Map getKoubeiReportData(ReportDataContext rc,String token,AlipayClient alipayClient) throws AlipayApiException {
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();

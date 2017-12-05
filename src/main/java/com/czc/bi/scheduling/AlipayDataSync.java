@@ -75,10 +75,11 @@ public class AlipayDataSync {
     private List<String> shops;
 
 
-    //    @Scheduled(cron = "0/10 * * * * ?") // 每10秒执行一次
-    public void scheduler() {
-        logger.info(">>>>>>>>>>>>> scheduled ... ");
-    }
+//    @Scheduled(cron = "0/10 * * * * ?") // 每10秒执行一次
+//    public void scheduler(String pdate) {
+//        System.out.println(pdate);
+//        logger.info(">>>>>>>>>>>>> scheduled ... ");
+//    }
 
 
     // 同步商户信息
@@ -166,8 +167,7 @@ public class AlipayDataSync {
         }
     }
 
-    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
-    public void syncAlipayData() throws Exception {
+    public void syncAlipayDataByPdate(String _pdate) throws Exception {
 
         List<ShopToken> shopTokens = shopTokenMapper.selectByCondition("`stat` != '0'");
 
@@ -196,62 +196,88 @@ public class AlipayDataSync {
                 continue;
             }
             delay();
-            List<String> datesBetween = getDatesBetween(localdate, alipayDate);
-            for (String pdate : datesBetween) {
 
-                logger.info(String.format("开始同步账号[%s]在日期[%s]的数据", account, pdate));
-                // 同步商户信息
-                syncShopList(account, token);
-                // 同步当日客流
-                logger.info("开始同步当日客流");
-                boolean b = custFlowDataSync.syncDayFlow(pdate, token);
-                if (!b) {
-                    msgs.add("同步当日客流同步失败");
-                    String format = String.format("账号[%s]在日期[%s]的无法取得客流数据,退出同步,请检查!", account, pdate);
-                    logger.info(format);
-                    // 发送短信提醒同步失败
-                    MessageUtil.sendMessageAdmin(format);
-                    continue;
+            String pdate;
+            // auth date
+            {
+                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+                // if _pdate null, set pdate = nextDay. if not set pdate=_pdate
+                if (_pdate == null) {
+                    pdate = BaseUtil.getNextDateString(localdate);
+                } else {
+                    pdate = _pdate;
+                }
+                Date pdateDate = sf.parse(pdate);
+                Date alipayDateDate = sf.parse(alipayDate);
+                if (pdateDate.after(alipayDateDate)) {
+                    logger.info(String.format("pdate[%s] is after alipayDate[%s] return", pdate, alipayDate));
+                    return;
+                }
+
+            }
+
+            logger.info(String.format("开始同步账号[%s]在日期[%s]的数据", account, pdate));
+            // 同步商户信息
+            syncShopList(account, token);
+            // 同步当日客流
+            logger.info("开始同步当日客流");
+            boolean b = custFlowDataSync.syncDayFlow(pdate, token);
+            if (!b) {
+                msgs.add("同步当日客流同步失败");
+                String format = String.format("账号[%s]在日期[%s]的无法取得客流数据,退出同步,请检查!", account, pdate);
+                logger.info(format);
+                // 发送短信提醒同步失败
+                MessageUtil.sendMessageAdmin(format);
+                continue;
+            }
+            delay();
+
+            b = custFlowDataSync.syncMonthFlow(pdate, token);
+
+            logger.info("开始同步回流情况数据");
+            custFlowDataSync.syncUsrLostBackForweek(pdate, token);
+            delay();
+
+            // 按店铺同步部分
+            // 同步区间客流
+            for (String shop : this.shops) {
+                b = custFlowDataSync.syncIntervalFlow(shop, pdate, token);
+                if (b) {
+                    msgs.add(String.format("店铺[%s]同步区间客流失败", shop));
                 }
                 delay();
-
-                logger.info("开始同步回流情况数据");
-                custFlowDataSync.syncUsrLostBackForweek(pdate, token);
+                logger.info("开始同步热力图数据");
+                custLabelDataSync.syncShopHotDiagram(shop, pdate, token);
                 delay();
-
-                // 按店铺同步部分
-                // 同步区间客流
-                for (String shop : this.shops) {
-                    b = custFlowDataSync.syncIntervalFlow(shop, pdate, token);
-                    if (b) {
-                        msgs.add(String.format("店铺[%s]同步区间客流失败", shop));
-                    }
-                    delay();
-                    logger.info("开始同步热力图数据");
-                    custLabelDataSync.syncShopHotDiagram(shop, pdate, token);
-                    delay();
-                    logger.debug(String.format("开始处理shop[%s]", shop));
-                    logger.info("开始同步客户特征数据");
-                    custLabelDataSync.syncShopProperty(shop, pdate, token);
-                    delay();
-                    logger.info("开始同步客户区域特征数据");
-                    custLabelDataSync.syncShopPropertyArea(shop, pdate, token);
-                    delay();
-                    logger.info("开始同步每周新老客户数据");
-                    custFlowDataSync.syncUsranalysisForweek(shop, pdate, token);
-                    delay();
-                    logger.info("开始同步回头客数据");
-                    custFlowDataSync.syncUsrBackForweek(shop, pdate, token);
-                    delay();
-                }
-                logger.info("同步支付宝口碑数据结束");
-                // 更新etl时间
+                logger.debug(String.format("开始处理shop[%s]", shop));
+                logger.info("开始同步客户特征数据");
+                custLabelDataSync.syncShopProperty(shop, pdate, token);
+                delay();
+                logger.info("开始同步客户区域特征数据");
+                custLabelDataSync.syncShopPropertyArea(shop, pdate, token);
+                delay();
+                logger.info("开始同步每周新老客户数据");
+                custFlowDataSync.syncUsranalysisForweek(shop, pdate, token);
+                delay();
+                logger.info("开始同步回头客数据");
+                custFlowDataSync.syncUsrBackForweek(shop, pdate, token);
+                delay();
+            }
+            logger.info("同步支付宝口碑数据结束");
+            // 更新etl时间
+            if(_pdate != null){
                 etlDateMapper.updataEtlDate(account, pdate);
             }
         }
-
         logger.debug("更新数据日志------------>" + msgs);
 
+    }
+
+    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
+    public void syncAlipayData() throws Exception {
+        syncAlipayDataByPdate(null);
+        // once again
+        syncAlipayDataByPdate(null);
     }
 
     /**

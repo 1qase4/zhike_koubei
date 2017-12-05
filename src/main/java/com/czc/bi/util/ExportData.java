@@ -127,7 +127,7 @@ public class ExportData {
 
 
     public String listPojo2String(List pojos, Class cls) throws Exception {
-        //pojo.stream().map()
+        //pojo.stream().mapping()
 
         //t.getClass()
         //PropertyDescriptor pd = new PropertyDescriptor();
