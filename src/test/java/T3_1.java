@@ -6,6 +6,7 @@ import com.alipay.api.domain.AlisisReportRow;
 import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
 import com.czc.bi.pojo.alipay.ReportDataContext;
+import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.BaseUtil;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class T3_1 {
                 ALIPAY_PUBLIC_KEY,
                 SIGN_TYPE);
 
-
+        alipayClient = AlipayUtil.getYFYClient();
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk("QK171025k863e26v"); //"QK1711019f6d4557"
+        rc.setReport_uk("QK171101231co6td"); //"QK1711019f6d4557"
 
         rc.addCondition("shop_id", "=", "2015051400077000000000046605");
-        rc.addCondition("day","=","2017-11-04" );
+//        rc.addCondition("day","=","2017-11-04" );
 
      //   rc.addCondition("day", "=", "2017-11-07");
      //   rc.addCondition("month","=","2017-10" );
