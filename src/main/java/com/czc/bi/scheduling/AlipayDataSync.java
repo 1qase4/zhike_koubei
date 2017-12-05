@@ -275,8 +275,68 @@ public class AlipayDataSync {
 
     @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
     public void syncAlipayData() throws Exception {
-        syncAlipayDataByPdate(null);
-        // once again
+        // get token
+        List<ShopToken> shopTokens = shopTokenMapper.selectByCondition("`stat` != '0'");
+        for (ShopToken shopToken : shopTokens) {
+            String account = shopToken.getAccount();
+            String token = shopToken.getApp_auth_token();
+
+            // 验证token有效性
+            if (!isTokenValid(account, token)) {
+                logger.warn(String.format("账号[%s]令牌[%s]有效性查询失败,跳过数据拉取", account, token));
+                continue;
+            }
+            delay();
+            // get account local etl date
+            EtlDateQuery etlDateQuery = new EtlDateQuery();
+            etlDateQuery.setAccount(account);
+            String localdate = etlDateMapper.selectByQuery(etlDateQuery).get(0).getPdate();
+
+            // get account alipay etl date
+            String alipayDate = getAlipayEtlDate(token);
+            if (alipayDate == null) {
+                logger.warn(String.format("account[%s]get token error continue loop", account));
+                continue;
+            }
+            delay();
+
+            String pdate;
+            // auth date
+            {
+                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+                pdate = BaseUtil.getNextDateString(localdate);
+                Date pdateDate = sf.parse(pdate);
+                Date alipayDateDate = sf.parse(alipayDate);
+                if (pdateDate.after(alipayDateDate)) {
+                    logger.info(String.format("pdate[%s] is after alipayDate[%s] return", pdate, alipayDate));
+                    return;
+                }
+            }
+
+            // 同步商户信息
+            syncShopList(account, token);
+
+            // build job list
+            for (String shop : this.shops) {
+                JobList jl = new JobList();
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+            }
+
+
+        }
+
+
         syncAlipayDataByPdate(null);
     }
 
@@ -358,7 +418,7 @@ public class AlipayDataSync {
      */
     private void delay() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(800);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
