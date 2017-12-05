@@ -1,8 +1,10 @@
 package com.czc.bi;
 
+import com.alipay.api.AlipayApiException;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.scheduling.AlipayDataSync;
 import com.czc.bi.scheduling.CustFlowDataSync;
+import com.czc.bi.scheduling.impl.*;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,24 @@ public class ZhikeKoubeiApplicationTests2 {
 
     @Autowired
     private ShopMapper shopMapper;
+
+    @Autowired
+    private SyncShopHotDiagramData syncShopHotDiagramData;
+
+    @Autowired
+    private SyncShopPropertyAreaData syncShopPropertyAreaData;
+
+    @Autowired
+    private SyncShopPropertyData syncShopPropertyData;
+
+    @Autowired
+    private SyncUsranalysisForweekData syncUsranalysisForweekData;
+
+    @Autowired
+    private SyncUsrBackForweekData syncUsrBackForweekData;
+
+    @Autowired
+    private SyncUsrLostBackForweekData syncUsrLostBackForweekData;
 
     @Test
     public void test1() throws Exception{
@@ -88,5 +108,34 @@ public class ZhikeKoubeiApplicationTests2 {
             }
         }
 
+    }
+
+    @Test
+    public void demo() throws AlipayApiException, InterruptedException {
+        // 获取所有的shopid
+        List<String> ids = shopMapper.selectAllShopId();
+        logger.debug("shopid ======>" + ids);
+
+        String[] datas = {"2017-11-01",
+                "2017-11-02",
+                "2017-11-03",
+                "2017-11-04",
+                "2017-11-05",
+                "2017-11-06",
+                "2017-11-07"
+        };
+
+        String month = "2017-11";
+
+        for (String data : datas) {
+            for (String id : ids) {
+                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
+                custFlowDataSync.syncIntervalFlow(
+                        id,
+                        data,
+                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
+                Thread.sleep(1300);
+            }
+        }
     }
 }

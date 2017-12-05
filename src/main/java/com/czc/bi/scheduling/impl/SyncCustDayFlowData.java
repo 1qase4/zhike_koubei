@@ -43,7 +43,7 @@ public class SyncCustDayFlowData implements SyncJob {
     public JobResult execute(String shopid, String token, String pdate) {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk(UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS);
-        rc.addCondition("shop_id", "=", shopid);
+        rc.addCondition("shop_id", "=",  shopid);
         rc.addCondition("day", "=", pdate);
         JobResult result = new JobResult();
         try {
