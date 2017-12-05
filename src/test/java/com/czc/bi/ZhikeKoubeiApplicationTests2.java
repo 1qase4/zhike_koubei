@@ -4,6 +4,7 @@ import com.alipay.api.AlipayApiException;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.scheduling.AlipayDataSync;
 import com.czc.bi.scheduling.CustFlowDataSync;
+import com.czc.bi.scheduling.JobResult;
 import com.czc.bi.scheduling.impl.*;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -116,25 +117,48 @@ public class ZhikeKoubeiApplicationTests2 {
         List<String> ids = shopMapper.selectAllShopId();
         logger.debug("shopid ======>" + ids);
 
-        String[] datas = {"2017-11-01",
-                "2017-11-02",
-                "2017-11-03",
-                "2017-11-04",
-                "2017-11-05",
-                "2017-11-06",
-                "2017-11-07"
+        String[] datas = {"2017-11-31",
+                "2017-12-01",
+                "2017-12-02",
+                "2017-12-03",
+                "2017-12-04"
         };
 
         String month = "2017-11";
-
+        for (String id : ids) {
+            JobResult result1 = syncShopPropertyData.execute(
+                    id,
+                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                    month);
+            Thread.sleep(1300);
+            JobResult result2 = syncShopPropertyAreaData.execute(
+                    id,
+                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                    month);
+            Thread.sleep(1300);
+            JobResult result3 = syncShopHotDiagramData.execute(
+                    id,
+                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                    "201711");
+            Thread.sleep(1300);
+        }
         for (String data : datas) {
             for (String id : ids) {
                 logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
-                custFlowDataSync.syncIntervalFlow(
+                JobResult result1 = syncUsrLostBackForweekData.execute(
                         id,
-                        data,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
+                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                        data);
                 Thread.sleep(1300);
+                JobResult result2 = syncUsrBackForweekData.execute(
+                        id,
+                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                        data);
+                Thread.sleep(1300);
+                JobResult result3 = syncUsranalysisForweekData.execute(
+                        id,
+                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                        data);
             }
         }
     }
