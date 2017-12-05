@@ -10,6 +10,7 @@ import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
 import com.alipay.api.response.AlipayOpenAuthTokenAppQueryResponse;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
 import com.czc.bi.mapper.EtlDateMapper;
+import com.czc.bi.mapper.JobListMapper;
 import com.czc.bi.mapper.ShopMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
 import com.czc.bi.pojo.*;
@@ -265,7 +266,7 @@ public class AlipayDataSync {
             }
             logger.info("同步支付宝口碑数据结束");
             // 更新etl时间
-            if(_pdate != null){
+            if (_pdate != null) {
                 etlDateMapper.updataEtlDate(account, pdate);
             }
         }
@@ -273,8 +274,10 @@ public class AlipayDataSync {
 
     }
 
-    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
-    public void syncAlipayData() throws Exception {
+    @Autowired
+    private JobListMapper jobListMapper;
+
+    public void buildJobList() throws Exception {
         // get token
         List<ShopToken> shopTokens = shopTokenMapper.selectByCondition("`stat` != '0'");
         for (ShopToken shopToken : shopTokens) {
@@ -316,28 +319,66 @@ public class AlipayDataSync {
             // 同步商户信息
             syncShopList(account, token);
 
+            List<JobList> list = new ArrayList<>();
             // build job list
             for (String shop : this.shops) {
                 JobList jl = new JobList();
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
-                jl.setBean("").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("SyncCustDayFlowData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                list.add(jl);
+
+                jl = new JobList();
+                jl.setBean("SyncIntervalFlowData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                list.add(jl);
+
+                jl = new JobList();
+                jl.setBean("SyncUsranalysisForweekData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                list.add(jl);
+
+                jl = new JobList();
+                jl.setBean("SyncUsrBackForweekData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                list.add(jl);
+
+                jl = new JobList();
+                jl.setBean("SyncUsrLostBackForweekData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                list.add(jl);
+
+                if(pdate.endsWith("-01")){
+                    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+                    String month;
+                    Date parse = sf.parse(pdate);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(parse);
+                    calendar.add(Calendar.MONTH, -1);
+                    Date time = calendar.getTime();
+                    month = BaseUtil.getDateString(time, "yyyy-MM");
+
+
+
+                    jl = new JobList();
+                    jl.setBean("SyncCustMonthFlowData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    list.add(jl);
+
+                    jl = new JobList();
+                    jl.setBean("SyncShopHotDiagramData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    list.add(jl);
+
+                    jl = new JobList();
+                    jl.setBean("SyncShopPropertyAreaData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    list.add(jl);
+
+                    jl = new JobList();
+                    jl.setBean("SyncShopPropertyData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    list.add(jl);
+                }
             }
-
-
+            jobListMapper.replaces(list);
         }
+        // syncAlipayDataByPdate(null);
+    }
 
+    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
+    public void syncAlipayData() throws Exception {
 
-        syncAlipayDataByPdate(null);
     }
 
     /**

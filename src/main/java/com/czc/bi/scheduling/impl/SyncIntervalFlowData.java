@@ -25,7 +25,7 @@ import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANAL
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
  * @author : zchong
- * @Desc :
+ * @Desc : 客户区间数据
  * @date : 2017/12/5.
  * @version: V1.0
  */

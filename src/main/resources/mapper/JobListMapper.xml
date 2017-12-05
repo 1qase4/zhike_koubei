@@ -149,6 +149,36 @@
         </foreach>
         </insert>
 
+
+    <insert id="replaces" parameterType="java.util.List">
+        replace INTO `job_list`
+        (
+        `bean`,
+        `name`,
+        `shopid`,
+        `token`,
+        `pdate`,
+        `rows`,
+        `stauts`,
+        `createdt`,
+        `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+            (
+            #{record.bean},
+            #{record.name},
+            #{record.shopid},
+            #{record.token},
+            #{record.pdate},
+            #{record.rows},
+            #{record.stauts},
+            NOW(),
+            NOW()
+            )
+        </foreach>
+    </insert>
+
     <select id="selectByCondition" resultType="com.czc.bi.pojo.JobList">
         SELECT
         `id`,

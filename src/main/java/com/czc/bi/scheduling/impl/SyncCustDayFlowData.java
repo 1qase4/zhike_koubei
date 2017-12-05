@@ -27,7 +27,7 @@ import java.util.*;
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
  * @author : zchong
- * @Desc :
+ * @Desc : 客流当日客流
  * @date : 2017/12/4.
  * @version: V1.0
  */

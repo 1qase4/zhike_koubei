@@ -15,8 +15,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +24,7 @@ import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANAL
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
  * @author : zchong
- * @Desc :
+ * @Desc : 客户月客流
  * @date : 2017/12/4.
  * @version: V1.0
  */
