@@ -41,7 +41,7 @@
             <div class="sub-chart-wrap lf" id="chartsPie"></div>
             <div class="sub-chart-wrap fr">
                 <dl class="small-box">
-                    <dt>新用户</dt>
+                    <dt>新用户<i class="icon icon-question-sign" data-toggle="tooltip" data-placement="top" title="一年内首次出现的客户"></i></dt>
                     <dd><span id="newNum">0</span>人</dd>
                 </dl>
                 <dl class="small-box">
@@ -49,7 +49,7 @@
                     <dd><span id="newPercent">0</span>%</dd>
                 </dl>
                 <dl class="small-box">
-                    <dt>老用户</dt>
+                    <dt>老用户<i class="icon icon-question-sign" data-toggle="tooltip" data-placement="top" title="一年内多次出现的客户"></i></dt>
                     <dd><span id="oldNum">0</span>人</dd>
                 </dl>
                 <dl class="small-box">
@@ -97,6 +97,7 @@
     //    从父页面获取店名
     var gShop = parent.document.getElementById("shop").value;
     $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
         var type = $("#switchWay span.selected").data("time");
         var value = $("#selectedTime").html();
         loadTime1(type,value);
