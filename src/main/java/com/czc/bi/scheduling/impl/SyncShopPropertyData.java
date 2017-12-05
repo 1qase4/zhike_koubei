@@ -13,6 +13,7 @@ import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_PROPERTY;
  * Created by Administrator on 2017/12/5.
  * 客户特征数据同步
  */
+@Component
 public class SyncShopPropertyData implements SyncJob{
     private Logger logger = Logger.getLogger(SyncCustDayFlowData.class.getName());
 

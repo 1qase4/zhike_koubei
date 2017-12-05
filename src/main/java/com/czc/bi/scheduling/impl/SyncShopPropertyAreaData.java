@@ -13,6 +13,7 @@ import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -23,6 +24,7 @@ import static com.czc.bi.util.AlipayConstant.UK_REPORT_YFY_SHOP_PROPERTY_AREA_DI
  * Created by Administrator on 2017/12/5.
  * 客户区域特征数据同步
  */
+@Component
 public class SyncShopPropertyAreaData implements SyncJob {
     private Logger logger = Logger.getLogger(SyncCustDayFlowData.class.getName());
 
@@ -88,8 +90,9 @@ public class SyncShopPropertyAreaData implements SyncJob {
             Collection<ShopLabelAnalyze> values = provinceMap.values();
             Iterator<ShopLabelAnalyze> it = values.iterator();
             while (it.hasNext()) {
-                logger.debug(String.format("获取店铺客户区域特征数据[%s]", it.next()));
-                list.add(it.next());
+                ShopLabelAnalyze next = it.next();
+                logger.debug(String.format("获取店铺客户区域特征数据[%s]", next));
+                list.add(next);
             }
 
             // 执行数据插入
