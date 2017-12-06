@@ -66,6 +66,7 @@ public class AlipayConstant {
     public static String UK_REPORT_YFY_SHOP_PROPERTY_AREA_DIS = "QK17110221vjfg3r";
     public static String UK_REPORT_YFY_SHOP_HOT_DIAGRAM = "QK171101ozq154g7";
     public static String UK_REPORT_SHOP_PDATELIST = "QK171124uk2p318c";
+    public static String UK_REPORT_YFY_SHOP_DAY_TRAFFIC_ANALYSIS_FORYEAR = "QK171101231co6td";
 
     // 授权的回调函数
     public static String REDIRECT_URI = "http%3a%2f%2fkoubei.shangquanshow.com%2fsqs_ret";
