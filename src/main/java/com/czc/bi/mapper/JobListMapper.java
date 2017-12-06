@@ -1,6 +1,7 @@
 package com.czc.bi.mapper;
 
 import com.czc.bi.pojo.JobList;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -13,4 +14,7 @@ import com.czc.bi.pojo.JobList;
 
 public interface JobListMapper extends BaseMapper<JobList>{
 
+    int updateSuccess(@Param("id") int id,@Param("rows") int rows);
+
+    int updateFail(@Param("id")int id,@Param("remark") String remark);
 }

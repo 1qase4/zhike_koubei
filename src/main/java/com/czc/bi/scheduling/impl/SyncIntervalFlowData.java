@@ -125,8 +125,7 @@ public class SyncIntervalFlowData implements SyncJob {
 
         } catch (AlipayApiException e) {
             e.printStackTrace();
+            return result.setStatus("fail").setError(e.getErrCode(),e.getErrMsg());
         }
-
-        return null;
     }
 }

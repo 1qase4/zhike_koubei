@@ -32,4 +32,6 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
+	<bean id="springContextUtils" class="com.czc.bi.util.SpringContextUtils" />
+
 </beans>

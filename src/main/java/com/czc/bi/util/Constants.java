@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Constants {
 
-    private Constants(){};
+    private Constants(){}
 
     // 按天统计客流
     public static final String CUSTFLOW_TYPE_DAY = "按天统计客流";

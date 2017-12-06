@@ -37,6 +37,9 @@ public class JobList implements Serializable {
     // 状态
     private String stauts;
 
+    // 备注信息
+    private String remark;
+
     // 记录创建时间
     private Date createdt;
 
@@ -87,6 +90,15 @@ public class JobList implements Serializable {
     public com.czc.bi.pojo.JobList setToken(String token) {
         this.token = token;
         return this;
+    }
+
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getPdate() {
