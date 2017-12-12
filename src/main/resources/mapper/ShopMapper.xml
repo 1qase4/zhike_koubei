@@ -70,6 +70,7 @@
 		FROM
 		`shop` where `account` = #{0}
 	</select>
+
 	<select id="selectAllShopId" resultType="java.lang.String">
 		SELECT account FROM `shop`
 	</select>

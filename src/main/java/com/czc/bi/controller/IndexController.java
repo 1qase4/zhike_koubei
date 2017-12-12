@@ -2,12 +2,14 @@ package com.czc.bi.controller;
 
 import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
+import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.query.EtlDateQuery;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
 import com.czc.bi.service.UserService;
 import com.czc.bi.util.BaseUtil;
+import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,7 @@ public class IndexController {
     }
 
     @RequestMapping("/")
-    public String welcomePage(){
+    public String welcomePage() {
         return "loginPage";
     }
 
@@ -58,7 +60,13 @@ public class IndexController {
     @RequestMapping("/shouye")
     public String shouye(HttpSession session, Model model, HttpServletResponse response) throws Exception {
         String account = (String) SecurityUtils.getSubject().getPrincipal();
+
         session.setAttribute("account", account);
+
+        if (Constants.isWindowsOs) {
+            logger.debug("windows set session never timeout");
+            SecurityUtils.getSubject().getSession().setTimeout(180000000l);
+        }
 
         // 检查用户Token
         boolean ok = userService.authUserToken(account);
@@ -150,17 +158,21 @@ public class IndexController {
     public String ret(
             @RequestParam("app_id") String app_id,
             @RequestParam(value = "account", required = false) String account,
-            @RequestParam("app_auth_code") String app_auth_code) {
+            @RequestParam("app_auth_code") String app_auth_code,
+            HttpSession session) {
 
-        if (account == null) {
-            account = "";
+//        if (account == null) {
+//            account = "";
+//        }
+        //String res = userService.authAlipay(app_id, account, app_auth_code);
+
+        ShopToken shopToken = userService.alipayOpenAuth(app_auth_code);
+        boolean b = userService.mergeLoaclAuth(shopToken, session);
+        if(b){
+            return "shouye";
+        }else {
+            return "bindingAccount";
         }
-        boolean ok =userService.authAlipay(app_id, account, app_auth_code);
-        if(!ok){
-            return "404";
-        }else
-        {
-            return "redirect:/shouye";
-        }
+
     }
 }

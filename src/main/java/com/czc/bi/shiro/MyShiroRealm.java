@@ -94,8 +94,8 @@ public class MyShiroRealm extends AuthorizingRealm {
                 throw new IncorrectCredentialsException(message);
             }
             Map userInfo = (Map) resMap.get("text");
-            String name = (String) userInfo.get("name");
-            if (name.equals("")) {
+            String name = (String) userInfo.get("username");
+            if ("".equals(name) || name == null) {
                 name = account;
             }
             logger.debug(String.format("用户账号[%s],名称[%s]验证通过", account, name));

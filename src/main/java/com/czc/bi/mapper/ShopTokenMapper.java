@@ -17,4 +17,6 @@ public interface ShopTokenMapper extends BaseMapper<ShopToken> {
     // 将token置为无效
     int updataTokenStat(@Param("account") String account, @Param("token") String token, @Param("stat") String stat);
 
+    // merger token
+    int mergeToken(@Param("token") ShopToken token);
 }

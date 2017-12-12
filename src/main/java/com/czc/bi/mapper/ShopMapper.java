@@ -10,7 +10,7 @@ import java.util.List;
 public interface ShopMapper extends BaseMapper<Shop> {
 
 	Shop selectByAccount(String account);
-
+//
 	List<String> selectAllShopId();
 
 	List<Simple<String,String>> selectShopsByMerchant(@Param("merchant") String merchant);

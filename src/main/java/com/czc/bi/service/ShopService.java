@@ -17,16 +17,16 @@ public class ShopService {
     @Autowired
     private ShopMapper shopMapper;
 
-    public int saves(List<Shop> list) {
-        return shopMapper.replaces(list);
-    }
+//    public int saves(List<Shop> list) {
+//        return shopMapper.replaces(list);
+//    }
 
     public List<Simple<String,String>> selectShopsByMerchant(String account) {
         List<Simple<String, String>> res = shopMapper.selectShopsByMerchant(account);
         return res;
     }
-
-    public List<String> selectAllShopId() {
-        return shopMapper.selectAllShopId();
-    }
+//
+//    public List<String> selectAllShopId() {
+//        return shopMapper.selectAllShopId();
+//    }
 }

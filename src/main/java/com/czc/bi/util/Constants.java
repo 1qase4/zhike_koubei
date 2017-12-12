@@ -1,5 +1,7 @@
 package com.czc.bi.util;
 
+import org.apache.shiro.SecurityUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +67,9 @@ public class Constants {
     // 按月统计消费群
     public static final String CONSUME_LEVLE_MONTH = "按月统计消费群";
 
+    // os type
+    public static final boolean isWindowsOs;
+
     public static Map<String,String> ProvinceMap = new HashMap<String ,String>(34);
 
     static {
@@ -102,6 +107,7 @@ public class Constants {
         ProvinceMap.put("青海省","青海");
         ProvinceMap.put("香港","香港");
         ProvinceMap.put("黑龙江省","黑龙江");
-    }
 
+        isWindowsOs = System.getProperty("os.name").toLowerCase().startsWith("win");
+    }
 }
