@@ -175,4 +175,9 @@ public class IndexController {
         }
 
     }
+
+    @RequestMapping("/bindAccount")
+    public String bindAccount() {
+        return "bindAccount";
+    }
 }
