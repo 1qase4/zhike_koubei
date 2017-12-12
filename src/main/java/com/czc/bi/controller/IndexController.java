@@ -163,4 +163,9 @@ public class IndexController {
             return "redirect:/shouye";
         }
     }
+
+    @RequestMapping("/bindAccount")
+    public String bindAccount() {
+        return "bindAccount";
+    }
 }
