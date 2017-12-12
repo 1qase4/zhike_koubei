@@ -38,6 +38,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/zui-1.7.0-dist/dist/**", "anon");
 		filterChainDefinitionMap.put("/loginPage", "anon");
 		filterChainDefinitionMap.put("/user/login", "anon");
+		filterChainDefinitionMap.put("/bindAccount", "anon");
 		//图片点选验证码
 		filterChainDefinitionMap.put("/cut/code3", "anon");
 		filterChainDefinitionMap.put("/cut/verifyCode3", "anon");

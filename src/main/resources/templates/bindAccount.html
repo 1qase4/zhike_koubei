@@ -13,13 +13,30 @@
     </script>
     <link href="/image/favicon-20170908021540662.ico"  rel="shortcut icon"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/css/common.css">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/responsiveslides.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/login-soft.css">
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="/css/login-soft.css">-->
     <!--<link rel="stylesheet" type="text/css" media="screen" href="/iconfont/iconfont.css">-->
     <link rel="stylesheet" type="text/css" media="screen" href="/css/iconfont/iconfont.css">
     <!--提示低版本IE浏览器-->
     <link rel="stylesheet" type="text/css" media="screen" href="/css/iealert.css">
+    <style>
+        .head{
+            border-bottom: 1px solid #ddd;
+            -webkit-box-shadow: 0 5px 5px #ddd;
+            -moz-box-shadow: 0 5px 5px #ddd;
+            box-shadow: 0 5px 5px #ddd;
+        }
+        .logo-box{
+            width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+        .body{
+            width: 1200px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+    </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"></script>
     <!--浏览器IE9以下不兼容提示-->
     <script type="text/javascript" src="/js/iealert.js"></script>
@@ -29,117 +46,101 @@
         });
     </script>
 </head>
-<body class="login-body">
-<div class="banner">
-    <div class="heade">
-        <!--顶部logo-->
-        <div class="logo-box">
-            <div class="lf" style="padding: 6px 0">
-                <img  src="/image/koubei2.png" alt="">
-            </div>
-            <div class="lf top_right">
-                <a href="http://www.shangquanshow.com/" target="_blank">商圈秀首页</a>
-                <a href="http://www.shangquanshow.com/about_us.html" target="_blank">关于辰智</a>
-            </div>
-        </div>
-    </div>
-    <div class="content">
-        <div class="content-layout">
-            <div class="link-img lf">
-                <ul class="rslides" id="slider">
-                    <li>
-                        <img src="/image/slider2.jpg">
-                        <p class="caption">客流追踪，能及时反映客流变化，助力流量运营</p>
-                    </li>
-                    <li>
-                        <img src="/image/slider_mall.jpg">
-                        <p class="caption">专注于商业领域的大数据聚合应用，助力商家准确把握客流变化、洞察客流特征、进行精准引流</p>
-                    </li>
-                    <li>
-                        <img src="/image/slider_restaurant.jpg">
-                        <p class="caption">客源地分析，让您把握客流来源，做出精准引流决策</p>
-                    </li>
-                </ul>
-            </div>
-            <div class="login-content fr">
-                <form id="sqs" class="login-box" method="post">
-                    <div class="login-logo">绑定商圈秀账号</div>
-                    <!--错误提示-->
-                    <div class="cwts" style="display: none">
-                        <div class="error"></div>
-                        <span class="errorTips"></span>
-                    </div>
-                    <!--用户名-->
-                    <div class="login-input uname">
-                        <!--小图标-->
-                        <span><i class="iconfont icon-denglu"></i></span>
-                        <!--<div class="label">用户名</div>-->
-                        <input type="text" class="login-text" name="username" placeholder="商圈秀账号" autocomplete="off">
-                    </div>
-                    <!--密码-->
-                    <div class="login-input upwd">
-                        <label class="abs"></label>
-                        <!--小图标-->
-                        <span><i class="iconfont icon-denglumima"></i></span>
-                        <!--<div class="label">密码</div>-->
-                        <input type="password" class="login-text" name="password" placeholder="密码" autocomplete="off">
-                    </div>
-                    <div class="submitArea">
-                        <button type="submit" class="xsubmit">一键绑定</button>
-                    </div>
-                    <div class="login-method">
-                        <a href="http://www.shangquanshow.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>
-                        <a href="http://www.shangquanshow.com/signup.jsp" class="rt" id="signup">注册商圈秀账号</a>
-                    </div>
-                </form>
-            </div>
-        </div>
+<body>
+<div class="head">
+    <!--顶部logo-->
+    <div class="logo-box">
+        <img  src="/image/koubei2.png" alt="">
     </div>
 </div>
-<!--版权声明-->
-<div class="logl-footer">
-    <div class="copyright">
-        <div class="sub-footer clearfix">
-            <!--左侧地址-->
-            <div class="footer-address lf">
-                <div class="addr-name">上海office</div>
-                <div class="addr-list">
-                    <ul>
-                        <li>地址: 上海市杨浦区黄兴路2005弄2号楼15层</li>
-                        <li>电话：<span>021-52736567-8030</span></li>
-                        <li>电邮：davidhu@shangquanshow.com</li>
-                        <li style="padding-top: 30px;color: #989898;">版权所有 © 2017 上海辰智信息技术有限公司
-                            <a href="http://www.miitbeian.gov.cn" style="color: inherit;" target="_blank">沪ICP备11014632号</a>
-                        </li>
-                    </ul>
+<div class="body">
+    <div class="panel">
+        <div class="panel-heading">
+            绑定账号
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="account" class="col-sm-2 required">账号</label>
+                    <div class="col-md-6 col-sm-10">
+                        <input type="text" class="form-control" name="account" id="account" placeholder="电子邮件/手机号/用户名">
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="passwd" class="col-sm-2 required">密码</label>
+                    <div class="col-md-6 col-sm-10">
+                        <input type="password" class="form-control" name="passwd" id="passwd" placeholder="密码">
+                        <div class="help-block"></div>
+                    </div>
                 </div>
 
-            </div>
-            <!--右侧二维码-->
-            <div class="footer-qrcode fr">
-                <div class="addr-code lf">
-                    <img src="/image/footer_code1.png" alt="">
-                    <p>关注辰智微博</p>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-default" id="login">一键绑定</button>
+                    </div>
                 </div>
-                <div class="addr-code lf">
-                    <img src="/image/footer_code2.jpg" alt="">
-                    <p>关注辰智微信</p>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <a href="http://www.shangquanshow.com/signup.jsp">注册商圈秀账号</a>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-</div>
-<!--轮播图-->
 
-<script type="text/javascript" src="/js/responsiveslides.min.js"></script>
-<script type="text/javascript" src="/js/jquery.md5.min.js"></script>
-<script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>
-<script type="text/javascript" src="/js/index1.js"></script>
+</div>
+
+<!--<script type="text/javascript" src="/js/jquery.md5.min.js"></script>-->
+<!--<script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>-->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+
 <script>
     $(function () {
-        var url = encodeURIComponent(location.href);
-        var href = $("#signup").attr("href");
-        $("#signup").attr("href",href+ "?redirectURL="+url);
+        $("#login").click(function () {
+            var _this = this;
+            var account = $("[name='account']").val();
+            var pwd = $("[name='passwd']").val();
+            if(!account){
+                $("[name='account']").next(".help-block").html("请输入账号").parents(".form-group").addClass("has-error");
+                return false;
+            }
+            if(!pwd){
+                $("[name='passwd']").next(".help-block").html("请输入密码").parents(".form-group").addClass("has-error");
+                return false;
+            }
+            var ajaxTimeoutZhike = $.ajax({
+                type: 'POST',
+                url: 'user/bindingAccount',
+                data: $("form").serialize(),
+                timeout: 30000,
+                beforeSend:function(XMLHttpRequest){
+                    $(_this).html("绑定中...").prop("disabled",true);
+                },
+                success: function (obj) {
+                    if(obj.result){
+                        window.location = "/shouye";
+                    }else{
+                        $(_this).html("一键绑定").prop("disabled",false);
+                        new $.zui.Messager(obj.message || "绑定失败", {
+                            type: 'danger',
+                            icon:'warning-sign',
+                            time: 2000
+                        }).show();
+                    }
+                },
+                fail:function () {
+                    $(_this).html("一键绑定").prop("disabled",false);
+                },
+                complete:function(XMLHttpRequest,textStatus){
+                    if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+                        ajaxTimeoutZhike.abort();
+                        $(_this).html("一键绑定").prop("disabled",false);
+                        alert("超时");
+                    }
+                }
+            });
+        })
     });
 </script>
 </body>
