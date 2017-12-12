@@ -52,61 +52,61 @@ public class ZhikeKoubeiApplicationTests {
     @Autowired
     private ShopMapper shopMapper;
 
-    @Test
-    public void demo22() throws Exception {
-        // 获取所有的shopid
-        List<String> ids = shopMapper.selectAllShopId();
-        logger.debug("shopid ======>" + ids);
+//    @Test
+//    public void demo22() throws Exception {
+//        // 获取所有的shopid
+//        List<String> ids = shopMapper.selectAllShopId();
+//        logger.debug("shopid ======>" + ids);
+//
+//        String[] datas = {"2017-11-01",
+//                "2017-11-02",
+//                "2017-11-03",
+//                "2017-11-04",
+//                "2017-11-05",
+//                "2017-11-06",
+//                "2017-11-07"
+//        };
+//
+//        for (String data : datas) {
+//            for (String id : ids) {
+//                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
+//                custFlowDataSync.syncDayFlow(
+//                        data,
+//                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
+//                Thread.sleep(1000);
+//            }
+//        }
+//
+//    }
 
-        String[] datas = {"2017-11-01",
-                "2017-11-02",
-                "2017-11-03",
-                "2017-11-04",
-                "2017-11-05",
-                "2017-11-06",
-                "2017-11-07"
-        };
 
-        for (String data : datas) {
-            for (String id : ids) {
-                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
-                custFlowDataSync.syncDayFlow(
-                        data,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
-                Thread.sleep(1000);
-            }
-        }
-
-    }
-
-
-    @Test
-    public void demo23() throws Exception {
-        // 获取所有的shopid
-        List<String> ids = shopMapper.selectAllShopId();
-        logger.debug("shopid ======>" + ids);
-
-        String[] datas = {"2017-11-01",
-                "2017-11-02",
-                "2017-11-03",
-                "2017-11-04",
-                "2017-11-05",
-                "2017-11-06",
-                "2017-11-07"
-        };
-
-        for (String data : datas) {
-            for (String id : ids) {
-                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
-                custFlowDataSync.syncIntervalFlow(
-                        id,
-                        data,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
-                Thread.sleep(1300);
-            }
-        }
-
-    }
+//    @Test
+//    public void demo23() throws Exception {
+//        // 获取所有的shopid
+//        List<String> ids = shopMapper.selectAllShopId();
+//        logger.debug("shopid ======>" + ids);
+//
+//        String[] datas = {"2017-11-01",
+//                "2017-11-02",
+//                "2017-11-03",
+//                "2017-11-04",
+//                "2017-11-05",
+//                "2017-11-06",
+//                "2017-11-07"
+//        };
+//
+//        for (String data : datas) {
+//            for (String id : ids) {
+//                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
+//                custFlowDataSync.syncIntervalFlow(
+//                        id,
+//                        data,
+//                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55");
+//                Thread.sleep(1300);
+//            }
+//        }
+//
+//    }
 
     @Test
     public void getClient() {
@@ -280,44 +280,44 @@ public class ZhikeKoubeiApplicationTests {
     }
 
     //保存商户信息
-    @Test
-    public void insert4() throws AlipayApiException {
-        ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk("QK171030940e6aqv");
-        Map<String, Object> map = AlipayUtil.getKoubeiReport(rc);
-        Integer status = (Integer) map.get("status");
-        logger.debug((String) map.get("msg"));
-        if (status == 0) {
-            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
-            List<Shop> list = new ArrayList<>();
-            if (reportData == null) {
-                logger.debug("报表无数据");
-            } else {
-                for (AlisisReportRow reportDatum : reportData) {
-                    Shop s1 = new Shop();
-                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
-                    logger.debug("rowData:" + rowData.size());
-                    for (AlisisReportColumn rowDatum : rowData) {
-                        String alias = rowDatum.getAlias();
-                        String data = rowDatum.getData();
-                        if ("shop_name".equals(alias)) {
-                            s1.setName(data);
-                            s1.setInshort(data);
-                            s1.setMerchant("鱼非鱼");
-                        }
-                        if ("shop_id".equals(alias)) {
-                            s1.setAccount(data);
-                        }
-                        logger.debug(String.format("alias[%s],data[%s]", alias, data));
-                    }
-                    list.add(s1);
-                    logger.debug("--------------------");
-                }
-            }
-            shopService.saves(list);
-        }
-
-    }
+//    @Test
+//    public void insert4() throws AlipayApiException {
+//        ReportDataContext rc = new ReportDataContext();
+//        rc.setReport_uk("QK171030940e6aqv");
+//        Map<String, Object> map = AlipayUtil.getKoubeiReport(rc);
+//        Integer status = (Integer) map.get("status");
+//        logger.debug((String) map.get("msg"));
+//        if (status == 0) {
+//            List<AlisisReportRow> reportData = (List<AlisisReportRow>) map.get("data");
+//            List<Shop> list = new ArrayList<>();
+//            if (reportData == null) {
+//                logger.debug("报表无数据");
+//            } else {
+//                for (AlisisReportRow reportDatum : reportData) {
+//                    Shop s1 = new Shop();
+//                    List<AlisisReportColumn> rowData = reportDatum.getRowData();
+//                    logger.debug("rowData:" + rowData.size());
+//                    for (AlisisReportColumn rowDatum : rowData) {
+//                        String alias = rowDatum.getAlias();
+//                        String data = rowDatum.getData();
+//                        if ("shop_name".equals(alias)) {
+//                            s1.setName(data);
+//                            s1.setInshort(data);
+//                            s1.setMerchant("鱼非鱼");
+//                        }
+//                        if ("shop_id".equals(alias)) {
+//                            s1.setAccount(data);
+//                        }
+//                        logger.debug(String.format("alias[%s],data[%s]", alias, data));
+//                    }
+//                    list.add(s1);
+//                    logger.debug("--------------------");
+//                }
+//            }
+//            shopService.saves(list);
+//        }
+//
+//    }
 
     //保存商户信息
     @Test
@@ -345,7 +345,7 @@ public class ZhikeKoubeiApplicationTests {
                 list.add(shop);
 //                logger.debug(String.format("客户[%s]在日期[%s]时的当日流数据获取完成", shopId, date));
             }
-            shopService.saves(list);
+//            shopService.saves(list);
         }
     }
 

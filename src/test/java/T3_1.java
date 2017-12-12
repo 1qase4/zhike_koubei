@@ -31,13 +31,13 @@ public class T3_1 {
         alipayClient = AlipayUtil.getYFYClient();
         KoubeiMarketingDataAlisisReportQueryRequest kbrequest = new KoubeiMarketingDataAlisisReportQueryRequest();
         ReportDataContext rc = new ReportDataContext();
-        rc.setReport_uk("QK171101231co6td"); //"QK1711019f6d4557"
-
-        rc.addCondition("shop_id", "=", "2015051400077000000000046605");
+        rc.setReport_uk("QK171101ozq154g7"); //"QK1711019f6d4557"
+//QK171101ozq154g7
+       rc.addCondition("shop_id", "=", "2017081800077000000044802627");
 //        rc.addCondition("day","=","2017-11-04" );
 
-     //   rc.addCondition("day", "=", "2017-11-07");
-     //   rc.addCondition("month","=","2017-10" );
+//        rc.addCondition("day", "=", "2017-12-09");
+//       rc.addCondition("month","=","201710" );
 
         // rc.addCondition("week", ">", "12");
         kbrequest.setBizContent(BaseUtil.jsonToString(rc));

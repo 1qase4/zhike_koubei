@@ -1,4 +1,3 @@
-package com.czc.bi;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;

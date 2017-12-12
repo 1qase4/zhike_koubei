@@ -50,9 +50,37 @@ public class ZhikeKoubeiApplicationTests2 {
 
     @Test
     public void test1() throws Exception{
-        for (int i = 0; i < 1; i++) {
-            alipayDataSync.syncAlipayData();
-        }
+
+        JobResult execute = syncUsrBackForweekData.execute("2015052800077000000000121715"
+                , "201710BB587b6a2bf52a4795bba5e7eca40c1C55"
+                ,"2017-12-09");
+        System.out.println(execute);
+
+    }
+
+    @Test
+    public void test12() throws Exception{
+        JobResult execute = syncUsrLostBackForweekData.execute("2015052800077000000000121715"
+                , "201710BB587b6a2bf52a4795bba5e7eca40c1C55"
+                ,"2017-12-09");
+        System.out.println(execute);
+
+    }
+
+
+    @Test
+    public void test1112()throws Exception{
+        JobResult result3 = syncShopHotDiagramData.execute(
+                "2015051400077000000000046605",
+                "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+                "201711");
+    }
+
+    @Test
+    public void test111() throws Exception{
+
+        alipayDataSync.executeJob();
+
     }
 
     @Test

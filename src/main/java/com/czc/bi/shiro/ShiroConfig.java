@@ -42,6 +42,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/user/login", "anon");
 		filterChainDefinitionMap.put("/user/bindingAccount", "anon");
 
+		filterChainDefinitionMap.put("/bindAccount", "anon");
 		//图片点选验证码
 		filterChainDefinitionMap.put("/cut/code3", "anon");
 		filterChainDefinitionMap.put("/cut/verifyCode3", "anon");

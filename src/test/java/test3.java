@@ -1,3 +1,7 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
  *
@@ -8,6 +12,14 @@
  */
 public class test3 {
     public static void main(String[] args) {
-        System.out.println("2017-01".replace("-",""));
+        char[] s = new char[4];
+        s[0] = 'a';
+        s[1] = 'b';
+        s[2] = 'c';
+        s[3] = 'd';
+        System.out.println(s);
+
+        System.out.println(s.equals("abcd"));
     }
 }
+

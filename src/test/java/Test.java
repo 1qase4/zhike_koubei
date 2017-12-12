@@ -60,8 +60,9 @@ public class Test {
 
 
     public static void main(String[] args) {
-        String p = "2017-01-01";
-        System.out.println(p.substring(0,7));
+        String _month = "201765";
+        _month = _month.length() == 6?_month.substring(0,4) + "-" + _month.substring(4):_month;
+        System.out.println(_month);
 
     }
 }
