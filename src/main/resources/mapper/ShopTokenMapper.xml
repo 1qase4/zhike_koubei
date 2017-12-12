@@ -12,38 +12,9 @@
       AND app_auth_token = #{token}
     </update>
 
-    <update id="mergeToken">
-      INSERT INTO `shop_token`
-        (
-        `account`,
-        `name`,
-        `app_auth_code`,
-        `app_auth_token`,
-        `user_id`,
-        `auth_app_id`,
-        `expires_in`,
-        `re_expires_in`,
-        `app_refresh_token`,
-        `stat`,
-        `createdt`,
-        `updatedt`
-        )
-        VALUES(
-        #{record.account},
-        #{record.name},
-        #{record.app_auth_code},
-        #{record.app_auth_token},
-        #{record.user_id},
-        #{record.auth_app_id},
-        #{record.expires_in},
-        #{record.re_expires_in},
-        #{record.app_refresh_token},
-        #{record.stat},
-        NOW(),
-        NOW()
-        )ON DUPLICATE KEY
-      UPDATE `account` = #{record.account}
-            ,`app_auth_code` = #{record.app_auth_code}
+    <update id="updateToken">
+      UPDATE `shop_token`
+        SET `app_auth_code` = #{record.app_auth_code}
             ,`app_auth_token` = #{record.app_auth_token}
             ,`auth_app_id` = #{record.auth_app_id}
             ,`expires_in` = #{record.expires_in}
@@ -51,6 +22,7 @@
             ,`app_refresh_token` = #{record.app_refresh_token}
             ,`stat`  = '1'
             ,`updatedt` = NOW()
+      WHERE `user_id` = #{record.user_id}
     </update>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer">

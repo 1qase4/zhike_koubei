@@ -53,15 +53,18 @@ public class UserService {
     private AlipayClient alipayClient;
 
     // merger local auth info
-    public boolean mergeLoaclAuth(ShopToken token, HttpSession session){
+    public boolean mergeLocalAuth(ShopToken token, HttpSession session){
         ShopTokenQuery query = new ShopTokenQuery();
         query.setUser_id(token.getUser_id());
-        int i = shopTokenMapper.selectRowsByQuery(query);
-        if(i == 0){
+        List<ShopToken> list = shopTokenMapper.selectByQuery(query);
+        if(list.size() == 0){
             session.setAttribute("token",token);
             return false;
         }else {
-            shopTokenMapper.mergeToken(token);
+            // if user exists update token
+            String account = list.get(0).getAccount();
+            token.setAccount(account);
+            shopTokenMapper.updateToken(token);
             return true;
         }
     }
@@ -74,9 +77,9 @@ public class UserService {
                 "    \"code\":\"" + app_auth_code + "\"" +
                 "  }");
         try {
-            ShopToken shopToken = new ShopToken();
             AlipayOpenAuthTokenAppResponse response = alipayClient.execute(request);
             if (response.isSuccess()) {
+                ShopToken shopToken = new ShopToken();
                 String token = response.getAppAuthToken();
                 String userId = response.getUserId();
                 String authAppId = response.getAuthAppId();
@@ -91,8 +94,11 @@ public class UserService {
                         .setExpires_in(Integer.valueOf(expiresIn))
                         .setRe_expires_in(Integer.valueOf(reExpiresIn))
                         .setApp_refresh_token(appRefreshToken);
+                return shopToken;
+            }else {
+                return null;
             }
-            return shopToken;
+
         } catch (AlipayApiException e) {
             e.printStackTrace();
             return null;
@@ -146,11 +152,11 @@ public class UserService {
             return "error";
         }
 
-        shopTokenMapper.mergeToken(shopToken);
-        if (account == null) {
-            // not binding sqs account
-            return "binding";
-        }
+//        shopTokenMapper.mergeToken(shopToken);
+//        if (account == null) {
+//            // not binding sqs account
+//            return "binding";
+//        }
 
         // 处理用户etl数据时间
         EtlDateQuery query = new EtlDateQuery();

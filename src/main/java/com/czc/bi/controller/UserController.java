@@ -1,10 +1,14 @@
 package com.czc.bi.controller;
 
+import com.czc.bi.mapper.ShopTokenMapper;
+import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.dto.Result;
+import com.czc.bi.service.UserService;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +19,9 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.czc.bi.util.AlipayConstant.APPID;
+import static com.czc.bi.util.AlipayConstant.REDIRECT_URI;
 
 /**
  * Copyright © 武汉辰智商务信息咨询有限公司. All rights reserved.
@@ -29,10 +36,16 @@ import java.util.Map;
 public class UserController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ShopTokenMapper shopTokenMapper;
+
     // 用户登陆
     @ResponseBody
     @RequestMapping("/login")
-    public Result login(HttpServletRequest request, HttpSession session, String username, String password ,String code) throws Exception {
+    public Result login(HttpSession session, String username, String password) throws Exception {
 //        if (!verifyCode(request,session,code)){
 //            return new Result<>().setResult(false).setMessage("验证码错误！");
 //        }
@@ -44,11 +57,48 @@ public class UserController {
             // 将token交给shiro验证
             subject.login(usernamePasswordToken);//完成登录
             String account = (String) subject.getPrincipal();
-            logger.debug(String.format("用户[%s]通过验证,准备跳转主页", account));
+            logger.debug(String.format("用户[%s]通过验证,验证alipay Token", account));
+
             session.setAttribute("account", account);
+
+            // 检查用户Token
+            boolean ok = userService.authUserToken(account);
+            // 验证不通过, 指导用户去验证
+            if (!ok) {
+                logger.debug(String.format("用户[%s]token信息验证不通过,指导用户前往验证", account));
+                String url =
+                        String.format("https://openauth.alipay.com/oauth2/appToAppAuth.htm?app_id=%s&account=%s&redirect_uri=%s",
+                                APPID,
+                                account,
+                                REDIRECT_URI
+                        );
+                return new Result().setMessage(url);
+            }
             return new Result();
         } catch (Exception e) {
             return new Result<>().setResult(false).setMessage(e.getMessage());
+        }
+    }
+
+    @RequestMapping("bindingAccount")
+    private Result bindingAccount(HttpSession session, String account, String passwd) {
+        ShopToken token = (ShopToken) session.getAttribute("token");
+        try {
+            // 将用户名和密码打包成token
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(account, passwd);
+            // 获取shiro验证器
+            Subject subject = SecurityUtils.getSubject();
+
+            // 将token交给shiro验证
+            subject.login(usernamePasswordToken);//完成登录
+            token.setAccount(account);
+            shopTokenMapper.insert(token);
+            session.setAttribute("account", account);
+            logger.debug(String.format("用户[%s]通过验证,验证alipay Token", account));
+            return new Result();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result().setResult(false).setMessage("绑定异常,请稍后重试");
         }
     }
 

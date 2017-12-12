@@ -150,6 +150,10 @@ $(".xsubmit").click(function () {
             },
             success: function (obj) {
                 if(obj.result){
+                    if(obj.message){
+                        window.location = obj.message;
+                        return;
+                    }
                     window.location = "/shouye";
                 }else{
                     errorBox.show();

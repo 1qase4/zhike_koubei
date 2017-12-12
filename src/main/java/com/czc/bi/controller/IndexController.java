@@ -12,17 +12,16 @@ import com.czc.bi.util.BaseUtil;
 import com.czc.bi.util.Constants;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -59,28 +58,14 @@ public class IndexController {
 
     @RequestMapping("/shouye")
     public String shouye(HttpSession session, Model model, HttpServletResponse response) throws Exception {
-        String account = (String) SecurityUtils.getSubject().getPrincipal();
+//        String account = (String) SecurityUtils.getSubject().getPrincipal();
+//
+//        session.setAttribute("account", account);
 
-        session.setAttribute("account", account);
-
+        String account = (String) session.getAttribute("account");
         if (Constants.isWindowsOs) {
             logger.debug("windows set session never timeout");
             SecurityUtils.getSubject().getSession().setTimeout(180000000l);
-        }
-
-        // 检查用户Token
-        boolean ok = userService.authUserToken(account);
-        // 验证不通过, 指导用户去验证
-        if (!ok) {
-            logger.debug(String.format("用户[%s]token信息验证不通过,指导用户前往验证", account));
-            String url =
-                    String.format("https://openauth.alipay.com/oauth2/appToAppAuth.htm?app_id=%s&account=%s&redirect_uri=%s",
-                            APPID,
-                            account,
-                            REDIRECT_URI
-                    );
-            response.sendRedirect(url);
-            return null;
         }
 
         List<Simple<String, String>> shops = shopService.selectShopsByMerchant(account);
@@ -167,11 +152,28 @@ public class IndexController {
         //String res = userService.authAlipay(app_id, account, app_auth_code);
 
         ShopToken shopToken = userService.alipayOpenAuth(app_auth_code);
-        boolean b = userService.mergeLoaclAuth(shopToken, session);
-        if(b){
-            return "shouye";
-        }else {
-            return "bindingAccount";
+        if (shopToken == null) {
+            logger.debug("alipay error");
+            return "403";
+        }
+        boolean b = userService.mergeLocalAuth(shopToken, session);
+        if (b) {
+            // auth complete, fake user login
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("alipay", "ORAYa0e874ac300c");
+            // 获取shiro验证器
+            Subject subject = SecurityUtils.getSubject();
+            try {
+                // 将token交给shiro验证
+                subject.login(usernamePasswordToken);//完成登录
+                String _account = shopToken.getAccount();
+                logger.debug(String.format("用户[%s]通过验证,准备跳转主页", _account));
+                session.setAttribute("account", _account);
+                return "redirect:shouye";
+            } catch (Exception e) {
+                return "403";
+            }
+        } else {
+            return "bindAccount";
         }
 
     }
