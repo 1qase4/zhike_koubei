@@ -108,12 +108,10 @@ public class SyncCustDayFlowData implements SyncJob {
             return result;
         } catch (AlipayApiException e) {
             e.printStackTrace();
-            result.setStatus("fail").setError(e.getErrCode(), e.getErrMsg());
+            return result.setStatus("fail").setError(e.getErrCode(), e.getErrMsg());
         } catch (ParseException e) {
             e.printStackTrace();
-            result.setStatus("fail").setError("", e.getMessage());
-            return result;
+            return result.setStatus("fail").setError("", e.getMessage());
         }
-        return null;
     }
 }

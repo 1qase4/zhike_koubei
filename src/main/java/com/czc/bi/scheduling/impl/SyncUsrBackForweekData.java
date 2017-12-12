@@ -94,8 +94,7 @@ public class SyncUsrBackForweekData implements SyncJob {
             return result;
         } catch (AlipayApiException e) {
             e.printStackTrace();
-            result.setStatus("fail").setError(e.getErrCode(),e.getErrMsg());
+            return result.setStatus("fail").setError(e.getErrCode(),e.getErrMsg());
         }
-        return null;
     }
 }

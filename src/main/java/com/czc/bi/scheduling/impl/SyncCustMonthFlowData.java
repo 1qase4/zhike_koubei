@@ -77,7 +77,7 @@ public class SyncCustMonthFlowData implements SyncJob {
             // 执行数据插入
             int rows = shopPassengerflowAnalyzeMapper.replace(analyze);
             logger.debug(String.format("客户在日期[%s]时的当日流数据获取完成", month));
-            result.setStatus("success").setRows(rows);
+            return result.setStatus("success").setRows(rows);
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }

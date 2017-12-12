@@ -94,8 +94,8 @@ public class ShopPassengerflowAnalyzeService {
 //        cal.add(Calendar.DATE, -1);
 //        Date time = cal.getTime();
 //        date = BaseUtil.getDateString(cal.getTime());
-        date = BaseUtil.getDay(date,-1);
-        query.setType(Constants.CUSTFLOW_TYPE_DAY).setPdate(date);
+        String _date = BaseUtil.getDay(date,-1);
+        query.setType(Constants.CUSTFLOW_TYPE_DAY).setPdate(_date);
         ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         Integer yesterdayFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
 
@@ -104,17 +104,16 @@ public class ShopPassengerflowAnalyzeService {
         // 获取上周同期客流
 //        cal.add(Calendar.DATE, -6);
 //        date = BaseUtil.getDateString(cal.getTime());
-        date = BaseUtil.getDay(date,-6);
-        query.setPdate(date);
+        _date = BaseUtil.getDay(date,-6);
+        query.setPdate(_date);
         ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         Integer lastWeekFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
 
         map.put("lastWeekFlow", lastWeekFlow);
 
         //获取上月日均客流
-
-        String label = BaseUtil.getLastMonth(date);
-        query.setLabel(label).setType(Constants.CUSTFLOW_TYPE_MONTH).setPdate(null,null);
+        _date = BaseUtil.getLastMonth(date);
+        query.setLabel(_date).setType(Constants.CUSTFLOW_AVG_TYPE_MONTH).setPdate(null,null);
         ShopPassengerflowAnalyze = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         Integer dailyFlow = ShopPassengerflowAnalyze.size() == 0 ? 0 : ShopPassengerflowAnalyze.get(0).getValue();
         map.put("dailyFlow", dailyFlow);
@@ -567,7 +566,7 @@ public class ShopPassengerflowAnalyzeService {
         // 构建7天的map
         LinkedHashMap<String, Integer> map = new LinkedHashMap<>(7);
         for (int i = 0; i < 7; i++) {
-            if (new Date().after(cal.getTime())) {
+            if (new Date().before(cal.getTime())) {
                 break;
             }
 
