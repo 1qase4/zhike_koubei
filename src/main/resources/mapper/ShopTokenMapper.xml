@@ -168,7 +168,7 @@
         #{record.expires_in},
         #{record.re_expires_in},
         #{record.app_refresh_token},
-        #{record.stat},
+        '1',
         NOW(),
         NOW()
         )

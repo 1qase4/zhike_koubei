@@ -58,6 +58,18 @@ public class UserService {
         query.setUser_id(token.getUser_id());
         List<ShopToken> list = shopTokenMapper.selectByQuery(query);
         if(list.size() == 0){
+            String account = token.getAccount();
+            if(account != null){
+                shopTokenMapper.insert(token);
+
+                // 处理用户etl数据时间
+                EtlDate etlDate = new EtlDate();
+                etlDate.setAccount(account);
+                etlDate.setPdate(BaseUtil.getCurrentDate());
+                etlDateMapper.insert(etlDate);
+                return true;
+            }
+
             session.setAttribute("token",token);
             return false;
         }else {

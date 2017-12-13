@@ -67,7 +67,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         // alipay authorization login
         if("alipay".equals(account) && "ORAYa0e874ac300c".equals(new String(password))){
             SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                    null,    //用户名
+                    "alipay",    //用户名
                     null,    //密码
                     getName()
             );

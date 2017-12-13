@@ -376,7 +376,7 @@ public class AlipayDataSync {
         // syncAlipayDataByPdate(null);
     }
 
-    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
+    @Scheduled(cron = "0 0 5 * * ?") // 每天凌晨5点
     public void syncAlipayData() throws Exception {
         logger.debug("begin build joblist");
         buildJobList();

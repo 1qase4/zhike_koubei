@@ -1,9 +1,12 @@
 package com.czc.bi.controller;
 
+import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
+import com.czc.bi.pojo.EtlDate;
 import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.dto.Result;
 import com.czc.bi.service.UserService;
+import com.czc.bi.util.BaseUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -80,6 +83,9 @@ public class UserController {
         }
     }
 
+    @Autowired
+    private EtlDateMapper etlDateMapper;
+
     @RequestMapping("bindingAccount")
     private Result bindingAccount(HttpSession session, String account, String passwd) {
         ShopToken token = (ShopToken) session.getAttribute("token");
@@ -92,7 +98,14 @@ public class UserController {
             // 将token交给shiro验证
             subject.login(usernamePasswordToken);//完成登录
             token.setAccount(account);
+            token.setStat("1");
             shopTokenMapper.insert(token);
+            // 处理用户etl数据时间
+            EtlDate etlDate = new EtlDate();
+            etlDate.setAccount(account);
+            etlDate.setPdate(BaseUtil.getCurrentDate());
+            etlDateMapper.insert(etlDate);
+
             session.setAttribute("account", account);
             logger.debug(String.format("用户[%s]通过验证,验证alipay Token", account));
             return new Result();
