@@ -31,10 +31,49 @@
             margin: 0 auto;
             padding: 10px 0;
         }
-        .body{
+        .main{
             width: 1200px;
             margin: 0 auto;
             margin-top: 50px;
+        }
+        .bind-tabNav{
+            margin-bottom: 34px;
+        }
+        .bind-tabNav .bind-tab{
+            width: 400px;
+            text-align: center;
+            border-bottom: solid 2px #ececec;
+            font-size: 18px;
+            float: left;
+            height: 32px;
+            cursor: pointer;
+        }
+        .bind-tab span{
+            font-size: 18px;
+        }
+        .bind-tabNav .tab-cur{
+            border-bottom: solid 2px #3280fc;
+            color: #3280fc;
+            font-weight: 700;
+        }
+        .welcome-tip{
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 12px;
+            background: #f6f6f6;
+            padding: 8px 15px;
+            vertical-align: middle;
+        }
+        .welcome-tip p{
+            display: inline-block;
+            vertical-align: middle;
+            width: 320px;
+        }
+        .main-body{
+            padding: 0 150px;
+        }
+        .form-control{
+            height: 50px;
         }
     </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"></script>
@@ -53,39 +92,58 @@
         <img  src="/image/koubei2.png" alt="">
     </div>
 </div>
-<div class="body">
+<div class="main">
     <div class="panel">
-        <div class="panel-heading">
+        <div class="panel-heading" style="font-size: 18px">
             绑定账号
         </div>
-        <div class="panel-body">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label for="account" class="col-sm-2 required">账号</label>
-                    <div class="col-md-6 col-sm-10">
-                        <input type="text" class="form-control" name="account" id="account" placeholder="电子邮件/手机号/用户名">
-                        <div class="help-block"></div>
-                    </div>
+        <div class="panel-body" style="width: 830px;margin: 0 auto;padding-top: 50px;">
+            <div class="bind-tabNav clearfix">
+                <a class="bind-tab tab-cur">
+                    <span></span>
+                    <span>已有账号，请绑定</span>
+                </a>
+                <a class="bind-tab" href="http://www.shangquanshow.com/signup.jsp?redirectURL=http%3a%2f%2fkoubei.shangquanshow.com%2fbindAccount" style="color: #333;">
+                    <span></span>
+                    <span>没有账号，请前往商圈秀创建账号</span>
+                </a>
+            </div>
+            <div class="main-body">
+                <div class="welcome-tip">
+                    <p>   欢迎来到商圈秀知客  |  口碑，完成绑定后可以用支付宝
+                        一键登录哦~</p>
                 </div>
-                <div class="form-group">
-                    <label for="passwd" class="col-sm-2 required">密码</label>
-                    <div class="col-md-6 col-sm-10">
-                        <input type="password" class="form-control" name="passwd" id="passwd" placeholder="密码">
-                        <div class="help-block"></div>
+                <form class="form-horizontal">
+                    <!--<div class="form-group">-->
+                    <!--<label for="account" class="col-sm-2 required">账号</label>-->
+                    <!--<div class="col-md-6 col-sm-10">-->
+                    <!--<input type="text" class="form-control" name="account" id="account" placeholder="电子邮件/手机号/用户名">-->
+                    <!--<div class="help-block"></div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <div class="input-group mb30">
+                        <span class="input-group-addon">账号</span>
+                        <input type="text" name="account" class="form-control" placeholder="商圈秀账号">
                     </div>
-                </div>
+                    <div class="input-group mb30">
+                        <span class="input-group-addon">密码</span>
+                        <input type="password" name="passwd" class="form-control" placeholder="密码">
+                    </div>
+                    <!--<div class="form-group">-->
+                    <!--<label for="passwd" class="col-sm-2 required">密码</label>-->
+                    <!--<div class="col-md-6 col-sm-10">-->
+                    <!--<input type="password" class="form-control" name="passwd" id="passwd" placeholder="密码">-->
+                    <!--<div class="help-block"></div>-->
+                    <!--</div>-->
+                    <!--</div>-->
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" class="btn btn-default" id="login">一键绑定</button>
+                    <div class="mb30">
+                        <button type="button" class="btn btn-primary btn-block" id="login" style="height: 50px;font-size: 16px">一键绑定</button>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <a href="http://www.shangquanshow.com/signup.jsp">注册商圈秀账号</a>
-                    </div>
-                </div>
-            </form>
+
+                </form>
+            </div>
+
         </div>
     </div>
 
@@ -97,16 +155,25 @@
 
 <script>
     $(function () {
+
         $("#login").click(function () {
             var _this = this;
             var account = $("[name='account']").val();
             var pwd = $("[name='passwd']").val();
             if(!account){
-                $("[name='account']").next(".help-block").html("请输入账号").parents(".form-group").addClass("has-error");
+                new $.zui.Messager("请输入账号", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 2000
+                }).show();
                 return false;
             }
             if(!pwd){
-                $("[name='passwd']").next(".help-block").html("请输入密码").parents(".form-group").addClass("has-error");
+                new $.zui.Messager("请输入密码", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 2000
+                }).show();
                 return false;
             }
             var ajaxTimeoutZhike = $.ajax({
