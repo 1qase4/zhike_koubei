@@ -174,7 +174,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 获取首页的周客流echarts图
-    public Result getMainWeekFlow(String account) throws ParseException {
+    public Result getMainWeekFlow(String account,String today) throws ParseException {
         Calendar cal = Calendar.getInstance();
         // 获取周一的日期
         int d = 0;
@@ -191,7 +191,7 @@ public class ShopPassengerflowAnalyzeService {
                 .setPdate(monday, BaseQuery.GREATER_OR_EQUAL);
         List<ShopPassengerflowAnalyze> shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopPassengerflowAnalyzes);
+        List<Integer> integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopPassengerflowAnalyzes,today);
 
         Option option = new Option();
         option.tooltip().trigger(Trigger.axis);
@@ -210,7 +210,7 @@ public class ShopPassengerflowAnalyzeService {
                 .setLabel(monday,BaseQuery.LESS_THAN);
         logger.debug("查询条件有："+query.getPdate()+","+query.getLabel());
         shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopPassengerflowAnalyzes);
+        integers = formartOneWeekFlow(BaseUtil.getDateString(cal.getTime()), shopPassengerflowAnalyzes,today);
         option.series(new Line().name("上周客流")
                 .data(integers));
 
@@ -219,7 +219,8 @@ public class ShopPassengerflowAnalyzeService {
 
     // 数据趋势
     // 数据趋势 - 年客流量
-    public List<Map> getYearFlow(String account, String years) {
+    public List<Map> getYearFlow(String account, String years,String today) {
+
         List<Map> data = new ArrayList<>(2);
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
         query.setAccount(account).setType(Constants.CUSTFLOW_TYPE_MONTH);
@@ -237,7 +238,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 数据趋势 - 月客流量
-    public List<Map> getMonthFlow(String account, String months) {
+    public List<Map> getMonthFlow(String account, String months,String today) {
         List<Map> data = new ArrayList<>(2);
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
         query.setAccount(account)
@@ -246,7 +247,7 @@ public class ShopPassengerflowAnalyzeService {
             Map<String, Object> map = new HashMap<>(2);
             query.setPdate(String.format("%s%%", month), BaseQuery.LIKE);
             List<ShopPassengerflowAnalyze> flows = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-            List<Integer> flow = formartOneMonthFlow(month, flows);
+            List<Integer> flow = formartOneMonthFlow(month, flows,today);
             map.put("name", String.format("%s年%d月", month.substring(0, 4), Integer.valueOf(month.substring(5, 7))));
             map.put("data", flow);
             data.add(map);
@@ -255,7 +256,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 数据趋势 - 周客流量
-    public List<Map> getWeekFlow(String account, String weekstrs) throws ParseException {
+    public List<Map> getWeekFlow(String account, String weekstrs, String today) throws ParseException {
         List<Map> data = new ArrayList<>(2);
         Map<String, List> maps = new HashMap<>(2);
         for (String weekstr : weekstrs.split(",")) {
@@ -271,7 +272,7 @@ public class ShopPassengerflowAnalyzeService {
 
             List<ShopPassengerflowAnalyze> shopCustflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-            List<Integer> flow = formartOneWeekFlow(date, shopCustflowAnalyzes);
+            List<Integer> flow = formartOneWeekFlow(date, shopCustflowAnalyzes,today);
             map.put("name", String.format("%s年%d周", weekstr.substring(0, 4), Integer.valueOf(weekstr.substring(10, 12))));
             map.put("data", flow);
             data.add(map);
@@ -306,7 +307,8 @@ public class ShopPassengerflowAnalyzeService {
     // 客户分析 - 新老客户/周
     public Map<String, Map> getWeekNewOldCust(
             String account,
-            String time)
+            String time,
+            String today)
             throws ParseException {
         String pdate = time.substring(0, 10);
         // 获取新客户数据
@@ -318,12 +320,12 @@ public class ShopPassengerflowAnalyzeService {
 
         List<ShopPassengerflowAnalyze> shopCustflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> flow = formartOneWeekFlow(pdate, shopCustflowAnalyzes);
+        List<Integer> flow = formartOneWeekFlow(pdate, shopCustflowAnalyzes,today);
         // 获取老客户数据
         query.setType(Constants.OLDCUST_TYPE_DAY);
         List<ShopPassengerflowAnalyze> shopCustflowAnalyzes2 = shopPassengerflowAnalyzeMapper.selectByQuery(query);
         // 格式化数据
-        List<Integer> flow2 = formartOneWeekFlow(pdate, shopCustflowAnalyzes2);
+        List<Integer> flow2 = formartOneWeekFlow(pdate, shopCustflowAnalyzes2,today);
 
         // 计算总客户量: 老客户+新客户
         List<Integer> flow3 = new ArrayList<>(7);
@@ -356,7 +358,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 客户分析 - 新老客户/月
-    public Map<String, Map> getMonthNewOldCust(String account, String time) {
+    public Map<String, Map> getMonthNewOldCust(String account, String time,String today) {
         // 获取新客户数据
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
         query.setType(Constants.NEWCUST_TYPE_DAY)
@@ -365,12 +367,12 @@ public class ShopPassengerflowAnalyzeService {
 
         List<ShopPassengerflowAnalyze> shopPassengerflowAnalyzes = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> flow = formartOneMonthFlow(time, shopPassengerflowAnalyzes);
+        List<Integer> flow = formartOneMonthFlow(time, shopPassengerflowAnalyzes,today);
         // 获取老客户数据
         query.setType(Constants.OLDCUST_TYPE_DAY);
         List<ShopPassengerflowAnalyze> shopPassengerflowAnalyzes2 = shopPassengerflowAnalyzeMapper.selectByQuery(query);
 
-        List<Integer> flow2 = formartOneMonthFlow(time, shopPassengerflowAnalyzes2);
+        List<Integer> flow2 = formartOneMonthFlow(time, shopPassengerflowAnalyzes2,today);
 
         List<Integer> flow3 = new ArrayList<>(31);
         for (int i = 0; i < flow2.size(); i++) {
@@ -402,7 +404,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 客户分析 - 回流流失/周
-    public Map<String, Map> getWeekBackFlow(String account, String date) throws ParseException {
+    public Map<String, Map> getWeekBackFlow(String account, String date,String today) throws ParseException {
         date = date.substring(0, 10);
         Map<String, Map> maps = new HashMap<>(4);
         // 获取流失客户
@@ -412,7 +414,7 @@ public class ShopPassengerflowAnalyzeService {
                 .setPdate(date, BaseQuery.GREATER_OR_EQUAL)
                 .setLabel(BaseUtil.getAfter7Day(date), BaseQuery.LESS_THAN);
         List<ShopPassengerflowAnalyze> mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_lost = formartOneWeekFlow(date, mapper);
+        List<Integer> flow_lost = formartOneWeekFlow(date, mapper,today);
         Map<String, Object> map = new HashMap<>(2);
         map.put("name", "流失客户");
         map.put("subdata", flow_lost);
@@ -421,7 +423,7 @@ public class ShopPassengerflowAnalyzeService {
         // 获取回流客户
         query.setType(Constants.BACK_FLOW_TYPE);
         mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_back = formartOneWeekFlow(date, mapper);
+        List<Integer> flow_back = formartOneWeekFlow(date, mapper,today);
         map = new HashMap<>(2);
         map.put("name", "回流客户");
         map.put("subdata", flow_back);
@@ -430,7 +432,7 @@ public class ShopPassengerflowAnalyzeService {
         // 获取回头客
         query.setType(Constants.RETURN_TYPE);
         mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_return = formartOneWeekFlow(date, mapper);
+        List<Integer> flow_return = formartOneWeekFlow(date, mapper,today);
         map = new HashMap<>(2);
         map.put("name", "回头客");
         map.put("subdata", flow_return);
@@ -439,7 +441,7 @@ public class ShopPassengerflowAnalyzeService {
         // 获取常客
         query.setType(Constants.FREQUENT_TYPE);
         mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_frequent = formartOneWeekFlow(date, mapper);
+        List<Integer> flow_frequent = formartOneWeekFlow(date, mapper,today);
         map = new HashMap<>(2);
         map.put("name", "常客");
         map.put("subdata", flow_frequent);
@@ -449,7 +451,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 客户分析 - 回流流失/月
-    public Map<String, Map> getMonthBackFlow(String account, String month) {
+    public Map<String, Map> getMonthBackFlow(String account, String month,String today) {
         Map<String, Map> maps = new HashMap<>(4);
         // 获取流失客户
         ShopPassengerflowAnalyzeQuery query = new ShopPassengerflowAnalyzeQuery();
@@ -457,7 +459,7 @@ public class ShopPassengerflowAnalyzeService {
                 .setAccount(account)
                 .setPdate(String.format("%s%%", month), BaseQuery.LIKE);
         List<ShopPassengerflowAnalyze> mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_lost = formartOneMonthFlow(month, mapper);
+        List<Integer> flow_lost = formartOneMonthFlow(month, mapper,today);
         Map<String, Object> map = new HashMap<>(2);
         map.put("name", "流失客户");
         map.put("subdata", flow_lost);
@@ -466,7 +468,7 @@ public class ShopPassengerflowAnalyzeService {
         // 获取回流客户
         query.setType(Constants.BACK_FLOW_TYPE);
         mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_back = formartOneMonthFlow(month, mapper);
+        List<Integer> flow_back = formartOneMonthFlow(month, mapper,today);
         map = new HashMap<>(2);
         map.put("name", "回流客户");
         map.put("subdata", flow_back);
@@ -475,7 +477,7 @@ public class ShopPassengerflowAnalyzeService {
         // 获取回头客
         query.setType(Constants.RETURN_TYPE);
         mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_return = formartOneMonthFlow(month, mapper);
+        List<Integer> flow_return = formartOneMonthFlow(month, mapper,today);
         map = new HashMap<>(2);
         map.put("name", "回头客");
         map.put("subdata", flow_return);
@@ -484,7 +486,7 @@ public class ShopPassengerflowAnalyzeService {
         // 获取常客
         query.setType(Constants.FREQUENT_TYPE);
         mapper = shopPassengerflowAnalyzeMapper.selectByQuery(query);
-        List<Integer> flow_frequent = formartOneMonthFlow(month, mapper);
+        List<Integer> flow_frequent = formartOneMonthFlow(month, mapper,today);
         map = new HashMap<>(2);
         map.put("name", "常客");
         map.put("subdata", flow_frequent);
@@ -494,19 +496,19 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 格式化输出1月的客流信息
-    private List<Integer> formartOneMonthFlow(String month, List<ShopPassengerflowAnalyze> flows) {
+    private List<Integer> formartOneMonthFlow(String month, List<ShopPassengerflowAnalyze> flows,String today) {
         String firstDay = month + "-01";
         Calendar cal = Calendar.getInstance();
         // 构建一个月的map
         LinkedHashMap<String, Integer> map = new LinkedHashMap<>(31);
         try {
             cal.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(firstDay));
-            logger.debug("现在的时间是:"+new Date());
-            logger.debug("本月第一天是:"+cal.getTime());
+//            logger.debug("现在的时间是:"+new Date());
+            logger.debug("当月第一天是:"+cal.getTime());
             while (true) {
-
                 // 如果到了当天 退出循环
-                if (new Date().before(cal.getTime())) {
+                String pdate = BaseUtil.getDateString(cal.getTime());
+                if (pdate.compareTo(today) > 0) {
                     break;
                 }
 
@@ -554,7 +556,7 @@ public class ShopPassengerflowAnalyzeService {
     }
 
     // 格式化数据一周的客流信息
-    public List<Integer> formartOneWeekFlow(String start, List<ShopPassengerflowAnalyze> flows) {
+    public List<Integer> formartOneWeekFlow(String start, List<ShopPassengerflowAnalyze> flows,String today) {
         Date date = null;
         try {
             date = new SimpleDateFormat("yyyy-MM-dd").parse(start);
@@ -566,7 +568,8 @@ public class ShopPassengerflowAnalyzeService {
         // 构建7天的map
         LinkedHashMap<String, Integer> map = new LinkedHashMap<>(7);
         for (int i = 0; i < 7; i++) {
-            if (new Date().before(cal.getTime())) {
+            String pdate = BaseUtil.getDateString(cal.getTime());
+            if (pdate.compareTo(today) > 0) {
                 break;
             }
 
@@ -675,7 +678,7 @@ public class ShopPassengerflowAnalyzeService {
         String[] format = null;
         switch (type) {
             case "year":
-                list = getYearFlow(account, time);
+                list = getYearFlow(account, time,null);
                 loop = 12;
                 format = new String[]{
                         "1月", "2月", "3月", "4月", "5月", "6月",
@@ -683,7 +686,7 @@ public class ShopPassengerflowAnalyzeService {
                 file = String.format("客流分析-数据趋势(%s年).xls", time);
                 break;
             case "month":
-                list = getMonthFlow(account, time);
+                list = getMonthFlow(account, time,null);
                 loop = 31;
                 format = new String[]{
                         "1日", "2日", "3日", "4日", "5日",
@@ -696,7 +699,7 @@ public class ShopPassengerflowAnalyzeService {
                 file = String.format("客流分析-数据趋势(%s).xls", time);
                 break;
             case "week":
-                list = getWeekFlow(account, time);
+                list = getWeekFlow(account, time,null);
                 loop = 7;
                 format = new String[]{
                         "周一", "周二", "周三", "周四", "周五",
@@ -765,7 +768,7 @@ public class ShopPassengerflowAnalyzeService {
             case "week":
                 loop = 7;
                 format = getWeekString(time.substring(0, 10));
-                maps = getWeekNewOldCust(account, time);
+                maps = getWeekNewOldCust(account, time,null);
                 file = String.format(
                         "客流分析-新老用户(第%s周%s).xls",
                         time.substring(1, 10),
@@ -781,7 +784,7 @@ public class ShopPassengerflowAnalyzeService {
                         "21日", "22日", "23日", "24日", "25日",
                         "25日", "27日", "28日", "29日", "30日",
                         "31日"};
-                maps = getMonthNewOldCust(account, time);
+                maps = getMonthNewOldCust(account, time,null);
                 file = String.format("客流分析-新老用户(%s).xls", time);
                 break;
             default:
@@ -893,7 +896,7 @@ public class ShopPassengerflowAnalyzeService {
             case "week":
                 loop = 7;
                 format = getWeekString(time.substring(0, 10));
-                maps = getWeekBackFlow(account, time);
+                maps = getWeekBackFlow(account, time,null);
                 file = String.format(
                         "客流分析-回流流失(第%s周%s).xls",
                         time.substring(1, 10),
@@ -909,7 +912,7 @@ public class ShopPassengerflowAnalyzeService {
                         "21日", "22日", "23日", "24日", "25日",
                         "25日", "27日", "28日", "29日", "30日",
                         "31日"};
-                maps = getMonthBackFlow(account, time);
+                maps = getMonthBackFlow(account, time,null);
                 file = String.format("客流分析-回流流失(%s).xls", time);
                 break;
             default:
