@@ -17,4 +17,5 @@ public interface ShopMapper extends BaseMapper<Shop> {
 
 	int updateAliPay(@Param("shop") Shop shop);
 
+	int updateLatAndLng(@Param("longitude")String longitude, @Param("latitude")String latitude, @Param("account")String shopid);
 }
