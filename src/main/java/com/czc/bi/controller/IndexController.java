@@ -182,4 +182,6 @@ public class IndexController {
     public String bindAccount() {
         return "bindAccount";
     }
+
+
 }
