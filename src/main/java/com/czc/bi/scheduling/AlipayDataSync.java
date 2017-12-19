@@ -324,23 +324,23 @@ public class AlipayDataSync {
             // build job list
             for (String shop : this.shops) {
                 JobList jl = new JobList();
-                jl.setBean("syncCustDayFlowData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("syncCustDayFlowData").setName("当日客流").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
                 list.add(jl);
 
                 jl = new JobList();
-                jl.setBean("syncIntervalFlowData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("syncIntervalFlowData").setName("区间客流").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
                 list.add(jl);
 
                 jl = new JobList();
-                jl.setBean("syncUsranalysisForweekData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("syncUsranalysisForweekData").setName("新老用户").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
                 list.add(jl);
 
                 jl = new JobList();
-                jl.setBean("syncUsrBackForweekData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("syncUsrBackForweekData").setName("回头客").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
                 list.add(jl);
 
                 jl = new JobList();
-                jl.setBean("syncUsrLostBackForweekData").setName("").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
+                jl.setBean("syncUsrLostBackForweekData").setName("回流流失").setShopid(shop).setToken(token).setPdate(pdate).setStauts("fail");
                 list.add(jl);
 
                 // month data
@@ -355,19 +355,19 @@ public class AlipayDataSync {
                     month = BaseUtil.getDateString(time, "yyyy-MM");
 
                     jl = new JobList();
-                    jl.setBean("syncCustMonthFlowData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    jl.setBean("syncCustMonthFlowData").setName("客户月客流").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
                     list.add(jl);
 
                     jl = new JobList();
-                    jl.setBean("syncShopHotDiagramData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    jl.setBean("syncShopHotDiagramData").setName("热力图").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
                     list.add(jl);
 
                     jl = new JobList();
-                    jl.setBean("syncShopPropertyAreaData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    jl.setBean("syncShopPropertyAreaData").setName("客户所在省份").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
                     list.add(jl);
 
                     jl = new JobList();
-                    jl.setBean("syncShopPropertyData").setName("").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
+                    jl.setBean("syncShopPropertyData").setName("客户特征数据").setShopid(shop).setToken(token).setPdate(month).setStauts("fail");
                     list.add(jl);
                 }
             }
@@ -376,7 +376,7 @@ public class AlipayDataSync {
         // syncAlipayDataByPdate(null);
     }
 
-    @Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点
+    @Scheduled(cron = "0 0 5 * * ?") // 每天凌晨5点
     public void syncAlipayData() throws Exception {
         logger.debug("begin build joblist");
         buildJobList();

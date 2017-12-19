@@ -145,4 +145,8 @@ public class BaseUtil {
 		calendar.add(Calendar.DATE,1);
 		return getDateString(calendar.getTime());
     }
+
+	public static String convertTodayString(String today) {
+		return today.replace("年","-").replace("月","-").replace("日","");
+	}
 }

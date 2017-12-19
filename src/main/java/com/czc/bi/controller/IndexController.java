@@ -152,10 +152,12 @@ public class IndexController {
         //String res = userService.authAlipay(app_id, account, app_auth_code);
 
         ShopToken shopToken = userService.alipayOpenAuth(app_auth_code);
+        // fill account
         if (shopToken == null) {
             logger.debug("alipay error");
             return "403";
         }
+        shopToken.setAccount(account);
         boolean b = userService.mergeLocalAuth(shopToken, session);
         if (b) {
             // auth complete, fake user login

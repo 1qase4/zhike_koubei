@@ -154,40 +154,40 @@ public class ZhikeKoubeiApplicationTests2 {
 
         String month = "2017-11";
         for (String id : ids) {
-            JobResult result1 = syncShopPropertyData.execute(
-                    id,
-                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
-                    month);
-            Thread.sleep(1300);
-            JobResult result2 = syncShopPropertyAreaData.execute(
-                    id,
-                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
-                    month);
-            Thread.sleep(1300);
+//            JobResult result1 = syncShopPropertyData.execute(
+//                    id,
+//                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+//                    month);
+//            Thread.sleep(1300);
+//            JobResult result2 = syncShopPropertyAreaData.execute(
+//                    id,
+//                    "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+//                    month);
+//            Thread.sleep(1300);
             JobResult result3 = syncShopHotDiagramData.execute(
                     id,
                     "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
                     "201711");
             Thread.sleep(1300);
         }
-        for (String data : datas) {
-            for (String id : ids) {
-                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
-                JobResult result1 = syncUsrLostBackForweekData.execute(
-                        id,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
-                        data);
-                Thread.sleep(1300);
-                JobResult result2 = syncUsrBackForweekData.execute(
-                        id,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
-                        data);
-                Thread.sleep(1300);
-                JobResult result3 = syncUsranalysisForweekData.execute(
-                        id,
-                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
-                        data);
-            }
-        }
+//        for (String data : datas) {
+//            for (String id : ids) {
+//                logger.debug(String.format("开始处理date[%s] shop[%s]",data,id));
+//                JobResult result1 = syncUsrLostBackForweekData.execute(
+//                        id,
+//                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+//                        data);
+//                Thread.sleep(1300);
+//                JobResult result2 = syncUsrBackForweekData.execute(
+//                        id,
+//                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+//                        data);
+//                Thread.sleep(1300);
+//                JobResult result3 = syncUsranalysisForweekData.execute(
+//                        id,
+//                        "201710BB587b6a2bf52a4795bba5e7eca40c1C55",
+//                        data);
+//            }
+//        }
     }
 }

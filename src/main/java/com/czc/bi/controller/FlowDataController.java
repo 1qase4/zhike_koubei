@@ -2,6 +2,7 @@ package com.czc.bi.controller;
 
 import com.czc.bi.pojo.dto.Result;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
+import com.czc.bi.util.BaseUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -46,61 +47,75 @@ public class FlowDataController {
         if (account == null) {
             return null;
         }
-        String date = (String)session.getAttribute("today");
-        Map map = shopPassengerflowAnalyzeService.getCurrentFlow(account,date);
+        String date = (String) session.getAttribute("today");
+        Map map = shopPassengerflowAnalyzeService.getCurrentFlow(account, date);
         return new Result(map);
     }
 
 
     // 今日客流走势
     @RequestMapping(value = "mainDayFlow")
-    public Result mainDayFlow(@RequestParam("account") String account,HttpSession session) throws Exception {
+    public Result mainDayFlow(@RequestParam("account") String account, HttpSession session) throws Exception {
         if (account == null) {
             return null;
         }
-        String date = (String)session.getAttribute("today");
-        Result res = shopPassengerflowAnalyzeService.getMainDayFlow(account,date);
+        String date = (String) session.getAttribute("today");
+        Result res = shopPassengerflowAnalyzeService.getMainDayFlow(account, date);
         return res;
     }
 
     // 获取首页的周客流echarts图
     @RequestMapping(value = "mainWeekFlow")
-    public Result mainWeekFlow(@RequestParam("account") String account) throws ParseException {
+    public Result mainWeekFlow(@RequestParam("account") String account,
+                               HttpSession session) throws ParseException {
         if (account == null) {
             return null;
         }
-        Result res = shopPassengerflowAnalyzeService.getMainWeekFlow(account);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+        Result res = shopPassengerflowAnalyzeService.getMainWeekFlow(account,today);
         return res;
     }
 
     // 年客流
     @RequestMapping(value = "yearFlow")
-    public Result yearFlow(@RequestParam("account") String account, @RequestParam("time") String time) {
+    public Result yearFlow(@RequestParam("account") String account,
+                           @RequestParam("time") String time,
+                           HttpSession session) {
         if (account == null || time == null) {
             return null;
         }
-        List<Map> res = shopPassengerflowAnalyzeService.getYearFlow(account, time);
+        String today = (String) session.getAttribute("today");
+        List<Map> res = shopPassengerflowAnalyzeService.getYearFlow(account, time, today);
         return new Result(res);
     }
 
     // 月客流
     @RequestMapping(value = "monthFlow")
-    public Result monthFlow(@RequestParam("account") String account, @RequestParam("time") String time) {
+    public Result monthFlow(@RequestParam("account") String account,
+                            @RequestParam("time") String time,
+                            HttpSession session) {
         if (account == null || time == null) {
             return null;
         }
-        List<Map> res = shopPassengerflowAnalyzeService.getMonthFlow(account, time);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+        List<Map> res = shopPassengerflowAnalyzeService.getMonthFlow(account, time,today);
         return new Result(res);
     }
 
     // 周客流
     @RequestMapping(value = "weekFlow")
-    public Result weekFlow(@RequestParam("account") String account, @RequestParam("time") String time) throws ParseException {
+    public Result weekFlow(@RequestParam("account") String account,
+                           @RequestParam("time") String time,
+                           HttpSession session) throws ParseException {
         if (account == null || time == null) {
             return null;
         }
-        logger.debug("时间信息为："+time);
-        List<Map> res = shopPassengerflowAnalyzeService.getWeekFlow(account, time);
+        logger.debug("时间信息为：" + time);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+        List<Map> res = shopPassengerflowAnalyzeService.getWeekFlow(account, time,today);
         return new Result(res);
     }
 
@@ -116,41 +131,58 @@ public class FlowDataController {
 
     // 客户分析 - 新老客户/周
     @RequestMapping(value = "weekNewOldCust")
-    public Result weekNewOldCust(@RequestParam("account") String account, @RequestParam("time") String time) throws ParseException {
+    public Result weekNewOldCust(@RequestParam("account") String account,
+                                 @RequestParam("time") String time,
+                                 HttpSession session) throws ParseException {
         if (account == null || time == null) {
             return null;
         }
-        Map<String, Map> res = shopPassengerflowAnalyzeService.getWeekNewOldCust(account, time);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+
+        Map<String, Map> res = shopPassengerflowAnalyzeService.getWeekNewOldCust(account, time,today);
         return new Result(res);
     }
 
     // 客户分析 - 新老客户/月
     @RequestMapping(value = "monthNewOldCust")
-    public Result monthNewOldCust(@RequestParam("account") String account, @RequestParam("time") String time) {
+    public Result monthNewOldCust(@RequestParam("account") String account,
+                                  @RequestParam("time") String time,
+                                  HttpSession session) {
         if (account == null || time == null) {
             return null;
         }
-        Map<String, Map> res = shopPassengerflowAnalyzeService.getMonthNewOldCust(account, time);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+        Map<String, Map> res = shopPassengerflowAnalyzeService.getMonthNewOldCust(account, time,today);
         return new Result(res);
     }
 
     // 客户分析 - 回流流失/周
     @RequestMapping(value = "weekBackFlow")
-    public Result weekBackFlow(@RequestParam("account") String account, @RequestParam("time") String time) throws ParseException {
+    public Result weekBackFlow(@RequestParam("account") String account,
+                               @RequestParam("time") String time,
+                               HttpSession session) throws ParseException {
         if (account == null || time == null) {
             return null;
         }
-        Map<String, Map> res = shopPassengerflowAnalyzeService.getWeekBackFlow(account, time);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+        Map<String, Map> res = shopPassengerflowAnalyzeService.getWeekBackFlow(account, time,today);
         return new Result(res);
     }
 
     // 客户分析 - 回流流失/月
     @RequestMapping(value = "monthBackFlow")
-    public Result monthBackFlow(@RequestParam("account") String account, @RequestParam("time") String time) {
+    public Result monthBackFlow(@RequestParam("account") String account,
+                                @RequestParam("time") String time,
+                                HttpSession session) {
         if (account == null || time == null) {
             return null;
         }
-        Map<String, Map> res = shopPassengerflowAnalyzeService.getMonthBackFlow(account, time);
+        String today = (String) session.getAttribute("today");
+        today = BaseUtil.convertTodayString(today);
+        Map<String, Map> res = shopPassengerflowAnalyzeService.getMonthBackFlow(account, time,today);
         return new Result(res);
     }
 
@@ -159,16 +191,16 @@ public class FlowDataController {
     public ResponseEntity<byte[]> currentDownload(
             @RequestParam("account") String account,
             HttpSession session
-            ) throws Exception {
+    ) throws Exception {
         logger.debug("今日概况下载！！！");
         if (account == null) {
             return null;
         }
 
-        String date = (String)session.getAttribute("today");
+        String date = (String) session.getAttribute("today");
 
         // 今日客流 峰值客流 昨日客流 上周同期
-        byte[] bytes = shopPassengerflowAnalyzeService.currentDownload(account,date);
+        byte[] bytes = shopPassengerflowAnalyzeService.currentDownload(account, date);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", new String("客流分析-今日概况.xls".getBytes("UTF-8"), "iso-8859-1"));
