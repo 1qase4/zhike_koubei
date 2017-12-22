@@ -3,9 +3,14 @@ package com.czc.bi.service;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlisisReportRow;
+import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.request.KoubeiMarketingDataAlisisReportQueryRequest;
+import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.alipay.api.response.KoubeiMarketingDataAlisisReportQueryResponse;
+import com.czc.bi.mapper.ShopTokenMapper;
+import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.alipay.ReportDataContext;
+import com.czc.bi.pojo.query.ShopTokenQuery;
 import com.czc.bi.util.AlipayUtil;
 import com.czc.bi.util.BaseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +54,23 @@ public class AlipayService {
         return reportData;
     }
 
+    @Autowired
+    private ShopTokenMapper shopTokenMapper;
+    public String getUseridByAuthCode(String authCode){
+        AlipaySystemOauthTokenRequest request = new AlipaySystemOauthTokenRequest();
+        request.setCode(authCode);
+        request.setGrantType("authorization_code");
+        try {
+            AlipaySystemOauthTokenResponse response = alipayClient.execute(request);
+            if(!response.isSuccess()){
+                return null;
+            }
+            return response.getUserId();
+        } catch (AlipayApiException e) {
+            //处理异常
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

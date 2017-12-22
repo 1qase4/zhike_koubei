@@ -1,10 +1,12 @@
 package com.czc.bi.controller;
 
+import com.alipay.api.AlipayClient;
 import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
 import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.query.EtlDateQuery;
+import com.czc.bi.service.AlipayService;
 import com.czc.bi.service.ShopPassengerflowAnalyzeService;
 import com.czc.bi.service.ShopService;
 import com.czc.bi.service.UserService;
@@ -20,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
@@ -138,46 +141,51 @@ public class IndexController {
     }
 
 
+    @Autowired
+    private AlipayService alipayService;
+
     // 支付宝回调url
     @RequestMapping(value = "/sqs_ret", produces = "text/plain;charset=UTF-8")
-    public String ret(
-            @RequestParam("app_id") String app_id,
-            @RequestParam(value = "account", required = false) String account,
-            @RequestParam("app_auth_code") String app_auth_code,
-            HttpSession session) {
-
-//        if (account == null) {
-//            account = "";
-//        }
-        //String res = userService.authAlipay(app_id, account, app_auth_code);
-
-        ShopToken shopToken = userService.alipayOpenAuth(app_auth_code);
-        // fill account
-        if (shopToken == null) {
-            logger.debug("alipay error");
-            return "403";
+    public String ret(HttpServletRequest request, HttpSession session) {
+        String account = request.getParameter("account");
+        // account not null, silent login
+        if (account == null) {
+            String authCode = request.getParameter("auth_code");
+            String userid = alipayService.getUseridByAuthCode(authCode);
+            if (userid == null) {
+                return "404";
+            }
+            // get account by userid
+            account = userService.getAccountByUserid(userid);
+            if (account == null) {
+                return "binding";
+            } else {
+                // auto login
+                UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("alipay", "ORAYa0e874ac300c");
+                // 获取shiro验证器
+                Subject subject = SecurityUtils.getSubject();
+                try {
+                    // 将token交给shiro验证
+                    subject.login(usernamePasswordToken);//完成登录
+                    logger.debug(String.format("用户[%s]通过验证,准备跳转主页", account));
+                    session.setAttribute("account", account);
+                    return "redirect:shouye";
+                } catch (Exception e) {
+                    return "403";
+                }
+            }
         }
-        shopToken.setAccount(account);
-        boolean b = userService.mergeLocalAuth(shopToken, session);
-        if (b) {
-            // auth complete, fake user login
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("alipay", "ORAYa0e874ac300c");
-            // 获取shiro验证器
-            Subject subject = SecurityUtils.getSubject();
-            try {
-                // 将token交给shiro验证
-                subject.login(usernamePasswordToken);//完成登录
-                String _account = shopToken.getAccount();
-                logger.debug(String.format("用户[%s]通过验证,准备跳转主页", _account));
-                session.setAttribute("account", _account);
-                return "redirect:shouye";
-            } catch (Exception e) {
+        // param has account, insert
+        else{
+            String app_auth_code = request.getParameter("app_auth_code");
+            ShopToken shopToken = userService.alipayOpenAuth(app_auth_code);
+            String s = userService.saveUser(shopToken);
+            if(s != null){
+                System.out.println(s);
                 return "403";
             }
-        } else {
-            return "bindAccount";
+            return "loginPage";
         }
-
     }
 
     @RequestMapping("/bindAccount")

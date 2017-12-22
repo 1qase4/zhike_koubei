@@ -52,6 +52,17 @@ public class UserService {
     @Autowired
     private AlipayClient alipayClient;
 
+    public String getAccountByUserid(String userId){
+        ShopTokenQuery query = new ShopTokenQuery();
+        query.setUser_id(userId);
+        List<ShopToken> list = shopTokenMapper.selectByQuery(query);
+        if(list.size() == 0){
+            return null;
+        }
+        return list.get(0).getAccount();
+    }
+
+
     // merger local auth info
     public boolean mergeLocalAuth(ShopToken token, HttpSession session){
         ShopTokenQuery query = new ShopTokenQuery();
@@ -197,6 +208,15 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    public String saveUser(ShopToken token) {
+        int i = shopTokenMapper.checkAccountUserid(token.getAccount(),token.getUser_id());
+        if(i > 0){
+            return "您已经有绑定记录了,请联系管理员解绑!";
+        }
+        shopTokenMapper.insert(token);
+        return null;
     }
 }
 

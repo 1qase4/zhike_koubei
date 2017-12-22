@@ -229,4 +229,8 @@
         WHERE ${condition}
     </select>
 
+    <select id="checkAccountUserid" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM `shop_token` WHERE account = #{account} or user_id = #{userid}
+    </select>
+
 </mapper>

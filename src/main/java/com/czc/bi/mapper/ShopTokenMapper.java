@@ -19,4 +19,6 @@ public interface ShopTokenMapper extends BaseMapper<ShopToken> {
 
     // update token info
     int updateToken(@Param("record") ShopToken token);
+
+    int checkAccountUserid(@Param("account") String account, @Param("userid") String userid);
 }
