@@ -4,6 +4,8 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.domain.AlisisReportColumn;
 import com.alipay.api.domain.AlisisReportRow;
 import com.czc.bi.mapper.ShopLabelAnalyzeMapper;
+import com.czc.bi.mapper.ShopMapper;
+import com.czc.bi.pojo.Shop;
 import com.czc.bi.pojo.ShopLabelAnalyze;
 import com.czc.bi.pojo.alipay.ReportDataContext;
 import com.czc.bi.scheduling.JobResult;
@@ -33,6 +35,9 @@ public class SyncShopHotDiagramData implements SyncJob {
     @Autowired
     private ShopLabelAnalyzeMapper shopLabelAnalyzeMapper;
 
+    @Autowired
+    private ShopMapper shopMapper;
+
     @Override
     public JobResult execute(String shopid, String token, String pdate) {
         ReportDataContext rc = new ReportDataContext();
@@ -57,6 +62,7 @@ public class SyncShopHotDiagramData implements SyncJob {
             // analysis data
             List<ShopLabelAnalyze> list = new ArrayList<>();
             Map<String, ShopLabelAnalyze> gisMap = new HashMap<>();
+            Boolean flag = true;
             for (AlisisReportRow reportDatum : reportData) {
                 ShopLabelAnalyze shopLabelAnalyze = new ShopLabelAnalyze();
                 List<AlisisReportColumn> rowData = reportDatum.getRowData();
@@ -86,6 +92,10 @@ public class SyncShopHotDiagramData implements SyncJob {
                 Integer pct = Integer.parseInt(columnValue.get("user_cnt"));
                 total += pct;
                 shopLabelAnalyze.setValue(String.valueOf(total));
+                if (flag){
+                    shopMapper.updateLatAndLng(columnValue.get("longitude"),columnValue.get("latitude"),shopid);
+                    flag = false;
+                }
                 gisMap.put(key, shopLabelAnalyze);
             }
             Collection<ShopLabelAnalyze> values = gisMap.values();

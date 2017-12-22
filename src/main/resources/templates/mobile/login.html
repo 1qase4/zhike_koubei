@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no" name="viewport" />
+    <title>登录</title>
+    <link href="/image/favicon-20170908021540662.ico"  rel="shortcut icon"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/mobile/login.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div id="main">
+    <div class="login-content">
+        <div class="logo-box">
+            <img  src="/image/koubei2.png" alt="">
+        </div>
+        <form id="sqs" class="login-box">
+            <div class="login-logo">登录商圈秀知客</div>
+            <!--错误提示-->
+            <div class="cwts" style="display: none">
+                <div class="error"></div>
+                <span class="errorTips"></span>
+            </div>
+            <!--用户名-->
+            <div class="login-input uname">
+                <!--小图标-->
+                <span><i class="iconfont icon-denglu"></i></span>
+                <!--<div class="label">用户名</div>-->
+                <input type="text" class="login-text" name="username" placeholder="商圈秀账号" autocomplete="off">
+            </div>
+            <!--密码-->
+            <div class="login-input upwd">
+                <label class="abs"></label>
+                <!--小图标-->
+                <span><i class="iconfont icon-denglumima"></i></span>
+                <!--<div class="label">密码</div>-->
+                <input type="password" class="login-text" name="password" placeholder="密码" autocomplete="off">
+            </div>
+            <div class="submitArea">
+                <button type="button" class="xsubmit">登&nbsp;&nbsp;录</button>
+            </div>
+            <div class="login-method">
+                <a href="http://www.shangquanshow.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>
+                <a href="http://www.shangquanshow.com/signup.jsp?redirectURL=http%3a%2f%2fkoubei.shangquanshow.com" class="rt" id="signup">注册商圈秀账号</a>
+            </div>
+        </form>
+        <p class="hr"></p>
+        <div class="other-way">
+            <span class="lf">第三方登录</span>
+            <a href="http://openauth.alipay.com/oauth2/appToAppAuth.htm?app_id=2017110309704488&redirect_uri=http%3A%2F%2Fkoubei.shangquanshow.com%2Fsqs_ret" class="fr">
+                <img src="/image/zhifubao_01.png" alt="" style="vertical-align: middle">
+                支付宝
+            </a>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <p>版权所有 © 2017 上海辰智信息技术有限公司</p>
+    <a href="http://www.miitbeian.gov.cn" style="color: #999;;" target="_blank">沪ICP备11014632号</a>
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    $("input").focus(function () {
+        $(this).addClass("input-shadow");
+        $(this).prev("span").children().css('color','#477CD8');
+    });
+    $("input").blur(function () {
+        $(this).removeClass("input-shadow");
+        $(this).prev("span").children().css('color','#ffffff');
+    });
+    function errorFocus() {
+        $(".error-shadow").removeClass("error-shadow");
+        $(this).addClass("error-shadow");
+    };
+    $(".xsubmit").click(function () {
+        var _this = this;
+        // 按钮文字
+        var btnTxt = $(this).html();
+        var errorBox=$(this).parent().siblings(".cwts");
+        var errorTips=$(errorBox).children(".errorTips");
+        var username=$(this).parent().siblings(".uname").children("input[name='username']");
+        var password=$(this).parent().siblings(".upwd").children("input[name='password']");
+//        var inputCode=$(this).parent().siblings(".mycode").children("input[name='code']");
+        //重置输入框状态
+        errorBox.hide();
+        if (username.val() == ""){
+            errorBox.show();
+            username.focus(errorFocus).focus();
+             errorTips.html("请输入用户名!");
+        }
+        else if (password.val() == ""){
+            errorBox.show();
+            password.focus(errorFocus).focus();
+             errorTips.html("请输入密码!");
+        }
+        // else if(inputCode.val() == "")
+        // {
+        //     errorBox.show();
+        //     errorTips.html("请输入验证码！");
+        //     inputCode.focus(errorFocus).focus();
+        // }
+        //
+        // else if(inputCode.val().toUpperCase() != gCode.codeNum.toUpperCase())
+        // {
+        //     errorBox.show();
+        //     errorTips.html("验证码输入有误！");
+        //     inputCode.focus(errorFocus).focus();
+        //     inputCode.val("");
+        //     $("#"+code).click();
+        // }
+
+        else {
+//            md5加密
+            var uname=username.val();
+            //var upwd=$.md5(password.val());
+            var upwd=password.val();
+            // var datas={username:uname,password:upwd,code:coordHtml};
+            var datas={username:uname,password:upwd};
+            // console.log(datas);
+            var ajaxTimeoutZhike = $.ajax({
+                type: 'POST',
+                url: '../user/login',
+                data: datas,//$("form").serialize(),
+                timeout: 30000,
+                beforeSend:function(XMLHttpRequest){
+                    $(_this).html("登录中...").prop("disabled",true);
+                },
+                success: function (obj) {
+                    if(obj.result){
+                        if(obj.message){
+                            window.location = obj.message;
+                            return;
+                        }
+                        window.location = "/shouye";
+                    }else{
+                        errorBox.show();
+                        errorTips.html(obj.message);
+                        // $("#refresh_btn").click();
+                        $(_this).html(btnTxt).prop("disabled",false);
+                    }
+                },
+                fail:function () {
+                    $(_this).html(btnTxt).prop("disabled",false);
+                },
+                complete:function(XMLHttpRequest,textStatus){
+                    if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+                        ajaxTimeoutZhike.abort();
+                        $(_this).html(btnTxt).prop("disabled",false);
+                        alert("超时");
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

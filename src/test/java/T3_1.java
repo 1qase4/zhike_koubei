@@ -33,7 +33,7 @@ public class T3_1 {
         ReportDataContext rc = new ReportDataContext();
         rc.setReport_uk("QK171101ozq154g7"); //"QK1711019f6d4557"
 //QK171101ozq154g7
-       rc.addCondition("shop_id", "=", "2017081800077000000044802627");
+//       rc.addCondition("shop_id", "=", "2017081800077000000044802627");
 //        rc.addCondition("day","=","2017-11-04" );
 
 //        rc.addCondition("day", "=", "2017-12-09");

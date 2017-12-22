@@ -153,5 +153,8 @@
 			   `inshort`  = #{shop.inshort,jdbcType=VARCHAR},
 			   `updatedt` = NOW()
 	</update>
-
+	
+	<update id="updateLatAndLng" >
+		UPDATE shop SET `longitude` = #{longitude},`latitude` = #{latitude},`updatedt` = NOW() WHERE `account` = #{account}
+	</update>
 </mapper>

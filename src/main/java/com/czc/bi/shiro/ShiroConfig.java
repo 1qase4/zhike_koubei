@@ -37,6 +37,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/zui-1.7.0-dist/dist/**", "anon");
 		filterChainDefinitionMap.put("/loginPage", "anon");
+		filterChainDefinitionMap.put("/m/login", "anon");
 		// alipay return url
 		filterChainDefinitionMap.put("/sqs_ret", "anon");
 		filterChainDefinitionMap.put("/user/login", "anon");
