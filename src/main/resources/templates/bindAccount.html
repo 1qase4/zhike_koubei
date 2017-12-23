@@ -101,7 +101,7 @@
             <div class="bind-tabNav clearfix">
                 <a class="bind-tab tab-cur">
                     <span></span>
-                    <span>已有账号，请绑定</span>
+                        <span>请提供您的联系信息,客服会帮您完成注册!</span>
                 </a>
                 <a class="bind-tab" href="http://www.shangquanshow.com/signup.jsp?redirectURL=http%3a%2f%2fkoubei.shangquanshow.com%2fbindAccount" style="color: #333;">
                     <span></span>
@@ -121,13 +121,20 @@
                     <!--<div class="help-block"></div>-->
                     <!--</div>-->
                     <!--</div>-->
-                    <div class="input-group mb30">
-                        <span class="input-group-addon">账号</span>
-                        <input type="text" name="account" class="form-control" placeholder="商圈秀账号">
+                    <div class="input-group mb30" style="display: none">
+                        <input type="text" name="userid" th:value="${userid}">
                     </div>
                     <div class="input-group mb30">
-                        <span class="input-group-addon">密码</span>
-                        <input type="password" name="passwd" class="form-control" placeholder="密码">
+                        <span class="input-group-addon">联系人</span>
+                        <input type="text" name="link" class="form-control" placeholder="联系人">
+                    </div>
+                    <div class="input-group mb30">
+                        <span class="input-group-addon">联系电话</span>
+                        <input type="text" name="tel" class="form-control" placeholder="联系电话">
+                    </div>
+                    <div class="input-group mb30">
+                        <span class="input-group-addon">电子邮件</span>
+                        <input type="text" name="email" class="form-control" placeholder="电子邮件">
                     </div>
                     <!--<div class="form-group">-->
                     <!--<label for="passwd" class="col-sm-2 required">密码</label>-->
@@ -158,18 +165,28 @@
 
         $("#login").click(function () {
             var _this = this;
-            var account = $("[name='account']").val();
-            var pwd = $("[name='passwd']").val();
-            if(!account){
-                new $.zui.Messager("请输入账号", {
+            var userid = $("[name='userid']").val();
+            var link = $("[name='link']").val();
+            var tel = $("[name='tel']").val();
+
+            if(!userid){
+                new $.zui.Messager("页面失效,请刷新重试", {
                     type: 'danger',
                     icon:'warning-sign',
                     time: 2000
                 }).show();
                 return false;
             }
-            if(!pwd){
-                new $.zui.Messager("请输入密码", {
+            if(!link){
+                new $.zui.Messager("请填写联系人", {
+                    type: 'danger',
+                    icon:'warning-sign',
+                    time: 2000
+                }).show();
+                return false;
+            }
+            if(!tel){
+                new $.zui.Messager("请填写联系电话", {
                     type: 'danger',
                     icon:'warning-sign',
                     time: 2000
@@ -182,11 +199,11 @@
                 data: $("form").serialize(),
                 timeout: 30000,
                 beforeSend:function(XMLHttpRequest){
-                    $(_this).html("绑定中...").prop("disabled",true);
+                    $(_this).html("提交中...").prop("disabled",true);
                 },
                 success: function (obj) {
                     if(obj.result){
-                        window.location = "/shouye";
+                        alert("提交完成");
                     }else{
                         $(_this).html("一键绑定").prop("disabled",false);
                         new $.zui.Messager(obj.message || "绑定失败", {

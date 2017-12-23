@@ -146,19 +146,23 @@ public class IndexController {
 
     // 支付宝回调url
     @RequestMapping(value = "/sqs_ret", produces = "text/plain;charset=UTF-8")
-    public String ret(HttpServletRequest request, HttpSession session) {
+    public String ret(HttpServletRequest request, HttpSession session,Model model) {
         String account = request.getParameter("account");
         // account not null, silent login
         if (account == null) {
             String authCode = request.getParameter("auth_code");
+            if(authCode == null){
+                return "403";
+            }
             String userid = alipayService.getUseridByAuthCode(authCode);
             if (userid == null) {
-                return "404";
+                return "403";
             }
             // get account by userid
             account = userService.getAccountByUserid(userid);
             if (account == null) {
-                return "binding";
+                model.addAttribute("userid",userid);
+                return "redirect:bindAccount";
             } else {
                 // auto login
                 UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("alipay", "ORAYa0e874ac300c");
@@ -175,10 +179,11 @@ public class IndexController {
                 }
             }
         }
-        // param has account, insert
+        // account exists, insert
         else{
             String app_auth_code = request.getParameter("app_auth_code");
             ShopToken shopToken = userService.alipayOpenAuth(app_auth_code);
+            shopToken.setAccount(account);
             String s = userService.saveUser(shopToken);
             if(s != null){
                 System.out.println(s);
@@ -189,7 +194,8 @@ public class IndexController {
     }
 
     @RequestMapping("/bindAccount")
-    public String bindAccount() {
+    public String bindAccount(String userid,Model model) {
+        model.addAttribute("userid",userid);
         return "bindAccount";
     }
 

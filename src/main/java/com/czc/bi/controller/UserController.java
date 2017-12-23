@@ -1,8 +1,10 @@
 package com.czc.bi.controller;
 
 import com.czc.bi.mapper.EtlDateMapper;
+import com.czc.bi.mapper.PotentialCustMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
 import com.czc.bi.pojo.EtlDate;
+import com.czc.bi.pojo.PotentialCust;
 import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.dto.Result;
 import com.czc.bi.service.UserService;
@@ -86,85 +88,67 @@ public class UserController {
     @Autowired
     private EtlDateMapper etlDateMapper;
 
+    @Autowired
+    private PotentialCustMapper potentialCustMapper;
+
     @RequestMapping("bindingAccount")
-    private Result bindingAccount(HttpSession session, String account, String passwd) {
-        ShopToken token = (ShopToken) session.getAttribute("token");
-        try {
-            // 将用户名和密码打包成token
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(account, passwd);
-            // 获取shiro验证器
-            Subject subject = SecurityUtils.getSubject();
-
-            // 将token交给shiro验证
-            subject.login(usernamePasswordToken);//完成登录
-            token.setAccount(account);
-            token.setStat("1");
-            shopTokenMapper.insert(token);
-            // 处理用户etl数据时间
-            EtlDate etlDate = new EtlDate();
-            etlDate.setAccount(account);
-            etlDate.setPdate(BaseUtil.getCurrentDate());
-            etlDateMapper.insert(etlDate);
-
-            session.setAttribute("account", account);
-            logger.debug(String.format("用户[%s]通过验证,验证alipay Token", account));
-            return new Result();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Result().setResult(false).setMessage("绑定异常,请稍后重试");
-        }
+    private Result bindingAccount(PotentialCust record) {
+        // customer service binding
+        record.setStatus("0");
+        potentialCustMapper.insert(record);
+        return new Result();
     }
-
-    private Boolean verifyCode(HttpServletRequest request, HttpSession session, String code) {
-        String value = code;
-        String sessionid = session.getId();
-        List<String> sValue = (List<String>) request.getSession().getAttribute(sessionid + "randomCode3");
-        System.out.println("*****" + value);
-        System.out.println("*&&&**" + sValue.toString());
-
-
-        boolean flag = false;
-        //为null 或者"" 或者 " "
-//        if (StringUtils.isBlank(value) || sValue == null || sValue.size() < 1) {
-//            mapping.put("result", flag);
-//            return mapping;
+//
+//    private Boolean verifyCode(HttpServletRequest request, HttpSession session, String code) {
+//        String value = code;
+//        String sessionid = session.getId();
+//        List<String> sValue = (List<String>) request.getSession().getAttribute(sessionid + "randomCode3");
+//        System.out.println("*****" + value);
+//        System.out.println("*&&&**" + sValue.toString());
+//
+//
+//        boolean flag = false;
+//        //为null 或者"" 或者 " "
+////        if (StringUtils.isBlank(value) || sValue == null || sValue.size() < 1) {
+////            mapping.put("result", flag);
+////            return mapping;
+////        }
+//        if (value == null || value == "" || value == " " || sValue == null || sValue.size() < 1) {
+//            return flag;
 //        }
-        if (value == null || value == "" || value == " " || sValue == null || sValue.size() < 1) {
-            return flag;
-        }
-        String[] valueStr = value.split(",");
-        if (valueStr.length != sValue.size() || valueStr.length != 4) {
-            return flag;
-        }
-
-        /*判断坐标参数是否正确*/
-        String str = "";
-        for (int i = 0; i < valueStr.length; i++) {
-            str = valueStr[i].toString();
-//            if(StringUtils.isBlank(str) || StringUtils.isBlank(sValue.get(i).toString())){
-//                mapping.put("result", flag);
-//                return mapping;
+//        String[] valueStr = value.split(",");
+//        if (valueStr.length != sValue.size() || valueStr.length != 4) {
+//            return flag;
+//        }
+//
+//        /*判断坐标参数是否正确*/
+//        String str = "";
+//        for (int i = 0; i < valueStr.length; i++) {
+//            str = valueStr[i].toString();
+////            if(StringUtils.isBlank(str) || StringUtils.isBlank(sValue.get(i).toString())){
+////                mapping.put("result", flag);
+////                return mapping;
+////            }
+//            if (str == null || str == "" || str == " " || sValue.get(i).toString() == null && sValue.get(i).toString() == "") {
+//                return flag;
 //            }
-            if (str == null || str == "" || str == " " || sValue.get(i).toString() == null && sValue.get(i).toString() == "") {
-                return flag;
-            }
-            String[] vL = valueStr[i].toString().split("_");
-            String[] svL = sValue.get(i).toString().split("_");
-            if (vL.length != svL.length || svL.length != 2) {
-                return flag;
-            }
-            //x轴  y轴判断    坐标点在左上角 ，图片宽度32px  点击范围扩大17px，  范围在      x-17 < x <x+30+17  ;
-            if (!(Integer.parseInt(svL[0]) - 17 < Integer.parseInt(vL[0])
-                    && Integer.parseInt(vL[0]) < Integer.parseInt(svL[0]) + 47)
-                    || !(Integer.parseInt(svL[1]) - 17 < Integer.parseInt(vL[1])
-                    && Integer.parseInt(vL[1]) < Integer.parseInt(svL[1]) + 47)) {
-                return flag;
-            }
-            ;
-
-        }
-        flag = true;
-        return flag;
-    }
+//            String[] vL = valueStr[i].toString().split("_");
+//            String[] svL = sValue.get(i).toString().split("_");
+//            if (vL.length != svL.length || svL.length != 2) {
+//                return flag;
+//            }
+//            //x轴  y轴判断    坐标点在左上角 ，图片宽度32px  点击范围扩大17px，  范围在      x-17 < x <x+30+17  ;
+//            if (!(Integer.parseInt(svL[0]) - 17 < Integer.parseInt(vL[0])
+//                    && Integer.parseInt(vL[0]) < Integer.parseInt(svL[0]) + 47)
+//                    || !(Integer.parseInt(svL[1]) - 17 < Integer.parseInt(vL[1])
+//                    && Integer.parseInt(vL[1]) < Integer.parseInt(svL[1]) + 47)) {
+//                return flag;
+//            }
+//            ;
+//
+//        }
+//        flag = true;
+//        return flag;
+//    }
 
 }
