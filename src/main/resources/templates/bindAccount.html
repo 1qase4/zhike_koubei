@@ -38,13 +38,14 @@
         }
         .bind-tabNav{
             margin-bottom: 34px;
+            text-align: center;
         }
         .bind-tabNav .bind-tab{
             width: 400px;
             text-align: center;
             border-bottom: solid 2px #ececec;
             font-size: 18px;
-            float: left;
+            /*float: left;*/
             height: 32px;
             cursor: pointer;
         }
@@ -95,18 +96,13 @@
 <div class="main">
     <div class="panel">
         <div class="panel-heading" style="font-size: 18px">
-            绑定账号
+            信息提交
         </div>
         <div class="panel-body" style="width: 830px;margin: 0 auto;padding-top: 50px;">
             <div class="bind-tabNav clearfix">
-                <a class="bind-tab tab-cur">
-                    <span></span>
-                        <span>请提供您的联系信息,客服会帮您完成注册!</span>
-                </a>
-                <a class="bind-tab" href="http://www.shangquanshow.com/signup.jsp?redirectURL=http%3a%2f%2fkoubei.shangquanshow.com%2fbindAccount" style="color: #333;">
-                    <span></span>
-                    <span>没有账号，请前往商圈秀创建账号</span>
-                </a>
+                <span class="bind-tab tab-cur">
+                        请提供您的联系信息,客服会帮您完成注册!
+                </span>
             </div>
             <div class="main-body">
                 <div class="welcome-tip">
@@ -145,7 +141,7 @@
                     <!--</div>-->
 
                     <div class="mb30">
-                        <button type="button" class="btn btn-primary btn-block" id="login" style="height: 50px;font-size: 16px">一键绑定</button>
+                        <button type="button" class="btn btn-primary btn-block" id="login" style="height: 50px;font-size: 16px">提&nbsp;&nbsp;交</button>
                     </div>
 
                 </form>
