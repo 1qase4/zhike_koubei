@@ -113,12 +113,12 @@
         </foreach>
         </insert>
 
-    <delete id="deleteByPrimaryKey" parameterType="Integer" resultType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="Integer" >
         DELETE FROM `cfg_user`
          WHERE id = #{key}
     </delete>
 
-    <delete id="deleteByQuery" parameterType="com.czc.bi.pojo.query.CfgUserQuery" resultType="java.lang.Integer">
+    <delete id="deleteByQuery" parameterType="com.czc.bi.pojo.query.CfgUserQuery" >
         DELETE FROM `cfg_user`
         WHERE 1 = 1
         <if test="query.username != null">
