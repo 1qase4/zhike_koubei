@@ -66,7 +66,7 @@
             </div>
             <div class="login-content fr">
                 <form id="sqs" class="login-box" method="post">
-                    <div class="login-logo">登录商圈秀知客</div>
+                    <div class="login-logo">登录商圈秀知客后台管理</div>
                     <!--错误提示-->
                     <div class="cwts" style="display: none">
                         <div class="error"></div>
@@ -109,21 +109,21 @@
                     <!--<img id="sqsCode" class="code" src="" title="更换验证码">-->
                     <!--</div>-->
                     <div class="submitArea">
-                        <button type="submit" class="xsubmit">登&nbsp;&nbsp;录</button>
+                        <button type="submit" class="xsubmit" id="xsubmit">登&nbsp;&nbsp;录</button>
                     </div>
-                    <div class="login-method">
-                        <a href="http://www.shangquanshow.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>
-                        <a href="http://www.shangquanshow.com/signup.jsp?redirectURL=http%3a%2f%2fkoubei.shangquanshow.com" class="rt" id="signup">注册商圈秀账号</a>
-                    </div>
+                    <!--<div class="login-method">-->
+                        <!--<a href="http://www.shangquanshow.com/signreset.jsp" target="_blank" class="lf">忘记密码 ?</a>-->
+                        <!--<a href="http://www.shangquanshow.com/signup.jsp?redirectURL=http%3a%2f%2fkoubei.shangquanshow.com" class="rt" id="signup">注册商圈秀账号</a>-->
+                    <!--</div>-->
                 </form>
-                <p class="hr"></p>
-                <div class="other-way">
-                    <span class="lf">第三方登录</span>
-                    <a href="http://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2017110309704488&scope=auth_base&redirect_uri=http%3A%2F%2Fkoubei.shangquanshow.com%2Fsqs_ret" class="fr">
-                        <img src="/image/zhifubao_01.png" alt="" style="vertical-align: middle">
-                        支付宝
-                    </a>
-                </div>
+                <!--<p class="hr"></p>-->
+                <!--<div class="other-way">-->
+                    <!--<span class="lf">第三方登录</span>-->
+                    <!--<a href="http://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2017110309704488&scope=auth_base&redirect_uri=http%3A%2F%2Fkoubei.shangquanshow.com%2Fsqs_ret" class="fr">-->
+                        <!--<img src="/image/zhifubao_01.png" alt="" style="vertical-align: middle">-->
+                        <!--支付宝-->
+                    <!--</a>-->
+                <!--</div>-->
             </div>
         </div>
     </div>
@@ -163,16 +163,136 @@
 </div>
 <!--轮播图-->
 <script type="text/javascript" src="/js/responsiveslides.min.js"></script>
+<script>
+    //    轮播图
+    $(function () {
+        $("#slider").responsiveSlides({
+            auto: true,
+            pager: true,
+            nav: false,
+            speed: 500,
+            namespace: "callbacks"
+        });
+    });
+</script>
 <script type="text/javascript" src="/js/jquery.md5.min.js"></script>
 <script type="text/javascript" src="/js/jquery.placeholder.min.js"></script>
-<script type="text/javascript" src="/js/index1.js"></script>
+<!--<script type="text/javascript" src="/js/index1.js"></script>-->
 <script>
-
     $(function () {
-//        new SecurityCode("sqsCode").init()
-        var url = encodeURIComponent(location.href);
-        var href = $("#signup").attr("href");
-        $("#signup").attr("href",href+ "?redirectURL="+url);
+        //绑定键盘事件
+        document.onkeydown = function(event){
+            var event = (event) ? event : ((window.event) ? window.event : "");
+            var key = event.keyCode?event.keyCode:event.which;
+            if(key == "13"){
+                $(".login-box:not(:hidden)").find(".xsubmit").click();
+            }
+        };
+        $("input").focus(function () {
+            $(this).addClass("input-shadow");
+            $(this).prev("span").children().css('color','#477CD8');
+        });
+        $("input").blur(function () {
+            $(this).removeClass("input-shadow");
+            $(this).prev("span").children().css('color','#ffffff');
+        });
+        function errorFocus() {
+            $(".error-shadow").removeClass("error-shadow");
+            $(this).addClass("error-shadow");
+        };
+
+//使用jquery添加事件
+        $("#xsubmit").click(function () {
+            var _this = this;
+            // 按钮文字
+            var btnTxt = $(this).html();
+            var errorBox=$(this).parent().siblings(".cwts");
+            var errorTips=$(errorBox).children(".errorTips");
+            var username=$(this).parent().siblings(".uname").children("input[name='username']");
+            var password=$(this).parent().siblings(".upwd").children("input[name='password']");
+            var inputCode=$(this).parent().siblings(".mycode").children("input[name='code']");
+            // 验证码
+            // var code = inputCode.next(".code").attr("id");
+            // var options = $("#codeSelect option");
+            // var optionLen = options.length;
+            // if (optionLen < 4){
+            //     errorBox.show();
+            //     errorTips.html("请点击验证码");
+            //     return false;
+            // }
+            // for(var i = 0,coordHtml = "";i < optionLen;i ++){
+            //     coordHtml += (options[i].innerHTML + ",");
+            // }
+            // coordHtml = coordHtml.slice(0,-1);
+            //验证码结束
+
+            //重置输入框状态
+            errorBox.hide();
+            if (username.val() == ""){
+                errorBox.show();
+                username.focus(errorFocus).focus();
+                // errorTips.html("请输入用户名!");
+            }
+            else if (password.val() == ""){
+                errorBox.show();
+                password.focus(errorFocus).focus();
+                // errorTips.html("请输入密码!");
+            }
+            // else if(inputCode.val() == "")
+            // {
+            //     errorBox.show();
+            //     errorTips.html("请输入验证码！");
+            //     inputCode.focus(errorFocus).focus();
+            // }
+            //
+            // else if(inputCode.val().toUpperCase() != gCode.codeNum.toUpperCase())
+            // {
+            //     errorBox.show();
+            //     errorTips.html("验证码输入有误！");
+            //     inputCode.focus(errorFocus).focus();
+            //     inputCode.val("");
+            //     $("#"+code).click();
+            // }
+
+            else {
+//            md5加密
+                var uname=username.val();
+                //var upwd=$.md5(password.val());
+                var upwd=password.val();
+                // var datas={username:uname,password:upwd,code:coordHtml};
+                var datas={username:uname,password:upwd};
+                // console.log(datas);
+                var ajaxTimeoutZhike = $.ajax({
+                    type: 'POST',
+                    url: '/management/cfgLogin',
+                    data: datas,//$("form").serialize(),
+                    timeout: 30000,
+                    beforeSend:function(XMLHttpRequest){
+                        $(_this).html("登录中...").prop("disabled",true);
+                    },
+                    success: function (obj) {
+                        if(obj.result){
+                            window.location = "/main";
+                        }else{
+                            errorBox.show();
+                            errorTips.html(obj.message || "未知错误");
+                            // $("#refresh_btn").click();
+                            $(_this).html(btnTxt).prop("disabled",false);
+                        }
+                    },
+                    fail:function () {
+                        $(_this).html(btnTxt).prop("disabled",false);
+                    },
+                    complete:function(XMLHttpRequest,textStatus){
+                        if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+                            ajaxTimeoutZhike.abort();
+                            $(_this).html(btnTxt).prop("disabled",false);
+                            alert("超时");
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>
 </body>
