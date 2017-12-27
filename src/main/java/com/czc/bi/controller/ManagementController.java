@@ -36,7 +36,10 @@ public class ManagementController {
     }
 
     @RequestMapping("show")
-    public Result show(){
+    public Result show(CfgUser cfgUser){
+        if (cfgUser == null){
+            return new Result().setResult(false);
+        }
         List<PotentialCust> list = potentialCustMapper.selectByQuery(new PotentialCustQuery().setStatus("0"));
         return new Result(list);
     }
