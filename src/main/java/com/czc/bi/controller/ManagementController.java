@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/12/27.
@@ -27,17 +29,28 @@ public class ManagementController {
     private CfgUserMapper cfgUserMapper;
 
     @RequestMapping("cfgLogin")
-    public Result login(String username,String password){
-        List<CfgUser> cfgUsers = cfgUserMapper.selectByQuery(new CfgUserQuery().setUsername(username).setPassword(password));
+    public Map<String ,String> login(String username,String password){
+        Map<String ,String> result = new HashMap<String ,String>();
+        List<CfgUser> cfgUsers = cfgUserMapper.selectByQuery(new CfgUserQuery().setUsername(username));
         if (cfgUsers == null || cfgUsers.size() == 0){
-            return new Result().setResult(false);
+            result.put("message","用户不存在！");
+            result.put("status","0");
+            return result;
         }
-        return new Result(cfgUsers.get(0));
+        CfgUser cfgUser = cfgUsers.get(0);
+        if (!cfgUser.getPassword().equals(password)){
+            result.put("status","0");
+            result.put("message","密码错误！");
+            return result;
+        }
+        result.put("status","1");
+        result.put("userid",cfgUser.getId().toString());
+        return result;
     }
 
     @RequestMapping("show")
-    public Result show(CfgUser cfgUser){
-        if (cfgUser == null){
+    public Result show(Integer userid){
+        if (userid == null){
             return new Result().setResult(false);
         }
         List<PotentialCust> list = potentialCustMapper.selectByQuery(new PotentialCustQuery().setStatus("0"));
