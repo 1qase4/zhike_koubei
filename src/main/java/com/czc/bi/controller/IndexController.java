@@ -204,4 +204,8 @@ public class IndexController {
         return "manage/login";
     }
 
+    @RequestMapping("/manageMain")
+    public String manageMain() {
+        return "manage/main";
+    }
 }
