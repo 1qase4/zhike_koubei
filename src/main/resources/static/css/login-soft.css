@@ -419,3 +419,6 @@
   padding: 10px 0;
   overflow: hidden;
 }
+.other-link:hover{
+  color: #477CD8;
+}
