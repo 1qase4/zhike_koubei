@@ -199,5 +199,9 @@ public class IndexController {
         return "bindAccount";
     }
 
+    @RequestMapping("/cfgLogin")
+    public String cfgLogin() {
+        return "manage/login";
+    }
 
 }
