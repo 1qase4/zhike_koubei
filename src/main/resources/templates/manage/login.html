@@ -271,8 +271,8 @@
                         $(_this).html("登录中...").prop("disabled",true);
                     },
                     success: function (obj) {
-                        if(obj.result){
-                            window.location = "/main";
+                        if(obj.status == 1){
+                            window.location = "manageMain";
                         }else{
                             errorBox.show();
                             errorTips.html(obj.message || "未知错误");

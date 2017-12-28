@@ -31,15 +31,121 @@
             $("body").iealert();
         });
     </script>
+    <style>
+        .head{
+            border-bottom: 1px solid #ddd;
+            -webkit-box-shadow: 0 5px 5px #ddd;
+            -moz-box-shadow: 0 5px 5px #ddd;
+            box-shadow: 0 5px 5px #ddd;
+        }
+        .logo-box{
+            width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+        .main{
+            width: 1200px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+        .bind-tabNav{
+            margin-bottom: 34px;
+            text-align: center;
+        }
+        .bind-tabNav .bind-tab{
+            width: 400px;
+            text-align: center;
+            border-bottom: solid 2px #ececec;
+            font-size: 18px;
+            /*float: left;*/
+            height: 32px;
+            cursor: pointer;
+        }
+        .bind-tab span{
+            font-size: 18px;
+        }
+        .view{
+            padding: 4px 10px;
+            color: #ffffff;
+            background-color: #0a67bb;
+        }
+        .view:hover{
+            color: #ffffff;
+            background-color: #0a67fb;
+        }
+
+    </style>
 </head>
 <body>
+<div class="head">
+    <!--顶部logo-->
+    <div class="logo-box">
+        <img  src="/image/koubei2.png" alt="">
+    </div>
+</div>
+<div class="main">
+    <div class="panel">
+        <div class="panel-heading" style="font-size: 18px">
+            信息提交
+        </div>
+        <div class="panel-body" style="width: 1100px;margin: 0 auto;padding-top: 50px;">
+            <table class="table datatable">
+                <thead>
+                <tr>
+                    <!-- 以下两列左侧固定 -->
+                    <th>#</th>
+                    <th>时间</th>
+                    <!-- 以下三列中间可滚动 -->
+                    <th class="flex-col">事件类型</th>
+                    <th class="flex-col">描述</th>
+                    <th class="flex-col">相关人物</th>
+                    <!-- 以下列右侧固定 -->
+                    <th>评分</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>12.11</td>
+                    <td>时间</td>
+                    <td>好的</td>
+                    <td>我</td>
+                    <td>10</td>
+                </tr>
+                <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-
+</div>
 <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
 <script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
 <script src="/zui-1.7.0-dist/dist/lib/datatable/zui.datatable.min.js"></script>
 <script>
-
+//    $('table.datatable').datatable({sortable: true});
+/* 使用选项选项来初始化数据 */
+$('table.datatable').datatable({
+    data: {
+        cols: [
+            {width: 80, text: '编号', type: 'number', flex: false, colClass: 'text-center'},
+            {width: 160, text: '用户ID', type: 'string', flex: false, colClass: 'text-center'},
+            {width: 80, text: '手机', type: 'string', flex: true, colClass: 'text-center'},
+            {width: 80, text: '邮箱', type: 'string', flex: true, colClass: 'text-center'},
+            {width: 80, text: '是否绑定口碑', type: 'string', flex: true, colClass: 'text-center'},
+            {width: 80, text: '创建时间', type: 'date', flex: true, colClass: 'text-center'},
+            {width: 80, text: '查看', type: 'string', flex: true, colClass: 'text-center'}
+        ],
+        rows: [
+            {checked: false, data: [1, 'e2r1','13065984587','123@qq.com','是','2016-01-18 11:05:15', '<a href="javascript:;" class="view">查看</a>']},
+            {checked: false, data: [2, 'e2r1','13065984587','123@qq.com','是','2016-01-18 11:05:15', '<a href="javascript:;" class="view">查看</a>']},
+            {checked: false, data: [3, 'e2r1','13065984587','123@qq.com','是','2016-01-18 11:05:15', '<a href="javascript:;" class="view">查看</a>']},
+            // 更多数据
+        ]
+    },
+    
+    // 其他选项选项
+});
 </script>
 </body>
 </html>
