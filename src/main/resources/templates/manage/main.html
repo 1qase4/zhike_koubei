@@ -88,8 +88,8 @@
         </div>
         <div class="panel-body" style="width: 1100px;margin: 0 auto;padding-top: 50px;">
             <!--存放userid-->
-            <input id="userid" type="hidden" th:text="${session.userid}">
-            <input id="total_datas" type="hidden" th:text="${session.total}">
+            <input id="userid" type="hidden" th:value="${session.cfguserid}">
+            <input id="total_datas" type="hidden" th:value="${session.total}">
             <!--<table class="table datatable">-->
                 <!--<thead>-->
                 <!--<tr>-->
@@ -203,10 +203,7 @@ var myPage = {
         var _this = this;
 //        初始化
         this.currentPage = 1;
-        var NumberRegex = new RegExp(/^\d+$/);
-        if (pageSize != null && NumberRegex.test(pageSize)) {
-            _this.pageSize = parseInt(pageSize);
-        }
+
 //        检验total是否合格
         var _total = parseInt(_this.total);
         if(typeof _total != "number"){
@@ -262,20 +259,20 @@ var myPage = {
                     _this.currentPage = parseInt($(this).html());
                     _this.isAbled();
                 }
-                _this.renderData(_this.currentPage);
+                _this.renderData();
             })
         }else{
             $("#pageBox").html("");
         }
-        _this.renderData(_this.currentPage);//渲染数据
+        _this.renderData();//渲染数据
     },
     //渲染表格
-    renderData: function (curPage) {//请求路径、请求的哪一页
+    renderData: function () {//请求路径、请求的哪一页
         var _this = this;
         $.ajax({
             type: 'GET',
             url: _this.url,
-            data: {userid: $("#userid").val(),pageSize: _this.pageSize,curPage: curPage},
+            data: {userid: $("#userid").val(),pageSize: _this.pageSize,curPage: _this.currentPage},
             timeout: 30000,
             success:function (res) {
                 if (res.status == 1){

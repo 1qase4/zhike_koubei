@@ -49,9 +49,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/cut/verifyCode3", "anon");
 
 		//后台系统
-		filterChainDefinitionMap.put("/management/cfgLogin", "anon");
+		filterChainDefinitionMap.put("/management/**", "anon");
 		filterChainDefinitionMap.put("/cfgLogin", "anon");
-		filterChainDefinitionMap.put("/management/show", "anon");
 		filterChainDefinitionMap.put("/manageMain", "anon");
 		filterChainDefinitionMap.put("/QRcode", "anon");
 		//filterChainDefinitionMap.put("/show/**", "anon");
