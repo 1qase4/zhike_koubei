@@ -88,8 +88,7 @@
         </div>
         <div class="panel-body" style="width: 1100px;margin: 0 auto;padding-top: 50px;">
             <!--存放userid-->
-            <input id="userid" type="hidden" th:value="${session.cfguserid}">
-            <input id="total_datas" type="hidden" th:value="${session.total}">
+            <input id="total_datas" type="hidden" th:value="${total}">
             <!--<table class="table datatable">-->
                 <!--<thead>-->
                 <!--<tr>-->
@@ -272,7 +271,8 @@ var myPage = {
         $.ajax({
             type: 'GET',
             url: _this.url,
-            data: {userid: $("#userid").val(),pageSize: _this.pageSize,curPage: _this.currentPage},
+//            data: {userid: $("#userid").val(),pageSize: _this.pageSize,curPage: _this.currentPage},
+            data: {pageSize: _this.pageSize,curPage: _this.currentPage},
             timeout: 30000,
             success:function (res) {
                 if (res.status == 1){

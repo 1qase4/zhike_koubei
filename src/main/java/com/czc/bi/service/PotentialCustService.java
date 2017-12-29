@@ -3,8 +3,6 @@ package com.czc.bi.service;
 import com.czc.bi.mapper.PotentialCustMapper;
 import com.czc.bi.pojo.PotentialCust;
 import com.czc.bi.pojo.query.PotentialCustQuery;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
