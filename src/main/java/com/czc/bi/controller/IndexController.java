@@ -3,6 +3,7 @@ package com.czc.bi.controller;
 import com.alipay.api.AlipayClient;
 import com.czc.bi.mapper.EtlDateMapper;
 import com.czc.bi.mapper.ShopTokenMapper;
+import com.czc.bi.pojo.EtlDate;
 import com.czc.bi.pojo.ShopToken;
 import com.czc.bi.pojo.dto.Simple;
 import com.czc.bi.pojo.query.EtlDateQuery;
@@ -77,7 +78,8 @@ public class IndexController {
         // 根据账号 获取账号的当前数据时间
         EtlDateQuery etlDateQuery = new EtlDateQuery();
         etlDateQuery.setAccount(account);
-        String today = etlDateMapper.selectByQuery(etlDateQuery).get(0).getPdate();
+        List<EtlDate> etlDates = etlDateMapper.selectByQuery(etlDateQuery);
+        String today = etlDates.size() == 0?BaseUtil.getCurrentDate():etlDates.get(0).getPdate();
 
         session.setAttribute("today", new SimpleDateFormat("yyyy年MM月dd日").format(new SimpleDateFormat("yyyy-MM-dd").parse(today)));
         String weekOfYear = BaseUtil.getWeekOfYear(today);

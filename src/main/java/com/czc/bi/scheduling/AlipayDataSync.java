@@ -344,7 +344,7 @@ public class AlipayDataSync {
                 list.add(jl);
 
                 // month data
-                if(pdate.endsWith("-01")){
+                if (pdate.endsWith("-01")) {
                     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
                     String month;
                     Date parse = sf.parse(pdate);
@@ -384,7 +384,7 @@ public class AlipayDataSync {
         executeJob();
     }
 
-    public void executeJob(){
+    public void executeJob() {
         JobListQuery query = new JobListQuery();
         query.setStauts("fail");
         List<JobList> list = jobListMapper.selectByQuery(query);
@@ -395,15 +395,20 @@ public class AlipayDataSync {
             String shopid = job.getShopid();
             String token = job.getToken();
             String pdate = job.getPdate();
-            JobResult result = syncJob.execute(shopid, token, pdate);
-            if("success".equals(result.getStatus())){
-                int rows = result.getRows();
-                jobListMapper.updateSuccess(id,rows);
-            }else {
-                String remark = String.format("errorCode[%s]errorMsg",result.getErrorCode(),result.getErrorMsg());
-                jobListMapper.updateFail(id,remark);
+
+            try {
+                JobResult result = syncJob.execute(shopid, token, pdate);
+                if ("success".equals(result.getStatus())) {
+                    int rows = result.getRows();
+                    jobListMapper.updateSuccess(id, rows);
+                } else {
+                    String remark = String.format("errorCode[%s]errorMsg", result.getErrorCode(), result.getErrorMsg());
+                    jobListMapper.updateFail(id, remark);
+                }
+                delay();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            delay();
         }
 
     }
