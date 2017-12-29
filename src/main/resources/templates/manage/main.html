@@ -45,22 +45,7 @@
             margin: 0 auto;
             margin-top: 50px;
         }
-        .bind-tabNav{
-            margin-bottom: 34px;
-            text-align: center;
-        }
-        .bind-tabNav .bind-tab{
-            width: 400px;
-            text-align: center;
-            border-bottom: solid 2px #ececec;
-            font-size: 18px;
-            /*float: left;*/
-            height: 32px;
-            cursor: pointer;
-        }
-        .bind-tab span{
-            font-size: 18px;
-        }
+
         .data-common-table thead {
             background-color: #FBFBFB;
             border-bottom: 1px solid #EAEAEA;
@@ -69,7 +54,7 @@
             text-align: center;
             height: 40px;
         }
-        .data-common-table tr:not(:last-child) {
+        .data-common-table .tr:not(:last-child) {
             border-bottom: 1px solid #EAEAEA;
         }
     </style>
@@ -87,34 +72,9 @@
             信息列表
         </div>
         <div class="panel-body" style="width: 1100px;margin: 0 auto;padding-top: 50px;">
-            <!--存放userid-->
+            <!--存放total-->
             <input id="total_datas" type="hidden" th:value="${total}">
-            <!--<table class="table datatable">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--&lt;!&ndash; 以下两列左侧固定 &ndash;&gt;-->
-                    <!--<th>#</th>-->
-                    <!--<th>时间</th>-->
-                    <!--&lt;!&ndash; 以下三列中间可滚动 &ndash;&gt;-->
-                    <!--<th class="flex-col">事件类型</th>-->
-                    <!--<th class="flex-col">描述</th>-->
-                    <!--<th class="flex-col">相关人物</th>-->
-                    <!--&lt;!&ndash; 以下列右侧固定 &ndash;&gt;-->
-                    <!--<th>评分</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                <!--<tr>-->
-                    <!--<td>1</td>-->
-                    <!--<td>12.11</td>-->
-                    <!--<td>时间</td>-->
-                    <!--<td>好的</td>-->
-                    <!--<td>我</td>-->
-                    <!--<td>10</td>-->
-                <!--</tr>-->
-                <!--<tr></tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
+
             <div class="common-box">
                 <table id="tableData" class="data-common-table" style="width: 100%">
                     <thead>
@@ -163,7 +123,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="control-box clearfix">
+            <div class="control-box clearfix" style="margin-top: 20px;">
                 <div id="pageControl" class="fr">
                     <div id="pageBox" class=" noselect lf">
                         <ul id="pageWrap" class="pager" style="margin: 0;">
@@ -281,11 +241,11 @@ var myPage = {
                     if (data.length == 0){
                         html = "<tr> <td colspan='3'> 无数据</td>  </tr>";
                     }else{
-                        for (var i = 0;i < data.length;i ++){
+                        for (var i = 0;i < _this.pageSize;i ++){
                             if (data[i]){
-                                html += "<tr> <td>"+data[i].id+"</td> <td>"+data[i].userid+"</td> <td>"+data[i].tel+"</td> <td>"+data[i].email+"</td><td>"+(data[i].status==0?'否':'是')+"</td><td>"+data[i].createdt+"</td></tr>";
+                                html += "<tr class='tr'> <td>"+data[i].id+"</td> <td>"+data[i].userid+"</td> <td>"+data[i].tel+"</td> <td>"+data[i].email+"</td><td>"+(data[i].status==0?'否':'是')+"</td><td>"+data[i].createdt+"</td></tr>";
                             }else{
-                                html += "<tr> <td> </td> <td></td> <td></td> </tr>";
+                                html += "<tr> <td> </td> </tr>";
                             }
                         }
                     }
