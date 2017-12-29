@@ -10,6 +10,7 @@ import com.czc.bi.pojo.query.PotentialCustQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class ManagementController {
             return result;
         }
         CfgUser cfgUser = cfgUsers.get(0);
-        if (!cfgUser.getPassword().equals(password)){
+        if (cfgUser.getPassword()!= null && !cfgUser.getPassword().equals(password)){
             result.put("status","0");
             result.put("message","密码错误！");
             return result;
@@ -49,11 +50,30 @@ public class ManagementController {
     }
 
     @RequestMapping("show")
-    public Result show(Integer userid){
+    public Map<String ,Object> show(Integer userid){
+        Map<String ,Object> result = new HashMap<String ,Object>();
+
         if (userid == null){
-            return new Result().setResult(false);
+            result.put("status",0);
+            result.put("message","请登录！");
+            return result;
         }
-        List<PotentialCust> list = potentialCustMapper.selectByQuery(new PotentialCustQuery().setStatus("0"));
-        return new Result(list);
+
+        CfgUser cfgUser = cfgUserMapper.selectByPrimaryKey(userid);
+        if (cfgUser == null){
+            result.put("status",0);
+            result.put("message","用户无权限！");
+            return result;
+        }
+
+        List<PotentialCust> list = potentialCustMapper.selectByQuery(new PotentialCustQuery());
+        result.put("status",1);
+        result.put("result",list);
+        return result;
+    }
+
+    @RequestMapping("test")
+    public Result test(){
+        return new Result("5555");
     }
 }
