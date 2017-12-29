@@ -207,7 +207,7 @@ public class IndexController {
     }
 
 
-    @RequestMapping("/QRcode")
+    @RequestMapping("/qrcode")
     public String QRcode() {
         return "manage/QRcode";
     }
