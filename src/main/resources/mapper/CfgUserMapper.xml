@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.czc.bi.mapper.CfgUserMapper">
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer"  resultType="com.czc.bi.pojo.CfgUser">
+        SELECT
+        `id`,
+        `username`,
+        `password`,
+        `nickname`,
+        `status`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `cfg_user`
+        WHERE `id` = #{key}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.czc.bi.pojo.query.CfgUserQuery" resultType="com.czc.bi.pojo.CfgUser">
+        SELECT
+        `id`,
+        `username`,
+        `password`,
+        `nickname`,
+        `status`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `cfg_user`
+        WHERE 1 = 1
+        <if test="query.username != null">
+          AND `username` ${query.usernameOperator} #{query.username}
+        </if>
+        <if test="query.password != null">
+          AND `password` ${query.passwordOperator} #{query.password}
+        </if>
+        <if test="query.nickname != null">
+          AND `nickname` ${query.nicknameOperator} #{query.nickname}
+        </if>
+        <if test="query.status != null">
+          AND `status` ${query.statusOperator} #{query.status}
+        </if>
+        <if test="query.orderBy!=null">
+            ORDER BY ${query.orderBy}
+            <if test="!query.asc">
+            DESC
+        </if>
+        </if>
+        <if test="query.startRecord != null and query.pageSize != null">
+            LIMIT ${query.startRecord}, ${query.pageSize}
+        </if>
+    </select>
+
+    <select id="selectRowsByQuery" parameterType="com.czc.bi.pojo.query.CfgUserQuery" resultType="Integer">
+        SELECT COUNT(1)
+        FROM
+        `cfg_user`
+        WHERE 1 = 1
+        <if test="query.username != null">
+          AND `username` ${query.usernameOperator} #{query.username}
+        </if>
+        <if test="query.password != null">
+          AND `password` ${query.passwordOperator} #{query.password}
+        </if>
+        <if test="query.nickname != null">
+          AND `nickname` ${query.nicknameOperator} #{query.nickname}
+        </if>
+        <if test="query.status != null">
+          AND `status` ${query.statusOperator} #{query.status}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.czc.bi.pojo.CfgUser">
+        INSERT INTO `cfg_user`
+        (
+             `username`,
+             `password`,
+             `nickname`,
+             `status`,
+             `createdt`,
+             `updatedt`
+        )
+        VALUES(
+             #{record.username},
+             #{record.password},
+             #{record.nickname},
+             #{record.status},
+             NOW(),
+             NOW()
+        )
+    </insert>
+
+    <insert id="inserts" parameterType="java.util.List">
+        INSERT INTO `cfg_user`
+        (
+             `username`,
+             `password`,
+             `nickname`,
+             `status`,
+             `createdt`,
+             `updatedt`
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+        (
+             #{record.username},
+             #{record.password},
+             #{record.nickname},
+             #{record.status},
+             NOW(),
+             NOW()
+        )
+        </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="Integer" >
+        DELETE FROM `cfg_user`
+         WHERE id = #{key}
+    </delete>
+
+    <delete id="deleteByQuery" parameterType="com.czc.bi.pojo.query.CfgUserQuery" >
+        DELETE FROM `cfg_user`
+        WHERE 1 = 1
+        <if test="query.username != null">
+          AND `username` ${query.usernameOperator} #{query.username}
+        </if>
+        <if test="query.password != null">
+          AND `password` ${query.passwordOperator} #{query.password}
+        </if>
+        <if test="query.nickname != null">
+          AND `nickname` ${query.nicknameOperator} #{query.nickname}
+        </if>
+        <if test="query.status != null">
+          AND `status` ${query.statusOperator} #{query.status}
+        </if>
+    </delete>
+
+    <select id="selectByCondition" resultType="com.czc.bi.pojo.CfgUser">
+        SELECT
+        `id`,
+        `username`,
+        `password`,
+        `nickname`,
+        `status`,
+        `createdt`,
+        `updatedt`
+        FROM
+        `cfg_user`
+        WHERE ${condition}
+    </select>
+
+</mapper>

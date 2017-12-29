@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta content="width=device-width, initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no" name="viewport" />-->
+    <meta name="renderer" content="webkit">
+    <title>商圈秀 | 口碑</title>
+    <script>
+        if(window !=top){
+            top.location.href=location.href;
+        }
+    </script>
+    <link href="/image/favicon-20170908021540662.ico"  rel="shortcut icon"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/common.css">
+
+    <link href="/zui-1.7.0-dist/dist/css/zui.min.css" rel="stylesheet">
+    <link href="/zui-1.7.0-dist/dist/lib/datatable/zui.datatable.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="/iconfont/iconfont.css">-->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/iconfont/iconfont.css">
+    <!--提示低版本IE浏览器-->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/iealert.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"></script>
+    <!--浏览器IE9以下不兼容提示-->
+    <script type="text/javascript" src="/js/iealert.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("body").iealert();
+        });
+    </script>
+    <style>
+        .head{
+            border-bottom: 1px solid #ddd;
+            -webkit-box-shadow: 0 5px 5px #ddd;
+            -moz-box-shadow: 0 5px 5px #ddd;
+            box-shadow: 0 5px 5px #ddd;
+        }
+        .logo-box{
+            width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+        .main{
+            width: 1200px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        .data-common-table thead {
+            background-color: #FBFBFB;
+            border-bottom: 1px solid #EAEAEA;
+        }
+        .data-common-table td {
+            text-align: center;
+            height: 40px;
+        }
+        .data-common-table .tr:not(:last-child) {
+            border-bottom: 1px solid #EAEAEA;
+        }
+    </style>
+</head>
+<body>
+<div class="head">
+    <!--顶部logo-->
+    <div class="logo-box">
+        <img  src="/image/koubei2.png" alt="">
+    </div>
+</div>
+<div class="main">
+    <div class="panel">
+        <div class="panel-heading" style="font-size: 18px">
+            信息列表
+        </div>
+        <div class="panel-body" style="width: 1100px;margin: 0 auto;padding-top: 50px;">
+            <!--存放total-->
+            <input id="total_datas" type="hidden" th:value="${total}">
+
+            <div class="common-box">
+                <table id="tableData" class="data-common-table" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <td data-name="id">编号</td>
+                        <td data-name="userid">用户ID</td>
+                        <td data-name="tel">手机</td>
+                        <td data-name="email">邮箱</td>
+                        <td data-name="status">是否绑定口碑</td>
+                        <td data-name="createdt">创建时间</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>12wqw11</td>
+                        <td>13016546589</td>
+                        <td>123456@qq.com</td>
+                        <td>是</td>
+                        <td>2018-12-12</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>12wqw11</td>
+                        <td>13016546589</td>
+                        <td>123456@qq.com</td>
+                        <td>是</td>
+                        <td>2018-12-12</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>12wqw11</td>
+                        <td>13016546589</td>
+                        <td>123456@qq.com</td>
+                        <td>是</td>
+                        <td>2018-12-12</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>12wqw11</td>
+                        <td>13016546589</td>
+                        <td>123456@qq.com</td>
+                        <td>是</td>
+                        <td>2018-12-12</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="control-box clearfix" style="margin-top: 20px;">
+                <div id="pageControl" class="fr">
+                    <div id="pageBox" class=" noselect lf">
+                        <ul id="pageWrap" class="pager" style="margin: 0;">
+                            <!--<li class="previous disabled"><a href="javascript:;">«上一页</a></li>-->
+                            <!--<li class="active"><a href="javascript:;">1</a></li>-->
+                            <!--<li><a href="javascript:;">2</a></li>-->
+                            <!--<li><a href="javascript:;">3</a></li>-->
+                            <!--<li><a href="javascript:;">4</a></li>-->
+                            <!--<li class="next"><a href="javascript:;">下一页»</a></li>-->
+                        </ul>
+                    </div>
+                    <div style="float: left;height: 33px;line-height: 33px;margin-left: 10px;"> 共 <span id="total">0</span>条</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
+<!--<script src="/zui-1.7.0-dist/dist/lib/datatable/zui.datatable.min.js"></script>-->
+<script type="text/javascript" src="/js/pageControl.js"></script>
+<script>
+
+$(function () {
+    myPage.init();
+});
+var myPage = {
+    url: '/management/show',//请求数据的地址
+    pageCount: 0,//总页数
+    total: $("#total_datas").val(),//总条数
+    pageSize: 10,//每一页多少条
+    currentPage: 1,//当前页
+    containerId: "pageWrap",
+    tableId: "tableData",
+    init: function () {
+        var _this = this;
+//        初始化
+        this.currentPage = 1;
+
+//        检验total是否合格
+        var _total = parseInt(_this.total);
+        if(typeof _total != "number"){
+            new $.zui.Messager('总条数应为数字', {
+                type: 'warning',
+                icon:'warning-sign',
+                time: 1000
+            }).show();
+            return false;
+        }
+        $("#total").html(_total);
+        var html = "";
+        _this.pageCount = Math.ceil(_total/_this.pageSize);//总页数
+        if (_total > 0){
+            html += "<ul id='"+this.containerId+"' class='pager' style='margin: 0;'><li class='previous'><a href='javascript:;'>«上一页</a></li>";
+            for (var i = 0;i < _this.pageCount;i ++){
+                if (i+1 === _this.currentPage){
+                    html += "<li class = 'active'><a href='javascript:;'>"+(i+1)+"</a></li>";
+                }else{
+                    html += "<li><a href='javascript:;'>"+(i+1)+"</a></li>";
+                }
+            }
+            html += "<li class='next'><a href='javascript:;'>下一页»</a></li></ul>";
+            $("#pageBox").html(html);
+            this.isAbled();//渲染完毕后检查按钮是否可点击
+            //给每个按钮绑定事件
+            $("#"+_this.containerId).on("click","li a",function () {
+                if($(this).parent().hasClass("previous")){//上一页
+                    _this.currentPage --;
+                    _this.currentPage = _this.currentPage < 1 ? 1 : _this.currentPage;
+                    var lis = $("#"+_this.containerId+" li");
+                    $(lis[_this.currentPage]).addClass("active").siblings(".active").removeClass("active");
+                    if (_this.currentPage <= 1){
+                        $(this).parent().addClass("disabled");
+                    }
+                    if (_this.currentPage < _this.pageCount){
+                        $("#"+_this.containerId+" .next").removeClass("disabled");
+                    }
+                }else if($(this).parent().hasClass("next")){//下一页
+                    _this.currentPage ++;
+                    _this.currentPage = _this.currentPage > _this.pageCount ? _this.pageCount : _this.currentPage;
+                    var lis = $("#"+_this.containerId+" li");
+                    $(lis[_this.currentPage]).addClass("active").siblings(".active").removeClass("active");
+                    if (_this.currentPage >= _this.pageCount){
+                        $(this).parent().addClass("disabled");
+                    }
+                    if (_this.currentPage > 1){
+                        $("#"+_this.containerId+" .previous").removeClass("disabled");
+                    }
+                }else{//点击页
+                    $(this).parent().addClass("active").siblings(".active").removeClass("active");
+                    //改变当前页
+                    _this.currentPage = parseInt($(this).html());
+                    _this.isAbled();
+                }
+                _this.renderData();
+            })
+        }else{
+            $("#pageBox").html("");
+        }
+        _this.renderData();//渲染数据
+    },
+    //渲染表格
+    renderData: function () {//请求路径、请求的哪一页
+        var _this = this;
+        $.ajax({
+            type: 'GET',
+            url: _this.url,
+//            data: {userid: $("#userid").val(),pageSize: _this.pageSize,curPage: _this.currentPage},
+            data: {pageSize: _this.pageSize,curPage: _this.currentPage},
+            timeout: 30000,
+            success:function (res) {
+                if (res.status == 1){
+                    var data = res.result;
+                    var html = "";
+                    if (data.length == 0){
+                        html = "<tr> <td colspan='3'> 无数据</td>  </tr>";
+                    }else{
+                        for (var i = 0;i < _this.pageSize;i ++){
+                            if (data[i]){
+                                html += "<tr class='tr'> <td>"+data[i].id+"</td> <td>"+data[i].userid+"</td> <td>"+data[i].tel+"</td> <td>"+data[i].email+"</td><td>"+(data[i].status==0?'否':'是')+"</td><td>"+data[i].createdt+"</td></tr>";
+                            }else{
+                                html += "<tr> <td> </td> </tr>";
+                            }
+                        }
+                    }
+                    $("#"+_this.tableId+" tbody").html(html);
+                }else{
+                    new $.zui.Messager('错误', {
+                        type: 'warning',
+                        icon:'warning-sign',
+                        time: 1000
+                    }).show();
+                }
+
+            },
+            complete: function () {
+                
+            }
+        });
+    },
+    isAbled: function () {
+        if (this.currentPage <= 1){
+            $("#"+this.containerId+" .previous").addClass("disabled");
+        }
+        if (this.currentPage > 1){
+            $("#"+this.containerId+" .previous").removeClass("disabled");
+        }
+        if (this.currentPage >= this.pageCount){
+            $("#"+this.containerId+" .next").addClass("disabled");
+        }
+        if (this.currentPage < this.pageCount){
+            $("#"+this.containerId+" .next").removeClass("disabled");
+        }
+    }
+};
+
+
+
+</script>
+</body>
+</html>

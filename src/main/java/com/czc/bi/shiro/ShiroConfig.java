@@ -47,6 +47,11 @@ public class ShiroConfig {
 		//图片点选验证码
 		filterChainDefinitionMap.put("/cut/code3", "anon");
 		filterChainDefinitionMap.put("/cut/verifyCode3", "anon");
+
+		//后台系统
+		filterChainDefinitionMap.put("/management/**", "anon");
+		filterChainDefinitionMap.put("/cfgLogin", "anon");
+		filterChainDefinitionMap.put("/QRcode", "anon");
 		//filterChainDefinitionMap.put("/show/**", "anon");
 		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		filterChainDefinitionMap.put("/loginOut", "logout");
