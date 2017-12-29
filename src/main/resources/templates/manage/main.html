@@ -123,59 +123,59 @@
 <script src="/zui-1.7.0-dist/dist/js/zui.min.js"></script>
 <script src="/zui-1.7.0-dist/dist/lib/datatable/zui.datatable.min.js"></script>
 <script>
-    //    $('table.datatable').datatable({sortable: true});
-    var ajaxTimeoutZhike = $.ajax({
-        type: 'GET',
-        url: '/management/show',
-        data: {"userid":1},//$("form").serialize(),
-        timeout: 30000,
-        beforeSend:function(XMLHttpRequest){
+//    $('table.datatable').datatable({sortable: true});
+var ajaxTimeoutZhike = $.ajax({
+    type: 'GET',
+    url: '/management/show',
+    data: {"userid":1},//$("form").serialize(),
+    timeout: 30000,
+    beforeSend:function(XMLHttpRequest){
 //        $(_this).html("登录中...").prop("disabled",true);
-        },
-        success: function (obj) {
+    },
+    success: function (obj) {
 
-            var data = obj.result;
-            var array = new Array();
+        var data = obj.result;
+        var array = new Array();
 
-            for (var i = 0; i < data.length; i++){
-                var a = [data[i].id,data[i].userid,data[i].tel,data[i].email,data[i].status,data[i].createdt];
-                array.push(a);
-            }
-            console.log(array);
-            $('table.datatable').datatable({
-                data: {
-                    cols: [
-                        {width: 80, text: '编号', type: 'number', flex: false, colClass: 'text-center'},
-                        {width: 160, text: '用户ID', type: 'string', flex: false, colClass: 'text-center'},
-                        {width: 80, text: '手机', type: 'string', flex: true, colClass: 'text-center'},
-                        {width: 80, text: '邮箱', type: 'string', flex: true, colClass: 'text-center'},
-                        {width: 80, text: '是否绑定口碑', type: 'string', flex: true, colClass: 'text-center'},
-                        {width: 80, text: '创建时间', type: 'date', flex: true, colClass: 'text-center'},
+        for (var i = 0; i < data.length; i++){
+            var a = [data[i].id,data[i].userid,data[i].tel,data[i].email,data[i].status,data[i].createdt];
+            array.push(a);
+        }
+        console.log(array);
+        $('table.datatable').datatable({
+            data: {
+                cols: [
+                    {width: 80, text: '编号', type: 'number', flex: false, colClass: 'text-center'},
+                    {width: 160, text: '用户ID', type: 'string', flex: false, colClass: 'text-center'},
+                    {width: 80, text: '手机', type: 'string', flex: true, colClass: 'text-center'},
+                    {width: 80, text: '邮箱', type: 'string', flex: true, colClass: 'text-center'},
+                    {width: 80, text: '是否绑定口碑', type: 'string', flex: true, colClass: 'text-center'},
+                    {width: 80, text: '创建时间', type: 'date', flex: true, colClass: 'text-center'},
 //                    {width: 80, text: '查看', type: 'string', flex: true, colClass: 'text-center'}
-                    ],
-                    rows: [
-                        {checked: false, data: array[0]}
+                ],
+                rows: [
+                    {checked: false, data: array[0]}
 //                    {checked: false, data: [1, 'e2r1',data.tel,'123@qq.com','是','2016-01-18 11:05:15', '<a href="javascript:;" class="view">查看</a>']},
 //                    {checked: false, data: [2, 'e2r1','13065984587','123@qq.com','是','2016-01-18 11:05:15', '<a href="javascript:;" class="view">查看</a>']},
 //                    {checked: false, data: [3, 'e2r1','13065984587','123@qq.com','是','2016-01-18 11:05:15', '<a href="javascript:;" class="view">查看</a>']},
-                        // 更多数据
-                    ]
-                },
-                // 其他选项选项
-            });
-        },
-        fail:function () {
+                    // 更多数据
+                ]
+            },
+            // 其他选项选项
+        });
+    },
+    fail:function () {
+        $(_this).html(btnTxt).prop("disabled",false);
+    },
+    complete:function(XMLHttpRequest,textStatus){
+        if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+            ajaxTimeoutZhike.abort();
             $(_this).html(btnTxt).prop("disabled",false);
-        },
-        complete:function(XMLHttpRequest,textStatus){
-            if(textStatus=='timeout'){//超时,status还有success,error等值的情况
-                ajaxTimeoutZhike.abort();
-                $(_this).html(btnTxt).prop("disabled",false);
-                alert("超时");
-            }
+            alert("超时");
         }
-    });
-    /* 使用选项选项来初始化数据 */
+    }
+});
+/* 使用选项选项来初始化数据 */
 
 </script>
 </body>
