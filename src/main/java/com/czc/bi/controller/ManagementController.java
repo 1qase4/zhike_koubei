@@ -30,10 +30,15 @@ public class ManagementController {
     private CfgUserService cfgUserService;
 
     @RequestMapping("manageMain")
-    public ModelAndView manageMain(ModelAndView mv){
-        int count = potentialCustService.findCount();
-        mv.addObject("total",count);
-        mv.setViewName("manage/main");
+    public ModelAndView manageMain(ModelAndView mv,HttpSession session){
+        try {
+            int userid = (int) session.getAttribute("cfguserid");
+            int count = potentialCustService.findCount();
+            mv.addObject("total",count);
+            mv.setViewName("manage/main");
+        }catch (Exception e){
+            mv.setViewName("manage/login");
+        }
         return mv;
     }
 
