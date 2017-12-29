@@ -259,6 +259,7 @@
                 var uname=username.val();
                 //var upwd=$.md5(password.val());
                 var upwd=password.val();
+                upwd = $.md5(upwd);
                 // var datas={username:uname,password:upwd,code:coordHtml};
                 var datas={username:uname,password:upwd};
                 // console.log(datas);
