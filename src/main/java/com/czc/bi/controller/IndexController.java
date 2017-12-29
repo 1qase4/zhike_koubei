@@ -208,4 +208,9 @@ public class IndexController {
     public String manageMain() {
         return "manage/main";
     }
+
+    @RequestMapping("/QRcode")
+    public String QRcode() {
+        return "manage/QRcode";
+    }
 }
