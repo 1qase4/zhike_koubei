@@ -57,6 +57,12 @@
         .data-common-table .tr:not(:last-child) {
             border-bottom: 1px solid #EAEAEA;
         }
+        .toCode{
+            color: #333;
+        }
+        .toCode:hover{
+            color: #145ccd;
+        }
     </style>
 </head>
 <body>
@@ -68,8 +74,9 @@
 </div>
 <div class="main">
     <div class="panel">
-        <div class="panel-heading" style="font-size: 18px">
-            信息列表
+        <div class="panel-heading clearfix" style="font-size: 18px">
+            <span class="lf">信息列表</span>
+            <a href="/QRcode" TARGET="_blank" class="toCode fr">生成二维码</a>
         </div>
         <div class="panel-body" style="width: 1100px;margin: 0 auto;padding-top: 50px;">
             <!--存放total-->
