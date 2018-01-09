@@ -102,14 +102,26 @@
     var gShop = parent.document.getElementById("shop").value;
     $(function () {
         var formatterDate = $("#selectedTime").html().substring(0,10).replace(/[\u4e00-\u9fa5]/g,"-");
-        $("#month").val(getMonthPre(formatterDate,-1));
+        $("#month").val(getMonthPre1(formatterDate,-1));
+        //初始化月选择框
+        $(".form-date-month").datetimepicker({
+            language:  "zh-CN",
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 3,
+            minView: 3,
+            forceParse: 0,
+            format: "yyyy年mm月"
+        });
         getCharts();
     });
     //选择时间时获取图
     $("#month").change(getCharts);
     function getCharts() {
         var time = $("#month").val();
-        var _time = time.replace(/\D/g,"-").slice(0,time.length-1);//时间参数
+        var _time = formatterTime(time);//时间参数
         $.ajax({
             url: "/label/custFeature",
             data: {account: gShop,time: _time},
@@ -247,22 +259,11 @@
         account = gShop;
         //时间
         var timeValue = $(".select-group .input-wrap").children("input").val();
-        time = timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+        time = formatterTime(timeValue);
 //        console.log(time);
         window.location = "/label/custFeatureDownload?account="+account+"&time="+time;
     }
-    //初始化月选择框
-    $(".form-date-month").datetimepicker({
-        language:  "zh-CN",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 3,
-        minView: 3,
-        forceParse: 0,
-        format: "yyyy年mm月"
-    });
+
     //柱状图模板
     var optionBar = {
         title: {

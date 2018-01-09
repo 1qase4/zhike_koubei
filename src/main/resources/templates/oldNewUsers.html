@@ -120,23 +120,24 @@
         $(this).addClass("selected").siblings().removeClass("selected");
         $("#"+state).parent().show().addClass("nowSelected").siblings(".input-wrap").hide().removeClass("nowSelected");
         loadTime1(state,$("#selectedTime").html());
+        //初始化月选择框
+        $(".form-date-month").datetimepicker({
+            language:  "zh-CN",
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 3,
+            minView: 3,
+            forceParse: 0,
+            format: "yyyy年mm月"
+        });
         //获取图表
         getCharts();
     });
     //切换时间
     $("#inputGroup").on("change","input",getCharts);
-    //初始化月选择框
-    $(".form-date-month").datetimepicker({
-        language:  "zh-CN",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 3,
-        minView: 3,
-        forceParse: 0,
-        format: "yyyy年mm月"
-    });
+
     //新老用户下载报告
     function loadReport() {
         var account,type,time;
@@ -145,7 +146,7 @@
         type = $("#switchWay .selected").data("time");
         //时间
         var timeValue = $("#"+type).val();
-        time = type === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+        time = formatterTime(timeValue,type);
 //        console.log(type,time);
         window.location = "/flow/newOldCustDownload?account="+account+"&type="+type+"&time="+time;
     }
@@ -173,7 +174,7 @@
         var timeValue = input.val();
         var xAxis;//x轴
         //时间参数
-        var time = state === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+        var time = formatterTime(timeValue,state);
 //        var time = state === "week" ? input.attr("title") : input.val().replace(/\D/g,"-").slice(0,input.val().length-1);
         $.ajax({
             url: "/flow/"+state+"NewOldCust",

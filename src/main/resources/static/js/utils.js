@@ -30,6 +30,15 @@ function getMonthPre(d,n) {//n可取正负整数(上个月或下个月)
     m = m < 10 ? '0' + m : m;
     return y+"年"+m+"月";
 }
+//根据输入的时间计算前后某个月
+function getMonthPre1(d,n) {//n可取正负整数(上个月或下个月)
+    var date=new Date(d);
+    date.setMonth(date.getMonth()+n);
+    var y=date.getFullYear();
+    var m=date.getMonth()+1;
+    m = m < 10 ? '0' + m : m;
+    return y+"-"+m;
+}
 //根据时间类型加载时间
 function loadTime1(type,value) {
     var inputBox = $("[data-id='"+type+"']").addClass("nowSelected").find(".time_input");
@@ -47,10 +56,36 @@ function loadTime1(type,value) {
     switch(type)
     {
         case "year":
-            input1.val() == "" && input1.val(thisYear+"年");
+            // input1.val() == "" && input1.val(thisYear+"年");
+            input1.val() == "" && input1.val(thisYear);
+            //    年选择器
+            $(".form-date-yeay").datetimepicker({
+                language:  "zh-CN",
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 4,
+                minView: 4,
+                forceParse: 0,
+                format: "yyyy年",
+            });
             break;
         case "month":
-            input1.val() == "" && input1.val(thisYear + "年" + thisMonth + "月");
+            // input1.val() == "" && input1.val(thisYear + "年" + thisMonth + "月");
+            input1.val() == "" && input1.val(thisYear + "-" + thisMonth);
+            //    月选择器
+            $(".form-date-month").datetimepicker({
+                language:  "zh-CN",
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 3,
+                minView: 3,
+                forceParse: 0,
+                format: "yyyy年mm月"
+            });
             break;
         case "week":
             var obj1 = getWeek(today);
@@ -59,6 +94,18 @@ function loadTime1(type,value) {
             break;
         case "day":
             input1.val() == "" && input1.val(value);
+            //    日选择器
+            $(".form-date-date").datetimepicker({
+                language:  "zh-CN",
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0,
+                format: "yyyy年mm月dd日"
+            });
             break;
     }
 }
@@ -120,4 +167,14 @@ function getWeek(dateobj) {
         order:count
     }
 }
-
+function formatterTime(time,state) {
+    var numargs = arguments.length;
+    var t;
+    if(numargs == 1){
+        t = time.indexOf("年") > -1 ?  time.replace(/\D/g,"-").slice(0,time.length-1) : time;
+    }else if(numargs == 2){
+        t = state === "week" ? (time.slice(4)+time.slice(1,3)) :
+            time.indexOf("年") > -1 ?  time.replace(/\D/g,"-").slice(0,time.length-1) : time;
+    }
+    return t;
+}

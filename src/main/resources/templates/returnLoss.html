@@ -161,6 +161,7 @@
         var type = $("#switchWay span.selected").data("time");
         var value = $("#selectedTime").html();
         loadTime1(type,value);
+
         $(".myWeek").weekpicker({});
         //页面加载完成时渲染图表
         getCharts();
@@ -174,22 +175,23 @@
         $("#"+state).parent().show().addClass("nowSelected").siblings(".input-wrap").hide().removeClass("nowSelected");
         //给对应的input赋值value，如果有存储的就存储值，如果没有就默认时间
         loadTime1(state,$("#selectedTime").html());
+        //初始化月选择框
+        $(".form-date-month").datetimepicker({
+            language:  "zh-CN",
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 3,
+            minView: 3,
+            forceParse: 0,
+            format: "yyyy年mm月"
+        });
         getCharts();
     });
     //选择时间时获取图表
     $("#inputBox").on("change","input",getCharts);
-    //初始化月选择框
-    $(".form-date-month").datetimepicker({
-        language:  "zh-CN",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 3,
-        minView: 3,
-        forceParse: 0,
-        format: "yyyy年mm月"
-    });
+
     //加载时间
     function loadTime(){
         //页面加载完成时加载时间
@@ -216,7 +218,7 @@
         type = $("#switchWay .selected").data("time");
         //时间
         var timeValue = $("#"+type).val();
-        time = type === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+        time = formatterTime(timeValue,type);
 //        console.log(type,time);
         window.location = "/flow/backFlowDownload?account="+account+"&type="+type+"&time="+time;
     }
@@ -227,7 +229,7 @@
         var timeValue = input.val();
         var xAxis;//x轴
         //时间参数
-        var time = state === "week" ? (timeValue.slice(4)+timeValue.slice(1,3)) : timeValue.replace(/\D/g,"-").slice(0,timeValue.length-1);
+        var time =formatterTime(timeValue,state);
         var myChartLine = echarts.init(document.getElementById("chartLine"));
         var myChartbar = echarts.init(document.getElementById("chartBar"));
         myChartLine.showLoading();

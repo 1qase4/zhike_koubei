@@ -197,8 +197,8 @@
         var inputs = timeBox.children(".input-wrap");
         var timeValue1 = $(inputs[0]).children("input").val();
         var timeValue2 = $(inputs[1]).children("input").val();
-        var begin = type === "week" ? (timeValue1.slice(4)+timeValue1.slice(1,3)) : timeValue1.replace(/\D/g,"-").slice(0,timeValue1.length-1);
-        var end = type === "week" ? (timeValue2.slice(4)+timeValue2.slice(1,3)) : timeValue2.replace(/\D/g,"-").slice(0,timeValue2.length-1);
+        var begin = formatterTime(timeValue1,type);
+        var end = formatterTime(timeValue2,type);
         time = check ? (begin + "," + end) : begin;
 //        console.log(type,time);
         window.location = "/flow/dateTrendDownload?account="+account+"&type="+type+"&time="+time;
@@ -206,47 +206,48 @@
     //    从父页面获取店名
     var gShop = parent.document.getElementById("shop").value;
     //    年选择器
-    $(".form-date-yeay").datetimepicker({
-        language:  "zh-CN",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 4,
-        minView: 4,
-        forceParse: 0,
-        format: "yyyy年"
-    });
-    //    月选择器
-    $(".form-date-month").datetimepicker({
-        language:  "zh-CN",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 3,
-        minView: 3,
-        forceParse: 0,
-        format: "yyyy年mm月"
-    });
-    //    日选择器
-    $(".form-date-date").datetimepicker({
-        language:  "zh-CN",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0,
-        format: "yyyy年mm月dd日"
-    });
+//    $(".form-date-yeay").datetimepicker({
+//        language:  "zh-CN",
+//        weekStart: 1,
+//        todayBtn:  1,
+//        autoclose: 1,
+//        todayHighlight: 1,
+//        startView: 4,
+//        minView: 4,
+//        forceParse: 0,
+//        format: "yyyy年",
+//    });
+//    //    月选择器
+//    $(".form-date-month").datetimepicker({
+//        language:  "zh-CN",
+//        weekStart: 1,
+//        todayBtn:  1,
+//        autoclose: 1,
+//        todayHighlight: 1,
+//        startView: 3,
+//        minView: 3,
+//        forceParse: 0,
+//        format: "yyyy年mm月"
+//    });
+//    //    日选择器
+//    $(".form-date-date").datetimepicker({
+//        language:  "zh-CN",
+//        weekStart: 1,
+//        todayBtn:  1,
+//        autoclose: 1,
+//        todayHighlight: 1,
+//        startView: 2,
+//        minView: 2,
+//        forceParse: 0,
+//        format: "yyyy年mm月dd日"
+//    });
     //页面初始化
     $(function () {
         //获取当前选中的 年/月/周/日选择器
         var val = $("#category").val();
         //changeXAxis(val);//初始化x轴
-        loadTime1(val,$("#selectedTime").html());//加载本地存储或默认时间
+//        loadTime1(val,$("#selectedTime").html());//加载本地存储或默认时间
+        loadTime1(val,formatterTime($("#selectedTime").html()));
         $(".myWeek").weekpicker({});
         //根据店铺获取分组
         getCharts();
@@ -269,7 +270,7 @@
         $("[data-id='"+val+"']").addClass("nowSelected");
         //changeXAxis(val);//选择对应的x轴
         //加载时间
-        loadTime1(val,$("#selectedTime").html());
+        loadTime1(val,formatterTime($("#selectedTime").html()));
         getCharts();
     });
     //    切换时间
@@ -300,8 +301,8 @@
             //获取时间
 //            $("#selectedTime").html(timeValue1 + " & " + timeValue2);
             $("#tableTitle").html("对比报表("+timeValue1+"客流量对比"+timeValue2+"客流量)");
-            var begin = state === "week" ? (timeValue1.slice(4)+timeValue1.slice(1,3)) : timeValue1.replace(/\D/g,"-").slice(0,timeValue1.length-1);
-            var end = state === "week" ? (timeValue2.slice(4)+timeValue2.slice(1,3)) : timeValue2.replace(/\D/g,"-").slice(0,timeValue2.length-1);
+            var begin = formatterTime(timeValue1,state);
+            var end = formatterTime(timeValue2,state);
 //            var begin = state === "week" ? $(inputs[0]).children("input").attr("title") : timeValue1.replace(/\D/g,"-").slice(0,timeValue1.length-1);
 //            var end = state === "week" ? $(inputs[1]).children("input").attr("title") : timeValue2.replace(/\D/g,"-").slice(0,timeValue2.length-1);
             data.time = begin +","+ end;
@@ -317,7 +318,7 @@
             }
 //            $("#selectedTime").html(timeValue1);
             $("#tableTitle").html("客流量报表("+timeValue1+"客流量)");
-            var time = state === "week" ? (timeValue1.slice(4)+timeValue1.slice(1,3)) : timeValue1.replace(/\D/g,"-").slice(0,timeValue1.length-1);
+            var time = formatterTime(timeValue1,state);
             data.time = time;
         }
 //        console.log(data)
