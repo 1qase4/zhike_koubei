@@ -106,8 +106,7 @@
             </div>
             <div class="main-body">
                 <div class="welcome-tip">
-                    <p>   欢迎来到商圈秀知客  |  口碑，完成绑定后可以用支付宝
-                        一键登录哦~</p>
+                    <p>   欢迎来到商圈秀知客 | 口碑，提交信息后我们的客服会与您联系的哟~</p>
                 </div>
                 <form class="form-horizontal">
                     <!--<div class="form-group">-->
@@ -121,7 +120,7 @@
                         <input type="text" name="userid" th:value="${userid}">
                     </div>
                     <div class="input-group mb30">
-                        <span class="input-group-addon">联系人</span>
+                        <span class="input-group-addon">&nbsp;联系人&nbsp;</span>
                         <input type="text" name="link" class="form-control" placeholder="联系人">
                     </div>
                     <div class="input-group mb30">
@@ -200,8 +199,9 @@
                 success: function (obj) {
                     if(obj.result){
                         alert("提交完成");
+                        window.location.href="/"
                     }else{
-                        $(_this).html("一键绑定").prop("disabled",false);
+                        $(_this).html("提交").prop("disabled",false);
                         new $.zui.Messager(obj.message || "绑定失败", {
                             type: 'danger',
                             icon:'warning-sign',
@@ -215,7 +215,7 @@
                 complete:function(XMLHttpRequest,textStatus){
                     if(textStatus=='timeout'){//超时,status还有success,error等值的情况
                         ajaxTimeoutZhike.abort();
-                        $(_this).html("一键绑定").prop("disabled",false);
+                        $(_this).html("提交").prop("disabled",false);
                         alert("超时");
                     }
                 }

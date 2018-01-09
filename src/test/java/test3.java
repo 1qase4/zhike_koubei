@@ -1,3 +1,4 @@
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -12,14 +13,11 @@ import java.util.UUID;
  */
 public class test3 {
     public static void main(String[] args) {
-        char[] s = new char[4];
-        s[0] = 'a';
-        s[1] = 'b';
-        s[2] = 'c';
-        s[3] = 'd';
-        System.out.println(s);
+        for (int i = 0; i < 464; i++) {
+            System.out.println(
+                    String.format("curl http://epaper.maxonmotor.com/cn/data/b9990/b999042/img/normal/bk_%d.jpg",i));
+        }
 
-        System.out.println(s.equals("abcd"));
     }
 }
 

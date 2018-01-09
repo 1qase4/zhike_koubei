@@ -88,9 +88,14 @@ public class SyncUsrBackForweekData implements SyncJob {
             }
 
             // 执行数据插入
-            int rows = shopPassengerflowAnalyzeMapper.replaces(list);
-            logger.debug(String.format("客户在日期[%s]时的当日回头客流数据获取完成", pdate));
-            result.setStatus("success").setRows(rows);
+            if(list.size() != 0){
+                int rows = shopPassengerflowAnalyzeMapper.replaces(list);
+                logger.debug(String.format("客户在日期[%s]时的当日回头客流数据获取完成", pdate));
+                result.setStatus("success").setRows(rows);
+            }else{
+                logger.debug(String.format("客户在日期[%s]时的当日无回头客流数据", pdate));
+                result.setStatus("success").setRows(0);
+            }
             return result;
         } catch (AlipayApiException e) {
             e.printStackTrace();

@@ -176,6 +176,7 @@ public class ShopPassengerflowAnalyzeService {
     // 获取首页的周客流echarts图
     public Result getMainWeekFlow(String account,String today) throws ParseException {
         Calendar cal = Calendar.getInstance();
+        cal.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(today));
         // 获取周一的日期
         int d = 0;
         if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
